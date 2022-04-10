@@ -15,11 +15,6 @@ function AppFormField({name, iconName, ...otherProps}) {
         name={name}
         values={values[name]}
         onChangeText={handleChange(name)}
-        // autoCorrect={false}
-        // autoCapitalize="none"
-        // keyboardType="email-address"
-        // name="email"
-
         {...otherProps}
       />
       <ErrorMessage error={errors[name]} />
