@@ -60,7 +60,9 @@ function RegisterScreen() {
           )}
         </AppForm>
         <View style={styles.loginContainer}>
-          <AppText>Already have an account?</AppText>
+          <AppText style={styles.accountCreatedText}>
+            Already have an account?
+          </AppText>
           <AppText
             onPress={() => {
               console.log('Log in Pressed!');
@@ -76,6 +78,9 @@ function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
+  accountCreatedText: {
+    color: colors.white,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.darkBlue,

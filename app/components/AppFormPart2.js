@@ -18,7 +18,7 @@ function AppFormPart2() {
 
   return (
     <View style={{width: '100%'}}>
-      <AppHeadingText>Choose Category</AppHeadingText>
+      <AppHeadingText style={styles.heading}>Choose Category</AppHeadingText>
       <AppFormPicker name="category" item={categories} />
       <View style={styles.textContainer}>
         {values['category'] && (
@@ -30,11 +30,15 @@ function AppFormPart2() {
 }
 
 const styles = StyleSheet.create({
+  heading: {
+    color: colors.white,
+  },
   textContainer: {
     flexDirection: 'row',
     padding: 10,
   },
   text: {
+    color: colors.white,
     flexShrink: 1,
     padding: 10,
     paddingHorizontal: 20,

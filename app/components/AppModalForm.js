@@ -17,7 +17,10 @@ const validationSchema = yup.object().shape({
 
 function AppModalForm({visible, setVisible, placeholder, userTitle}) {
   return (
-    <Modal visible={visible} animationType="slide">
+    <Modal
+      onRequestClose={() => setVisible(false)}
+      visible={visible}
+      animationType="slide">
       <View style={{flex: 1, paddingHorizontal: 10, paddingVertical: 10}}>
         <AppButton
           title="CLOSE"
@@ -52,7 +55,12 @@ function AppModalForm({visible, setVisible, placeholder, userTitle}) {
               textColor={colors.mediumGrey}
             />
           </AppKeyboardView>
-          <PostItem iconName="image" title="Image" iconColor={colors.yellow} />
+          <PostItem
+            iconName="image"
+            image={require('../assets/nature1.jpg')}
+            title="Image"
+            iconColor={colors.yellow}
+          />
 
           <SubmitButton title="POST" />
         </AppForm>

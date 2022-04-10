@@ -11,8 +11,10 @@ import SubmitButton from '../components/SubmitButton';
 
 const validationSchema = yup.object().shape({
   verificationCode: yup
-    .string()
-    .length(6)
+    .number()
+    .typeError('Code must be in numbers.')
+    .positive('Code must not have negative number.')
+    .integer('Code should be positive number.')
     .required()
     .label('Verification Code'),
 });
@@ -59,6 +61,7 @@ const styles = StyleSheet.create({
     padding: 25,
   },
   codeText: {
+    color: colors.white,
     fontSize: 20,
     marginTop: 70,
     marginBottom: 20,
@@ -73,6 +76,7 @@ const styles = StyleSheet.create({
     height: 170,
   },
   text: {
+    color: colors.white,
     fontSize: 25,
     fontWeight: 'bold',
     marginVertical: 5,

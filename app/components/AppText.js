@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     fontFamily: 'Roboto',
-    color: colors.white,
+    color: colors.dark,
   },
 });
 export default AppText;
