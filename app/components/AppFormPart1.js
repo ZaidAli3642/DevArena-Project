@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, ScrollView} from 'react-native';
-import {useFormikContext} from 'formik';
+import {View, StyleSheet} from 'react-native';
+import colors from '../config/colors';
 
 import AppFormField from './AppFormField';
 import AppHeadingText from './AppHeadingText';
@@ -8,7 +8,7 @@ import AppHeadingText from './AppHeadingText';
 function AppFormPart1() {
   return (
     <View style={{width: '100%'}}>
-      <AppHeadingText>Sign Up</AppHeadingText>
+      <AppHeadingText style={styles.heading}>Sign Up</AppHeadingText>
 
       <AppFormField
         name="firstName"
@@ -46,5 +46,11 @@ function AppFormPart1() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  heading: {
+    color: colors.white,
+  },
+});
 
 export default AppFormPart1;

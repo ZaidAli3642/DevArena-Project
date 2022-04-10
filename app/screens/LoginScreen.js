@@ -11,7 +11,7 @@ import AppHeadingText from './../components/AppHeadingText';
 
 const validationSchema = yup.object().shape({
   email: yup.string().required().email().label('Email'),
-  password: yup.string().required().min(10).max(15).label('Password'),
+  password: yup.string().required().min(8).label('Password'),
 });
 
 function LoginScreen() {
@@ -50,7 +50,9 @@ function LoginScreen() {
       </AppForm>
 
       <View style={styles.registerContainer}>
-        <AppText onPress={() => console.log('Forgot Password!')}>
+        <AppText
+          style={styles.accountCreatedText}
+          onPress={() => console.log('Forgot Password!')}>
           Don't have an account?
         </AppText>
         <AppText
@@ -64,6 +66,9 @@ function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  accountCreatedText: {
+    color: colors.white,
+  },
   container: {
     backgroundColor: colors.darkBlue,
     flex: 1,
@@ -75,6 +80,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   loginText: {
+    color: colors.white,
     marginBottom: 40,
   },
   registerContainer: {

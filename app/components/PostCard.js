@@ -1,15 +1,35 @@
 import React from 'react';
-import {View, Image, StyleSheet} from 'react-native';
+import {View, Image, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import AppText from './AppText';
 import colors from '../config/colors';
 
 const icons = [
-  {id: 1, iconName: 'thumb-up-outline', title: 'Like'},
-  {id: 2, iconName: 'thumb-down-outline', title: 'Dislike'},
-  {id: 3, iconName: 'comment-outline', title: 'Comment'},
-  {id: 4, iconName: 'share-outline', title: 'Share'},
+  {
+    id: 1,
+    iconName: 'thumb-up-outline',
+    title: 'Like',
+    onPress: () => console.log('Liked'),
+  },
+  {
+    id: 2,
+    iconName: 'thumb-down-outline',
+    title: 'Dislike',
+    onPress: () => console.log('Disliked'),
+  },
+  {
+    id: 3,
+    iconName: 'comment-outline',
+    title: 'Comment',
+    onPress: () => console.log('Commented'),
+  },
+  {
+    id: 4,
+    iconName: 'share-outline',
+    title: 'Share',
+    onPress: () => console.log('Shared'),
+  },
 ];
 
 function PostCard({description, postImage, userImage, username, date}) {
@@ -26,9 +46,10 @@ function PostCard({description, postImage, userImage, username, date}) {
         <AppText style={styles.description}>{description}</AppText>
       )}
       {postImage && <Image style={styles.postImage} source={postImage} />}
+
       <View style={styles.iconContainer}>
         {icons.map(icon => (
-          <View style={styles.icon} key={icon.id}>
+          <TouchableWithoutFeedback key={icon.id} onPress={icon.onPress}>
             <View style={styles.singleIcon}>
               <MaterialCommunityIcons
                 name={icon.iconName}
@@ -37,7 +58,7 @@ function PostCard({description, postImage, userImage, username, date}) {
               />
               <AppText style={styles.iconTitle}>{icon.title}</AppText>
             </View>
-          </View>
+          </TouchableWithoutFeedback>
         ))}
       </View>
     </View>
@@ -78,7 +99,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: colors.dark,
     fontWeight: 'bold',
   },
   userContainer: {
