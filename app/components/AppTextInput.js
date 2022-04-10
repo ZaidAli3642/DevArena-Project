@@ -9,11 +9,13 @@ function AppTextInput({
   iconName,
   placeholder,
   width = '100%',
+  style,
+  textColor = colors.white,
   values,
   ...otherProps
 }) {
   return (
-    <View style={[styles.inputContainer, {width: width}]}>
+    <View style={[styles.inputContainer, style]}>
       {iconName && (
         <MaterialCommunityIcons
           name={iconName}
@@ -24,7 +26,7 @@ function AppTextInput({
       <TextInput
         placeholderTextColor={colors.mediumWhite}
         placeholder={placeholder}
-        style={styles.textInput}
+        style={[styles.textInput, {color: textColor}]}
         value={values}
         {...otherProps}
       />

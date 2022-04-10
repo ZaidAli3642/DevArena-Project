@@ -6321,6 +6321,11 @@
     "readable-stream" "~2.3.6"
     "xtend" "~4.0.1"
 
+"timeago.js@^4.0.2":
+  "integrity" "sha512-a7wPxPdVlQL7lqvitHGGRsofhdwtkoSXPGATFuSOA2i1ZNQEPLrGnj68vOp2sOJTCFAQVXPeNMX/GctBaO9L2w=="
+  "resolved" "https://registry.npmjs.org/timeago.js/-/timeago.js-4.0.2.tgz"
+  "version" "4.0.2"
+
 "tiny-warning@^1.0.2":
   "integrity" "sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA=="
   "resolved" "https://registry.npmjs.org/tiny-warning/-/tiny-warning-1.0.3.tgz"
