@@ -35,7 +35,7 @@ function AppModalForm({visible, setVisible, placeholder, userTitle}) {
           <AppText style={styles.userText}>{userTitle}</AppText>
         </View>
         <AppForm
-          initialValues={{description: ''}}
+          initialValues={{description: '', image: null}}
           onSubmit={(values, {resetForm}) => {
             console.log(values);
             setVisible(false);
@@ -57,7 +57,7 @@ function AppModalForm({visible, setVisible, placeholder, userTitle}) {
           </AppKeyboardView>
           <PostItem
             iconName="image"
-            image={require('../assets/nature1.jpg')}
+            name="image"
             title="Image"
             iconColor={colors.yellow}
           />

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {useFormikContext} from 'formik';
 
 import ErrorMessage from './ErrorMessage';

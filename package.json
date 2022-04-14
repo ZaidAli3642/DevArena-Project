@@ -13,6 +13,7 @@
     "formik": "^2.2.9",
     "react": "17.0.2",
     "react-native": "0.67.4",
+    "react-native-image-picker": "^4.7.3",
     "react-native-vector-icons": "^9.1.0",
     "react-native-video": "^5.2.0",
     "timeago.js": "^4.0.2",
