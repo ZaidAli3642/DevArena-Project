@@ -1,15 +1,41 @@
 import React from 'react';
-import {TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {TouchableOpacity, Image, StyleSheet, Alert} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as ImagePicker from 'react-native-image-picker';
+import {useFormikContext} from 'formik';
 
 import AppText from './AppText';
 import colors from '../config/colors';
 
-function PostItem({title, iconName, iconColor, image}) {
+function PostItem({title, name, iconName, iconColor}) {
+  const {setFieldValue, values} = useFormikContext();
+
+  const imageUri = values[name];
+
+  const handleSelectImage = async () => {
+    const result = await ImagePicker.launchImageLibrary({mediaType: 'photo'});
+    if (!result.didCancel) {
+      setFieldValue(name, result.assets[0].uri);
+    }
+  };
+
+  const handlePress = () => {
+    if (!imageUri) handleSelectImage();
+    else
+      Alert.alert(
+        'Delete Image',
+        'Are you sure you want to delete this Image?',
+        [{text: 'Yes', onPress: () => setFieldValue(name, null)}, {text: 'No'}],
+      );
+  };
+
   return (
     <>
-      <TouchableOpacity activeOpacity={0.7} style={styles.container}>
-        {!image && (
+      <TouchableOpacity
+        onPress={handlePress}
+        activeOpacity={0.7}
+        style={styles.container}>
+        {!imageUri && (
           <>
             <MaterialCommunityIcons
               name={iconName}
@@ -19,8 +45,8 @@ function PostItem({title, iconName, iconColor, image}) {
             <AppText style={styles.text}>{title}</AppText>
           </>
         )}
+        {imageUri && <Image style={styles.image} source={{uri: imageUri}} />}
       </TouchableOpacity>
-      {image && <Image style={styles.image} source={image} />}
     </>
   );
 }

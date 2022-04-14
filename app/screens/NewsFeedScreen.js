@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {View, FlatList, Image, StyleSheet, ScrollView} from 'react-native';
+import {View, FlatList, Image, StyleSheet} from 'react-native';
 import {format} from 'timeago.js';
 
 import AppPostInput from './../components/AppPostInput';
 import AppModalForm from '../components/AppModalForm';
 import PostCard from '../components/PostCard';
 import colors from '../config/colors';
+import AppText from '../components/AppText';
 
 const posts = [
   {
@@ -47,6 +48,7 @@ function NewsFeedScreen() {
   return (
     <View style={styles.container}>
       <FlatList
+        contentContainerStyle={{flexGrow: 1}}
         data={posts}
         keyExtractor={post => post.postId.toString()}
         ListHeaderComponent={() => (
@@ -65,14 +67,27 @@ function NewsFeedScreen() {
             </View>
           </View>
         )}
-        renderItem={({item}) => (
-          <PostCard
-            username={item.username}
-            userImage={item.userImage}
-            description={item.description}
-            postImage={item.postImage}
-            date={item.date}
-          />
+        renderItem={({item, index}) => {
+          return (
+            <PostCard
+              // username={item.username}
+              // userImage={item.userImage}
+              // description={item.description}
+              // postImage={item.postImage}
+              // date={item.date}
+              item={item}
+            />
+          );
+        }}
+        ListEmptyComponent={() => (
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 250,
+            }}>
+            <AppText>No posts for now!</AppText>
+          </View>
         )}
       />
       <AppModalForm

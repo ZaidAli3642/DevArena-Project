@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, Keyboard} from 'react-native';
 import * as yup from 'yup';
-import {useFormikContext} from 'formik';
 
 import AppForm from '../components/AppForm';
 import SubmitButton from '../components/SubmitButton';

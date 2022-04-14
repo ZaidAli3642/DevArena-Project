@@ -32,7 +32,9 @@ const icons = [
   },
 ];
 
-function PostCard({description, postImage, userImage, username, date}) {
+function PostCard({item}) {
+  const {description, postImage, userImage, username, date} = item;
+
   return (
     <View style={styles.container}>
       <View style={styles.userContainer}>
