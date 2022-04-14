@@ -28,6 +28,7 @@ function AppTextInput({
         placeholder={placeholder}
         style={[styles.textInput, {color: textColor}]}
         value={values}
+        multiline
         {...otherProps}
       />
     </View>
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   inputContainer: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
