@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   Image,
   FlatList,
@@ -15,6 +15,7 @@ import AppCommentForm from './AppCommentForm';
 import AppText from './AppText';
 import colors from '../config/colors';
 import PostComment from './PostComment';
+import inputRefContext from './../context/inputRefContext';
 
 function PostCard({item}) {
   const [liked, setLiked] = useState(false);
@@ -41,12 +42,14 @@ function PostCard({item}) {
       id: 1,
       iconName: liked ? 'thumb-up' : 'thumb-up-outline',
       title: 'Like',
+      color: liked ? colors.red : colors.mediumGrey,
       onPress: handleLike,
     },
     {
       id: 2,
       iconName: disliked ? 'thumb-down' : 'thumb-down-outline',
       title: 'Dislike',
+      color: disliked ? colors.red : colors.mediumGrey,
       onPress: handleDislike,
     },
     {
@@ -70,6 +73,22 @@ function PostCard({item}) {
       username: 'Emma Watson',
       description: 'Need some sunlight!',
       date: format(new Date()),
+      commentResponses: [
+        {
+          commentId: 1,
+          userImage: require('../assets/girl1.jpg'),
+          username: 'Emma Watson',
+          description: 'Need some little sunlight!',
+          date: format(new Date()),
+        },
+        {
+          commentId: 2,
+          userImage: require('../assets/zaid-saleem-image.jpg'),
+          username: 'Zaid Saleem',
+          description: 'Need some more sunlight!',
+          date: format(new Date()),
+        },
+      ],
     },
     {
       commentId: 2,
@@ -77,6 +96,7 @@ function PostCard({item}) {
       username: 'Tony Stark',
       description: 'Yoooooo!',
       date: format(new Date()),
+      commentResponses: [],
     },
     {
       commentId: 3,
@@ -84,6 +104,7 @@ function PostCard({item}) {
       username: 'Selena',
       description: 'helloooooooo!',
       date: format(new Date()),
+      commentResponses: [],
     },
     {
       commentId: 4,
@@ -91,61 +112,99 @@ function PostCard({item}) {
       username: 'John',
       description: 'Good Night',
       date: format(new Date()),
+      commentResponses: [],
     },
   ];
+
   const [visible, setVisible] = useState(false);
   const [postComments, setPostComments] = useState(comments);
+  const [keyboardReplyVisible, setKeyboardReplyVisible] = useState(false);
   const {description, postImage, userImage, username, date} = item;
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.userContainer}>
-        <Image style={styles.image} source={userImage} />
-        <View style={styles.userDescription}>
-          <AppText style={styles.text}>{username}</AppText>
-          <AppText style={styles.date}>{date}</AppText>
-        </View>
-      </View>
-      {description && (
-        <AppText style={styles.description}>{description}</AppText>
-      )}
-      {postImage && (
-        <Image style={styles.postImage} source={{uri: postImage}} />
-      )}
+  const inputRef = useRef();
 
-      <View style={styles.iconContainer}>
-        {icons.map(icon => (
-          <TouchableWithoutFeedback key={icon.id} onPress={icon.onPress}>
-            <View style={styles.singleIcon}>
-              <MaterialCommunityIcons
-                name={icon.iconName}
-                size={25}
-                color={colors.mediumGrey}
-              />
-              <AppText style={styles.iconTitle}>{icon.title}</AppText>
-            </View>
-          </TouchableWithoutFeedback>
-        ))}
-      </View>
-      <Modal visible={visible} animationType="slide">
-        <View style={{flex: 1, paddingHorizontal: 10, paddingVertical: 10}}>
-          <AppButton
-            title="CLOSE"
-            color={colors.red}
-            onPress={() => setVisible(false)}
-          />
-          <FlatList
-            data={postComments}
-            keyExtractor={comment => comment.commentId.toString()}
-            renderItem={({item}) => <PostComment item={item} />}
-          />
-          <AppCommentForm
-            comments={comments}
-            onChangeComments={newComments => setPostComments(newComments)}
-          />
+  const focusInput = () => {
+    inputRef.current.focus();
+  };
+
+  const handleCommentSubmit = values => {
+    const newComment = {
+      commentId: Date.now(),
+      userImage: require('../assets/zaid-saleem-image.jpg'),
+      username: 'Zaid Saleem',
+      description: values.comment,
+      date: format(new Date()),
+    };
+
+    postComments.forEach(comment => {
+      if (comment.commentId === 1) {
+        comment.commentResponses.push(newComment);
+        console.log('pressed');
+      } else return comment.commentResponses;
+    });
+    const newComments = [...postComments];
+    setPostComments(newComments);
+  };
+
+  return (
+    <inputRefContext.Provider value={inputRef}>
+      <View style={styles.container}>
+        <View style={styles.userContainer}>
+          <Image style={styles.image} source={userImage} />
+          <View style={styles.userDescription}>
+            <AppText style={styles.text}>{username}</AppText>
+            <AppText style={styles.date}>{date}</AppText>
+          </View>
         </View>
-      </Modal>
-    </View>
+        {description && (
+          <AppText style={styles.description}>{description}</AppText>
+        )}
+        {postImage && (
+          <Image style={styles.postImage} source={{uri: postImage}} />
+        )}
+
+        <View style={styles.iconContainer}>
+          {icons.map(icon => (
+            <TouchableWithoutFeedback key={icon.id} onPress={icon.onPress}>
+              <View style={styles.singleIcon}>
+                <MaterialCommunityIcons
+                  name={icon.iconName}
+                  size={25}
+                  color={icon.color || colors.mediumGrey}
+                />
+                <AppText style={styles.iconTitle}>{icon.title}</AppText>
+              </View>
+            </TouchableWithoutFeedback>
+          ))}
+        </View>
+        <Modal visible={visible} animationType="slide">
+          <View style={{flex: 1, paddingHorizontal: 10}}>
+            <AppButton
+              title="CLOSE"
+              color={colors.red}
+              onPress={() => setVisible(false)}
+            />
+            <FlatList
+              data={postComments}
+              keyExtractor={comment => comment.commentId.toString()}
+              renderItem={({item}) => (
+                <PostComment
+                  setKeyboardReplyVisible={setKeyboardReplyVisible}
+                  focusInput={focusInput}
+                  item={item}
+                />
+              )}
+              showsVerticalScrollIndicator={false}
+            />
+            <AppCommentForm
+              keyboardReplyVisible={keyboardReplyVisible}
+              setKeyboardReplyVisible={setKeyboardReplyVisible}
+              handleSubmit={handleCommentSubmit}
+            />
+          </View>
+        </Modal>
+      </View>
+    </inputRefContext.Provider>
   );
 }
 

@@ -58,7 +58,7 @@ function QueryFeedScreen() {
     };
 
     console.log(values);
-    const newQueries = [...allQueries, newQueryPost];
+    const newQueries = [newQueryPost, ...allQueries];
     setAllQueries(newQueries);
     setVisible(false);
     resetForm();

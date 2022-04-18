@@ -1,13 +1,16 @@
 import React, {useState} from 'react';
-import {Image, View, StyleSheet} from 'react-native';
+import {FlatList, Image, View, StyleSheet} from 'react-native';
 
-import colors from '../config/colors';
 import AppText from './AppText';
+import colors from '../config/colors';
+import ResponseComments from './ResponseComments';
 
-function PostComment({item}) {
+function PostComment({item, focusInput, setKeyboardReplyVisible}) {
   const [like, setLike] = useState(false);
+  const [commentsVisible, setCommentVisible] = useState(false);
 
-  const {userImage, username, description, date} = item;
+  const {userImage, username, description, date, commentResponses} = item;
+  console.log(commentResponses);
   return (
     <View>
       <View style={styles.container}>
@@ -30,12 +33,36 @@ function PostComment({item}) {
             </AppText>
             <AppText
               style={[styles.text, styles.reply]}
-              onPress={() => console.log('Replied')}>
+              onPress={() => {
+                setKeyboardReplyVisible(true);
+                focusInput();
+              }}>
               reply
             </AppText>
           </View>
         </View>
       </View>
+      {commentResponses.length !== 0 && (
+        <>
+          {!commentsVisible ? (
+            <AppText
+              onPress={() => setCommentVisible(true)}
+              style={styles.responseText}>
+              View Responses
+            </AppText>
+          ) : (
+            <>
+              <FlatList
+                data={commentResponses}
+                keyExtractor={commentResponse =>
+                  commentResponse.commentId.toString()
+                }
+                renderItem={({item}) => <ResponseComments item={item} />}
+              />
+            </>
+          )}
+        </>
+      )}
     </View>
   );
 }
@@ -71,6 +98,11 @@ const styles = StyleSheet.create({
   },
   reply: {
     marginLeft: 10,
+  },
+  responseText: {
+    fontSize: 12,
+    marginLeft: 70,
+    textDecorationLine: 'underline',
   },
   text: {
     fontSize: 13,
