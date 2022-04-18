@@ -15,7 +15,13 @@ const validationSchema = yup.object().shape({
   description: yup.string().required().label('Description'),
 });
 
-function AppModalForm({visible, setVisible, placeholder, userTitle}) {
+function AppModalForm({
+  visible,
+  setVisible,
+  placeholder,
+  userTitle,
+  handleSubmit,
+}) {
   return (
     <Modal
       onRequestClose={() => setVisible(false)}
@@ -36,11 +42,7 @@ function AppModalForm({visible, setVisible, placeholder, userTitle}) {
         </View>
         <AppForm
           initialValues={{description: '', image: null}}
-          onSubmit={(values, {resetForm}) => {
-            console.log(values);
-            setVisible(false);
-            resetForm();
-          }}
+          onSubmit={handleSubmit}
           validationSchema={validationSchema}>
           <AppKeyboardView>
             <AppFormField

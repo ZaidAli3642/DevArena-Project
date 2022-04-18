@@ -22,7 +22,4 @@ function AppFormField({name, iconName, ...otherProps}) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {},
-});
 export default AppFormField;

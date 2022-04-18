@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {View, TextInput, StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import inputRefContext from '../context/inputRefContext';
 
 import colors from '../config/colors';
 
@@ -14,6 +15,8 @@ function AppTextInput({
   values,
   ...otherProps
 }) {
+  const inputContext = useContext(inputRefContext);
+
   return (
     <View style={[styles.inputContainer, style]}>
       {iconName && (
@@ -28,6 +31,8 @@ function AppTextInput({
         placeholder={placeholder}
         style={[styles.textInput, {color: textColor}]}
         value={values}
+        ref={inputContext}
+        multiline
         {...otherProps}
       />
     </View>
@@ -42,12 +47,13 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   inputContainer: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.red,
     borderRadius: 40,
-    padding: 5,
+    padding: 4,
     paddingLeft: 20,
     marginVertical: 15,
   },
