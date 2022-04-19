@@ -2,12 +2,10 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 
 import colors from './app/config/colors';
-import NewsFeedScreen from './app/screens/NewsFeedScreen';
-import RegisterScreen from './app/screens/RegisterScreen';
-import QueryFeedScreen from './app/screens/QueryFeedScreen';
+import NotificationScreen from './app/screens/NotificationScreen';
 
 function App() {
-  return <QueryFeedScreen />;
+  return <NotificationScreen />;
 }
 
 const styles = StyleSheet.create({
