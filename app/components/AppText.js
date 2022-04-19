@@ -3,9 +3,12 @@ import {Text, StyleSheet} from 'react-native';
 
 import colors from '../config/colors';
 
-function AppText({children, style, onPress}) {
+function AppText({children, style, numberOfLines, onPress}) {
   return (
-    <Text onPress={onPress} style={[styles.text, style]}>
+    <Text
+      numberOfLines={numberOfLines}
+      onPress={onPress}
+      style={[styles.text, style]}>
       {children}
     </Text>
   );
