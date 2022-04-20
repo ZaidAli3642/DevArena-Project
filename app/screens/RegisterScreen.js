@@ -25,7 +25,7 @@ function RegisterScreen() {
   const [page, setPage] = useState(0);
 
   return (
-    <View style={styles.container} showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
       <AppKeyboardView>
         <AppForm
           initialValues={{
