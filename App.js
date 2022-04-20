@@ -2,10 +2,11 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 
 import colors from './app/config/colors';
-import NotificationScreen from './app/screens/NotificationScreen';
+import CreateGroupScreen from './app/screens/CreateGroupScreen';
+import GroupsScreen from './app/screens/GroupsScreen';
 
 function App() {
-  return <NotificationScreen />;
+  return <CreateGroupScreen />;
 }
 
 const styles = StyleSheet.create({

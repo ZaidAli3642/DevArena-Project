@@ -119,7 +119,7 @@ function PostCard({item}) {
   const [visible, setVisible] = useState(false);
   const [postComments, setPostComments] = useState(comments);
   const [keyboardReplyVisible, setKeyboardReplyVisible] = useState(false);
-  const {description, postImage, userImage, username, date} = item;
+  const {description, postImage, userImage, groupName, username, date} = item;
 
   const inputRef = useRef();
 
@@ -153,6 +153,7 @@ function PostCard({item}) {
           <Image style={styles.image} source={userImage} />
           <View style={styles.userDescription}>
             <AppText style={styles.text}>{username}</AppText>
+            {groupName && <AppText style={styles.group}>{groupName}</AppText>}
             <AppText style={styles.date}>{date}</AppText>
           </View>
         </View>
@@ -214,6 +215,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingVertical: 10,
     elevation: 10,
+  },
+  group: {
+    fontSize: 13,
+    color: colors.green,
+    fontWeight: 'bold',
   },
   date: {
     fontSize: 15,

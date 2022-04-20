@@ -7,7 +7,15 @@ import {useFormikContext} from 'formik';
 import AppText from './AppText';
 import colors from '../config/colors';
 
-function PostItem({title, name, iconName, iconColor}) {
+function PostItem({
+  title,
+  name,
+  iconName,
+  iconColor,
+  width,
+  height,
+  textStyle,
+}) {
   const {setFieldValue, values} = useFormikContext();
 
   const imageUri = values[name];
@@ -35,17 +43,21 @@ function PostItem({title, name, iconName, iconColor}) {
         onPress={handlePress}
         activeOpacity={0.7}
         style={styles.container}>
-        {!imageUri && (
+        {!imageUri ? (
           <>
             <MaterialCommunityIcons
               name={iconName}
               size={40}
               color={iconColor}
             />
-            <AppText style={styles.text}>{title}</AppText>
+            <AppText style={[styles.text, textStyle]}>{title}</AppText>
           </>
+        ) : (
+          <Image
+            style={[styles.image, {width: width, height: height}]}
+            source={{uri: imageUri}}
+          />
         )}
-        {imageUri && <Image style={styles.image} source={{uri: imageUri}} />}
       </TouchableOpacity>
     </>
   );
@@ -56,7 +68,6 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: 'row',
     borderTopColor: colors.lightGrey,
-    borderTopWidth: 1,
     alignItems: 'center',
   },
   image: {
