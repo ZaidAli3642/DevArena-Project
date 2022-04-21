@@ -1,13 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {View, StyleSheet} from 'react-native';
 import * as yup from 'yup';
 
 import AppForm from '../components/AppForm';
 import AppFormField from '../components/AppFormField';
 import AppHeadingText from '../components/AppHeadingText';
 import AppKeyboardView from '../components/AppKeyboardView';
-import AppText from '../components/AppText';
 import PostItem from '../components/PostItem';
 import SubmitButton from '../components/SubmitButton';
 import colors from '../config/colors';
