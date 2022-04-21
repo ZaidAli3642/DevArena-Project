@@ -1,105 +1,137 @@
-import React from 'react';
-import {FlatList, View, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  Image,
+  ScrollView,
+  View,
+  StyleSheet,
+  RefreshControl,
+} from 'react-native';
 import {format} from 'timeago.js';
 
-import AppButton from './../components/AppButton';
-import colors from '../config/colors';
+import AppPostInput from '../components/AppPostInput';
+import GroupHeader from '../components/GroupHeader';
 import PostCard from '../components/PostCard';
-import AppHeadingText from '../components/AppHeadingText';
+import colors from '../config/colors';
+import AppModalForm from './../components/AppModalForm';
 
-const groupPosts = [
+const posts = [
   {
-    gourpPostId: 1,
+    postId: 1,
     userImage: require('../assets/girl1.jpg'),
     username: 'Emma Watson',
     date: format(new Date()),
     description: 'Wow! what a beautiful view!',
-    groupName: 'Group 1',
     // postImage: require('../assets/nature1.jpg'),
   },
   {
-    gourpPostId: 2,
+    postId: 2,
     userImage: require('../assets/boy1.jpg'),
     username: 'Tony Stark',
     date: format(new Date()),
     description: 'Yoooooo!',
-    groupName: 'Group 2',
     // postImage: require('../assets/nature2.jpg'),
   },
-  {
-    gourpPostId: 3,
-    userImage: require('../assets/girl2.jpg'),
-    username: 'Selena Gomez',
-    date: format(new Date()),
-    description: 'Need some sunlight!',
-    groupName: 'Group 3',
-    // postImage: require('../assets/nature3.jpg'),
-  },
-  {
-    gourpPostId: 4,
-    userImage: require('../assets/boy2.jpg'),
-    username: 'John Kent',
-    date: format(new Date()),
-    description: 'Be Greatful!',
-    groupName: 'Group 4',
-    // postImage: require('../assets/nature4.jpg'),
-  },
+  // {
+  //   postId: 3,
+  //   userImage: require('../assets/girl2.jpg'),
+  //   username: 'Selena Gomez',
+  //   date: format(new Date()),
+  //   description: 'Need some sunlight!',
+  //   // postImage: require('../assets/nature3.jpg'),
+  // },
+  // {
+  //   postId: 4,
+  //   userImage: require('../assets/boy2.jpg'),
+  //   username: 'John Kent',
+  //   date: format(new Date()),
+  //   description: 'Be Greatful!',
+  //   // postImage: require('../assets/nature4.jpg'),
+  // },
 ];
 
 function GroupsScreen() {
+  const [allPosts, setAllPosts] = useState(posts);
+
+  const [visible, setVisible] = useState(false);
+
+  const handleSubmit = (values, {resetForm}) => {
+    const newPost = {
+      postId: Date.now(),
+      userImage: require('../assets/zaid-saleem-image.jpg'),
+      username: 'Zaid Saleem',
+      date: format(new Date()),
+      description: values.description,
+      postImage: values.image,
+    };
+
+    console.log(values);
+    const newPosts = [...allPosts, newPost];
+    setAllPosts(newPosts);
+    setVisible(false);
+    resetForm();
+  };
+
   return (
-    <View style={styles.container}>
-      <AppHeadingText style={styles.heading}>Groups</AppHeadingText>
-      <View style={styles.buttonContainer}>
-        <AppButton
-          title="For you"
-          onPress={() => console.log('For you')}
-          color={colors.mediumGrey}
-          textStyle={styles.textStyle}
+    <ScrollView>
+      <View style={styles.container}>
+        <GroupHeader />
+
+        <View style={styles.inputContainer}>
+          <Image
+            style={styles.profileImage}
+            source={require('../assets/zaid-saleem-image.jpg')}
+          />
+          <AppPostInput
+            placeholder="Write Something..."
+            style={styles.input}
+            onPress={() => setVisible(true)}
+          />
+        </View>
+        <AppModalForm
+          userTitle="Zaid Saleem"
+          placeholder="What's on your mind?"
+          setVisible={setVisible}
+          visible={visible}
+          handleSubmit={handleSubmit}
         />
-        <AppButton
-          title="Create Group"
-          onPress={() => console.log('Create Group')}
-          color={colors.mediumGrey}
-          textStyle={styles.textStyle}
-        />
-        <AppButton
-          title="Join Group"
-          onPress={() => console.log('Join Group')}
-          color={colors.mediumGrey}
-          textStyle={styles.textStyle}
-        />
-        <AppButton
-          title="Your Groups"
-          onPress={() => console.log('Your Groups')}
-          color={colors.mediumGrey}
-          textStyle={styles.textStyle}
-        />
-      </View>
-      <FlatList
-        data={groupPosts}
-        keyExtractor={groupPost => groupPost.gourpPostId.toString()}
+
+        {allPosts.map(post => (
+          <PostCard key={post.postId} item={post} />
+        ))}
+        {/* <FlatList
+        data={allPosts}
+        keyExtractor={post => post.postId.toString()}
+        // ListHeaderComponent={() => (
+        //   <GroupHeader allPosts={allPosts} setAllPosts={setAllPosts} />
+        // )}
         renderItem={({item}) => <PostCard item={item} />}
-      />
-    </View>
+      /> */}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  heading: {
-    marginLeft: 20,
-    fontSize: 25,
-    marginVertical: 20,
-  },
-  textStyle: {
-    fontSize: 15,
-  },
   container: {
     flex: 1,
+    backgroundColor: colors.mediumWhite,
+  },
+  input: {
+    marginVertical: 10,
+    flex: 1,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    marginVertical: 10,
+    paddingVertical: 5,
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginHorizontal: 5,
   },
 });
 export default GroupsScreen;
