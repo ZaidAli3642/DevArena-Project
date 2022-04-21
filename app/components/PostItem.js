@@ -7,15 +7,7 @@ import {useFormikContext} from 'formik';
 import AppText from './AppText';
 import colors from '../config/colors';
 
-function PostItem({
-  title,
-  name,
-  iconName,
-  iconColor,
-  width,
-  height,
-  textStyle,
-}) {
+function PostItem({title, name, iconName, iconColor, textStyle}) {
   const {setFieldValue, values} = useFormikContext();
 
   const imageUri = values[name];
@@ -53,10 +45,7 @@ function PostItem({
             <AppText style={[styles.text, textStyle]}>{title}</AppText>
           </>
         ) : (
-          <Image
-            style={[styles.image, {width: width, height: height}]}
-            source={{uri: imageUri}}
-          />
+          <Image style={styles.image} source={{uri: imageUri}} />
         )}
       </TouchableOpacity>
     </>

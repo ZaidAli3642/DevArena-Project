@@ -212,9 +212,9 @@ function PostCard({item}) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
-    marginVertical: 10,
+    marginVertical: 5,
     paddingVertical: 10,
-    elevation: 10,
+    elevation: 5,
   },
   group: {
     fontSize: 13,
