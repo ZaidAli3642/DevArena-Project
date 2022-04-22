@@ -2,13 +2,10 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 
 import colors from './app/config/colors';
-import JoinGroupsScreen from './app/screens/JoinGroupsScreen';
-import GroupsForYouScreen from './app/screens/GroupForYouScreen';
-import GroupsScreen from './app/screens/GroupsScreen';
-import NewsFeedScreen from './app/screens/NewsFeedScreen';
+import CodeEditorScreen from './app/screens/CodeEditorScreen';
 
 function App() {
-  return <GroupsScreen />;
+  return <CodeEditorScreen />;
 }
 
 const styles = StyleSheet.create({

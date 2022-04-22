@@ -1,13 +1,13 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useFormikContext} from 'formik';
 
 import AppButton from './AppButton';
 import colors from '../config/colors';
 
-function SubmitButton({title}) {
-  const {handleSubmit} = useFormikContext();
+function SubmitButton({title, onSubmitCode}) {
+  const {handleSubmit, values} = useFormikContext();
 
   return (
     <>
@@ -15,12 +15,17 @@ function SubmitButton({title}) {
         <AppButton title={title} color={colors.red} onPress={handleSubmit} />
       )}
       {!title && (
-        <MaterialCommunityIcons
-          name="send-circle"
-          size={70}
-          color={colors.red}
-          onPress={handleSubmit}
-        />
+        <TouchableOpacity
+          onPress={() => {
+            handleSubmit();
+            if (values['code']) onSubmitCode();
+          }}>
+          <MaterialCommunityIcons
+            name="send-circle"
+            size={70}
+            color={colors.red}
+          />
+        </TouchableOpacity>
       )}
     </>
   );

@@ -45,7 +45,7 @@ const posts = [
 
 function NewsFeedScreen() {
   const [visible, setVisible] = useState(false);
-  const [allPosts, setAllPosts] = useState(posts);
+  const [allPosts, setAllPosts] = useState([]);
 
   const handleSubmit = (values, {resetForm}) => {
     const newPost = {
@@ -66,11 +66,8 @@ function NewsFeedScreen() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        contentContainerStyle={{flexGrow: 1}}
-        data={allPosts}
-        keyExtractor={post => post.postId.toString()}
-        ListHeaderComponent={() => (
+      {allPosts.length === 0 ? (
+        <>
           <View style={styles.input}>
             <View style={{flex: 0.2}}>
               <Image
@@ -85,21 +82,42 @@ function NewsFeedScreen() {
               />
             </View>
           </View>
-        )}
-        renderItem={({item}) => {
-          return <PostCard item={item} />;
-        }}
-        ListEmptyComponent={() => (
           <View
             style={{
+              flex: 1,
               justifyContent: 'center',
               alignItems: 'center',
-              marginTop: 250,
             }}>
             <AppText>No posts for now!</AppText>
           </View>
-        )}
-      />
+        </>
+      ) : (
+        <FlatList
+          contentContainerStyle={{flexGrow: 1}}
+          data={allPosts}
+          keyExtractor={post => post.postId.toString()}
+          ListHeaderComponent={() => (
+            <View style={styles.input}>
+              <View style={{flex: 0.2}}>
+                <Image
+                  style={styles.image}
+                  source={require('../assets/zaid-saleem-image.jpg')}
+                />
+              </View>
+              <View style={{flex: 1}}>
+                <AppPostInput
+                  onPress={() => setVisible(true)}
+                  placeholder="WRITE SOMETHING!"
+                />
+              </View>
+            </View>
+          )}
+          renderItem={({item}) => {
+            return <PostCard item={item} />;
+          }}
+        />
+      )}
+
       <AppModalForm
         placeholder="What's On Your Mind?"
         setVisible={setVisible}

@@ -1,12 +1,12 @@
 import React from 'react';
 import {FlatList, View, StyleSheet, ScrollView} from 'react-native';
 
-import GroupItem from '../components/GroupItem';
 import ItemSeperator from './../components/ItemSeperator';
 import AppText from './../components/AppText';
 import AppButton from './../components/AppButton';
 import colors from '../config/colors';
 import AppHeadingText from '../components/AppHeadingText';
+import ListItem from './../components/ListItem';
 
 const groups = [
   {
@@ -87,7 +87,7 @@ const createdGroups = [
 ];
 
 // List all the Groups that you have joined
-function YourGroupsScreen({GroupPickerItem = GroupItem}) {
+function YourGroupsScreen({GroupPickerItem = ListItem}) {
   return (
     <>
       {groups.length === 0 ? (
@@ -119,7 +119,13 @@ function YourGroupsScreen({GroupPickerItem = GroupItem}) {
                       keyExtractor={createdGroup =>
                         createdGroup.groupId.toString()
                       }
-                      renderItem={({item}) => <GroupPickerItem item={item} />}
+                      renderItem={({item}) => (
+                        <GroupPickerItem
+                          name={item.groupName}
+                          description={item.groupDescription}
+                          image={item.groupImage}
+                        />
+                      )}
                       ItemSeparatorComponent={ItemSeperator}
                     />
                     <ItemSeperator />
@@ -129,7 +135,13 @@ function YourGroupsScreen({GroupPickerItem = GroupItem}) {
                   </AppText>
                 </>
               )}
-              renderItem={({item}) => <GroupPickerItem item={item} />}
+              renderItem={({item}) => (
+                <GroupPickerItem
+                  name={item.groupName}
+                  description={item.groupDescription}
+                  image={item.groupImage}
+                />
+              )}
               ItemSeparatorComponent={ItemSeperator}
             />
           </View>

@@ -5,7 +5,8 @@ function AppKeyboardView({children}) {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{flexGrow: 1}}>
+      contentContainerStyle={{flexGrow: 1}}
+      keyboardShouldPersistTaps="handled">
       <KeyboardAvoidingView style={{flex: 1}}>{children}</KeyboardAvoidingView>
     </ScrollView>
   );

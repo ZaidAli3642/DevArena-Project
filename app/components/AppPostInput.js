@@ -4,13 +4,13 @@ import {TouchableHighlight, StyleSheet} from 'react-native';
 import AppText from './AppText';
 import colors from '../config/colors';
 
-function AppPostInput({onPress, placeholder, style}) {
+function AppPostInput({onPress, placeholder, style, textStyle}) {
   return (
     <TouchableHighlight
       style={[styles.postInput, style]}
       underlayColor={colors.lightGrey}
       onPress={onPress}>
-      <AppText style={styles.text}>{placeholder}</AppText>
+      <AppText style={[styles.text, textStyle]}>{placeholder}</AppText>
     </TouchableHighlight>
   );
 }

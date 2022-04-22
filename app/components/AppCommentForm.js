@@ -39,6 +39,7 @@ function AppCommentForm({
             name="comment"
             placeholder="Comment"
             color={colors.darkBlue}
+            style={styles.input}
           />
           <SubmitButton />
         </View>
@@ -56,6 +57,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.mediumWhite,
     padding: 2,
     borderRadius: 10,
+  },
+  input: {
+    flex: 1,
   },
   text: {
     fontSize: 13,
