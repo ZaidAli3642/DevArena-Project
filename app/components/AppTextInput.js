@@ -41,12 +41,12 @@ function AppTextInput({
 
 const styles = StyleSheet.create({
   textInput: {
+    flex: 1,
     fontSize: 18,
     color: colors.white,
     marginLeft: 5,
   },
   inputContainer: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,

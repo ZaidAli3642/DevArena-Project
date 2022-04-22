@@ -3,13 +3,13 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 import colors from '../config/colors';
 import AppText from './AppText';
 
-function PickerItem({label, onPress}) {
+function PickerItem({label, color, onPress}) {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       style={styles.container}
       onPress={onPress}>
-      <AppText style={styles.label}>{label}</AppText>
+      <AppText style={[styles.label, {color: color}]}>{label}</AppText>
     </TouchableOpacity>
   );
 }

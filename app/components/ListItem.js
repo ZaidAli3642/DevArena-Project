@@ -4,19 +4,32 @@ import {Image, View, StyleSheet, TouchableOpacity} from 'react-native';
 import AppText from '../components/AppText';
 import colors from '../config/colors';
 
-function GroupItem({item}) {
-  const {groupName, groupDescription, groupImage} = item;
+function GroupItem({
+  name,
+  description,
+  image,
+  IconComponent,
+  roundedImage = false,
+}) {
   return (
     <TouchableOpacity activeOpacity={0.7}>
       <View style={styles.container}>
-        <Image style={styles.image} source={groupImage} />
-        <View style={styles.groupDescriptionContainer}>
+        {IconComponent}
+        {image && (
+          <Image
+            style={[styles.image, {borderRadius: roundedImage ? 40 : 10}]}
+            source={image}
+          />
+        )}
+        <View style={styles.descriptionContainer}>
           <AppText style={styles.text} numberOfLines={1}>
-            {groupName}
+            {name}
           </AppText>
-          <AppText style={styles.description} numberOfLines={1}>
-            {groupDescription}
-          </AppText>
+          {description && (
+            <AppText style={styles.description} numberOfLines={1}>
+              {description}
+            </AppText>
+          )}
         </View>
       </View>
     </TouchableOpacity>
@@ -33,10 +46,10 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 10,
-    marginRight: 10,
   },
-  groupDescriptionContainer: {
+  descriptionContainer: {
     flex: 1,
+    marginLeft: 10,
   },
   text: {
     color: colors.dark,
