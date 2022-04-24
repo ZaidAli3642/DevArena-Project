@@ -8,13 +8,14 @@ import SubmitButton from '../components/SubmitButton';
 import AppFormField from '../components/AppFormField';
 import AppForm from '../components/AppForm';
 import AppHeadingText from './../components/AppHeadingText';
+import routes from '../routes/routes';
 
 const validationSchema = yup.object().shape({
   email: yup.string().required().email().label('Email'),
   password: yup.string().required().min(8).label('Password'),
 });
 
-function LoginScreen() {
+function LoginScreen({navigation}) {
   return (
     <View style={styles.container}>
       <AppHeadingText style={styles.loginText}>Log In</AppHeadingText>
@@ -50,13 +51,11 @@ function LoginScreen() {
       </AppForm>
 
       <View style={styles.registerContainer}>
-        <AppText
-          style={styles.accountCreatedText}
-          onPress={() => console.log('Forgot Password!')}>
+        <AppText style={styles.accountCreatedText}>
           Don't have an account?
         </AppText>
         <AppText
-          onPress={() => console.log('Sign up Pressed!')}
+          onPress={() => navigation.navigate(routes.REGISTER)}
           style={styles.signup}>
           Sign up
         </AppText>

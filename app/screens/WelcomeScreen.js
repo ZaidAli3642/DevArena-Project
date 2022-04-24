@@ -3,8 +3,9 @@ import {View, StyleSheet, Text, Image} from 'react-native';
 import Video from 'react-native-video';
 
 import AppButton from '../components/AppButton';
+import routes from '../routes/routes';
 
-function WelcomeScreen(props) {
+function WelcomeScreen({navigation}) {
   return (
     <View style={styles.container}>
       <Video
@@ -17,11 +18,11 @@ function WelcomeScreen(props) {
       <View style={styles.buttonContainer}>
         <AppButton
           title="LOGIN"
-          onPress={() => console.log('Login Pressed!')}
+          onPress={() => navigation.navigate(routes.LOGIN)}
         />
         <AppButton
           title="SIGNUP"
-          onPress={() => console.log('Signup Pressed!')}
+          onPress={() => navigation.navigate(routes.REGISTER)}
         />
       </View>
     </View>
