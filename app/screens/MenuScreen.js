@@ -2,6 +2,7 @@ import React from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import AppHeadingText from '../components/AppHeadingText';
 import Icon from '../components/Icon';
@@ -16,6 +17,14 @@ const menuItems = [
       iconPackage: Ionicons,
       backgroundColor: colors.green,
       name: 'settings-outline',
+    },
+  },
+  {
+    title: 'Groups',
+    icon: {
+      iconPackage: MaterialIcons,
+      backgroundColor: 'dodgerblue',
+      name: 'group',
     },
   },
   {

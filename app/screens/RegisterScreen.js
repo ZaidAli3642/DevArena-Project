@@ -10,6 +10,7 @@ import AppKeyboardView from '../components/AppKeyboardView';
 import AppFormPart1 from '../components/AppFormPart1';
 import AppFormPart2 from '../components/AppFormPart2';
 import AppButton from '../components/AppButton';
+import routes from '../routes/routes';
 
 const validationSchema = yup.object().shape({
   firstName: yup.string().required().label('First Name'),
@@ -21,7 +22,7 @@ const validationSchema = yup.object().shape({
 
 const steps = [<AppFormPart1 />, <AppFormPart2 />];
 
-function RegisterScreen() {
+function RegisterScreen({navigation}) {
   const [page, setPage] = useState(0);
 
   return (
@@ -64,7 +65,7 @@ function RegisterScreen() {
           </AppText>
           <AppText
             onPress={() => {
-              console.log('Log in Pressed!');
+              navigation.navigate(routes.LOGIN);
               Keyboard.dismiss();
             }}
             style={styles.login}>

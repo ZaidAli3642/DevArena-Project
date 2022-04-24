@@ -4,8 +4,9 @@ import {useFormikContext} from 'formik';
 
 import PickerItem from './PickerItem';
 import ErrorMessage from './ErrorMessage';
+import colors from '../config/colors';
 
-function AppFormPicker({name, color, item, onSelectLanguage}) {
+function AppFormPicker({name, color = colors.white, item, onSelectLanguage}) {
   const {setFieldValue, errors} = useFormikContext();
   return (
     <View style={styles.container}>
