@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
 import * as yup from 'yup';
 
@@ -9,6 +9,7 @@ import AppFormField from '../components/AppFormField';
 import AppForm from '../components/AppForm';
 import AppHeadingText from './../components/AppHeadingText';
 import routes from '../routes/routes';
+import AuthContext from './../context/AuthContext';
 
 const validationSchema = yup.object().shape({
   email: yup.string().required().email().label('Email'),
@@ -16,12 +17,18 @@ const validationSchema = yup.object().shape({
 });
 
 function LoginScreen({navigation}) {
+  const authContext = useContext(AuthContext);
+
+  const handleLogin = values => {
+    authContext.setUser(values);
+  };
+
   return (
     <View style={styles.container}>
       <AppHeadingText style={styles.loginText}>Log In</AppHeadingText>
       <AppForm
         initialValues={{email: '', password: ''}}
-        onSubmit={values => console.log(values)}
+        onSubmit={handleLogin}
         validationSchema={validationSchema}>
         <AppFormField
           name="email"

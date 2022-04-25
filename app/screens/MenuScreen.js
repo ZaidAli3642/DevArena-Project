@@ -8,6 +8,7 @@ import AppHeadingText from '../components/AppHeadingText';
 import Icon from '../components/Icon';
 import ListItem from '../components/ListItem';
 import colors from '../config/colors';
+import routes from '../routes/routes';
 import ItemSeperator from './../components/ItemSeperator';
 
 const menuItems = [
@@ -18,6 +19,7 @@ const menuItems = [
       backgroundColor: colors.green,
       name: 'settings-outline',
     },
+    target: routes.SETTINGS,
   },
   {
     title: 'Groups',
@@ -26,6 +28,7 @@ const menuItems = [
       backgroundColor: 'dodgerblue',
       name: 'group',
     },
+    target: routes.GROUPS,
   },
   {
     title: 'Logout',
@@ -37,7 +40,7 @@ const menuItems = [
   },
 ];
 
-function MenuScreen() {
+function MenuScreen({navigation}) {
   return (
     <View style={styles.container}>
       <AppHeadingText style={styles.heading}>Account</AppHeadingText>
@@ -47,6 +50,7 @@ function MenuScreen() {
           description="Software Engineer"
           image={require('../assets/zaid-saleem-image.jpg')}
           roundedImage={true}
+          onPress={() => navigation.navigate(routes.PROFILE)}
         />
       </View>
 
@@ -64,6 +68,7 @@ function MenuScreen() {
                   name={item.icon.name}
                 />
               }
+              onPress={() => navigation.navigate(item.target)}
             />
           )}
           ItemSeparatorComponent={ItemSeperator}

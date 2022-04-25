@@ -1,12 +1,17 @@
 import React, {useState} from 'react';
-import {Image, View, StyleSheet} from 'react-native';
+import {Image, View, StyleSheet, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
 
 import AppText from './AppText';
 import colors from '../config/colors';
 
-function NotificationItem({item, handleDelete, handleMarkAsRead}) {
+function NotificationItem({
+  item,
+  handleDelete,
+  handleMarkAsRead,
+  onSendToScreen,
+}) {
   const [visible, setVisible] = useState(false);
 
   const {date, description, image, markAsRead} = item;
@@ -16,7 +21,9 @@ function NotificationItem({item, handleDelete, handleMarkAsRead}) {
   const hideMenu = () => setVisible(false);
 
   return (
-    <View
+    <TouchableOpacity
+      onPress={onSendToScreen}
+      activeOpacity={0.7}
       style={[
         styles.notificationContainer,
         {backgroundColor: !markAsRead ? '#f5f5f5' : colors.white},
@@ -57,7 +64,7 @@ function NotificationItem({item, handleDelete, handleMarkAsRead}) {
           Mark as Read
         </MenuItem>
       </Menu>
-    </View>
+    </TouchableOpacity>
   );
 }
 

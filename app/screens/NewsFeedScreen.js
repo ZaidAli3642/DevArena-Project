@@ -45,7 +45,7 @@ const posts = [
 
 function NewsFeedScreen() {
   const [visible, setVisible] = useState(false);
-  const [allPosts, setAllPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState(posts);
 
   const handleSubmit = (values, {resetForm}) => {
     const newPost = {

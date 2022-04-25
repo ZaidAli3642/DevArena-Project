@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Modal,
@@ -14,8 +14,39 @@ import AppButton from './AppButton';
 import AppText from './AppText';
 import UserSearchItem from './UserSearchItem';
 
-function AppHeader({filteredData, search, searchUser}) {
+const users = [
+  {id: 1, username: 'Zaid', image: require('../assets/girl1.jpg')},
+  {id: 2, username: 'Ali', image: require('../assets/girl2.jpg')},
+  {id: 3, username: 'Mustafa', image: require('../assets/boy1.jpg')},
+  {id: 4, username: 'John', image: require('../assets/boy2.jpg')},
+];
+
+function AppHeader() {
   const [visible, setVisible] = useState(false);
+  const [search, setSearch] = useState('');
+  const [allUsers, setAllUsers] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+
+  const searchUser = searchQuery => {
+    if (searchQuery) {
+      const newData = allUsers.filter(item => {
+        const itemData = item.username
+          ? item.username.toUpperCase()
+          : ''.toUpperCase();
+        const textData = searchQuery.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredData(newData);
+      setSearch(searchQuery);
+    } else {
+      setFilteredData(allUsers);
+      setSearch(searchQuery);
+    }
+  };
+
+  useEffect(() => {
+    setAllUsers(users);
+  }, []);
 
   return (
     <>

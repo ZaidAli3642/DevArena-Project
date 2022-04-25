@@ -10,9 +10,10 @@ function GroupItem({
   image,
   IconComponent,
   roundedImage = false,
+  onPress,
 }) {
   return (
-    <TouchableOpacity activeOpacity={0.7}>
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
       <View style={styles.container}>
         {IconComponent}
         {image && (

@@ -160,9 +160,7 @@ function PostCard({item}) {
         {description && (
           <AppText style={styles.description}>{description}</AppText>
         )}
-        {postImage && (
-          <Image style={styles.postImage} source={{uri: postImage}} />
-        )}
+        {postImage && <Image style={styles.postImage} source={postImage} />}
 
         <View style={styles.iconContainer}>
           {icons.map(icon => (
