@@ -1,11 +1,16 @@
 export default {
   CODE: 'Code',
-  GROUP: 'Group',
+  GROUPS: 'Group',
   HOME: 'Home',
   LOGIN: 'Login',
   MENU: 'Menu',
+  MAIN: 'Main',
   NOTIFICATION: 'Notification',
+  NESTED_NOTIFICATION: 'NestedNotification',
+  POST_SCREEN: 'PostScreen',
+  PROFILE: 'Profile',
   QUERY: 'Query',
   REGISTER: 'Register',
+  SETTINGS: 'Settings',
   WELCOME: 'Welcome',
 };

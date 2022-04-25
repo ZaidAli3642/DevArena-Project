@@ -5,6 +5,7 @@ import AppHeadingText from './../components/AppHeadingText';
 import NotificationItem from '../components/NotificationItem';
 import colors from '../config/colors';
 import ItemSeperator from '../components/ItemSeperator';
+import routes from '../routes/routes';
 
 const allNotifications = [
   {
@@ -37,7 +38,7 @@ const allNotifications = [
   },
 ];
 
-function NotificationScreen() {
+function NotificationScreen({navigation}) {
   const [notifications, setNotifications] = useState(allNotifications);
 
   const handleDelete = notification => {
@@ -54,6 +55,8 @@ function NotificationScreen() {
     singleNotification.markAsRead = true;
   };
 
+  const onSendToScreen = () => navigation.navigate(routes.POST_SCREEN);
+
   return (
     <View style={styles.container}>
       <AppHeadingText style={styles.heading}>Notifications</AppHeadingText>
@@ -65,6 +68,7 @@ function NotificationScreen() {
             item={item}
             handleMarkAsRead={handleMarkAsRead}
             handleDelete={handleDelete}
+            onSendToScreen={onSendToScreen}
           />
         )}
         ItemSeparatorComponent={() => <ItemSeperator />}

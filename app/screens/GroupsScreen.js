@@ -92,14 +92,6 @@ function GroupsScreen() {
         {allPosts.map(post => (
           <PostCard key={post.postId} item={post} />
         ))}
-        {/* <FlatList
-        data={allPosts}
-        keyExtractor={post => post.postId.toString()}
-        // ListHeaderComponent={() => (
-        //   <GroupHeader allPosts={allPosts} setAllPosts={setAllPosts} />
-        // )}
-        renderItem={({item}) => <PostCard item={item} />}
-      /> */}
       </View>
     </ScrollView>
   );
