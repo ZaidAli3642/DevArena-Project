@@ -35,7 +35,6 @@ function CodeEditorScreen() {
           onSubmit={values => console.log(values)}
           validationSchema={validationSchema}>
           <AppFormField
-            autoFocus
             name="code"
             placeholder="Write Code"
             style={styles.inputForm}

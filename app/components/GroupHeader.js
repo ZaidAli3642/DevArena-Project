@@ -1,12 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Image, View, StyleSheet} from 'react-native';
-import {format} from 'timeago.js';
 
 import AppHeadingText from '../components/AppHeadingText';
-import AppPostInput from '../components/AppPostInput';
 import AppText from '../components/AppText';
 import colors from '../config/colors';
-import AppModalForm from './AppModalForm';
 
 function GroupHeader() {
   return (

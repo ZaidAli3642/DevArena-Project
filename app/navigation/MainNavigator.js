@@ -6,8 +6,10 @@ import routes from '../routes/routes';
 import AppNavigator from './AppNavigator';
 import PostViewScreen from '../screens/PostViewScreen';
 import ProfileScreen from './../screens/ProfileScreen';
-import SettingsScreen from './../screens/SettingsScreen';
-import GroupsForYouScreen from './../screens/GroupForYouScreen';
+import AccountSettingsNavigator from './AccountSettingsNavigator';
+import MainGroupsNavigator from './MainGroupsNavigator';
+import GroupsScreen from './../screens/GroupsScreen';
+import GroupsNavigator from './GroupsNavigator';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,12 +41,8 @@ const MainNavigator = () => (
     />
     <Stack.Screen
       name={routes.SETTINGS}
-      options={{
-        headerTitle: 'Settings',
-        headerTintColor: colors.red,
-        animation: 'slide_from_right',
-      }}
-      component={SettingsScreen}
+      options={{headerShown: false, animation: 'slide_from_right'}}
+      component={AccountSettingsNavigator}
     />
     <Stack.Screen
       name={routes.GROUPS}
@@ -52,8 +50,18 @@ const MainNavigator = () => (
         headerTitle: 'Group',
         headerTintColor: colors.red,
         animation: 'slide_from_right',
+        headerShadowVisible: false,
       }}
-      component={GroupsForYouScreen}
+      component={GroupsNavigator}
+    />
+    <Stack.Screen
+      name={routes.SINGLE_GROUP}
+      options={{
+        animation: 'slide_from_right',
+        title: 'Group',
+        headerTintColor: colors.red,
+      }}
+      component={GroupsScreen}
     />
   </Stack.Navigator>
 );

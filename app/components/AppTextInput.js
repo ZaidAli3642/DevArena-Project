@@ -32,7 +32,6 @@ function AppTextInput({
         style={[styles.textInput, {color: textColor}]}
         value={values}
         ref={inputContext}
-        multiline
         {...otherProps}
       />
     </View>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {View, Modal, Image, StyleSheet} from 'react-native';
 import * as yup from 'yup';
 
@@ -10,6 +10,7 @@ import AppText from './AppText';
 import colors from '../config/colors';
 import SubmitButton from './SubmitButton';
 import PostItem from './PostItem';
+import AuthContext from './../context/AuthContext';
 
 const validationSchema = yup.object().shape({
   description: yup.string().required().label('Description'),
@@ -22,6 +23,8 @@ function AppModalForm({
   userTitle,
   handleSubmit,
 }) {
+  const {user} = useContext(AuthContext);
+
   return (
     <Modal
       onRequestClose={() => setVisible(false)}
@@ -34,11 +37,11 @@ function AppModalForm({
           onPress={() => setVisible(false)}
         />
         <View style={styles.user}>
-          <Image
-            style={styles.image}
-            source={require('../assets/zaid-saleem-image.jpg')}
-          />
-          <AppText style={styles.userText}>{userTitle}</AppText>
+          <Image style={styles.image} source={{uri: user.profileImage}} />
+          <AppText
+            style={
+              styles.userText
+            }>{`${user.firstName} ${user.lastName}`}</AppText>
         </View>
         <AppForm
           initialValues={{description: '', image: null}}

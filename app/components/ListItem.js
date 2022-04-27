@@ -19,7 +19,7 @@ function GroupItem({
         {image && (
           <Image
             style={[styles.image, {borderRadius: roundedImage ? 40 : 10}]}
-            source={image}
+            source={{uri: image}}
           />
         )}
         <View style={styles.descriptionContainer}>
