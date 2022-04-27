@@ -56,15 +56,7 @@ const AppNavigator = () => (
           ),
         }}
       />
-      {/* <Top.Screen
-      name={routes.GROUP}
-      component={GroupsForYouScreen}
-      options={{
-        tabBarIcon: ({color}) => (
-          <MaterialIcons name="group" color={color} size={25} />
-        ),
-      }}
-    /> */}
+
       <Top.Screen
         name={routes.NOTIFICATION}
         component={NotificationScreen}

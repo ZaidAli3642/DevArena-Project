@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Image, ScrollView, View, StyleSheet} from 'react-native';
 import {format} from 'timeago.js';
 
@@ -9,39 +9,48 @@ import PostCard from '../components/PostCard';
 import ItemSeperator from '../components/ItemSeperator';
 import colors from '../config/colors';
 import AppButton from '../components/AppButton';
+import AuthContext from './../context/AuthContext';
 
 const posts = [
   {
     postId: 1,
-    userImage: require('../assets/girl1.jpg'),
+    userImage:
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
     username: 'Emma Watson',
     date: format(new Date()),
     description: 'Wow! what a beautiful view!',
-    // postImage: require('../assets/nature1.jpg'),
+    postImage:
+      'https://images.unsplash.com/photo-1587502537815-0c8b5c9ba39a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxzZWFyY2h8MXx8bmF0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
   },
   {
     postId: 2,
-    userImage: require('../assets/boy1.jpg'),
+    userImage:
+      'https://images.unsplash.com/photo-1500048993953-d23a436266cf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80',
     username: 'Tony Stark',
     date: format(new Date()),
     description: 'Yoooooo!',
-    // postImage: require('../assets/nature2.jpg'),
+    postImage:
+      'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8bmF0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
   },
   {
     postId: 3,
-    userImage: require('../assets/girl2.jpg'),
+    userImage:
+      'https://images.unsplash.com/photo-1504593811423-6dd665756598?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
     username: 'Selena Gomez',
     date: format(new Date()),
     description: 'Need some sunlight!',
-    // postImage: require('../assets/nature3.jpg'),
+    postImage:
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8bmF0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
   },
   {
     postId: 4,
-    userImage: require('../assets/boy2.jpg'),
+    userImage:
+      'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80',
     username: 'John Kent',
     date: format(new Date()),
     description: 'Be Greatful!',
-    // postImage: require('../assets/nature4.jpg'),
+    postImage:
+      'https://images.unsplash.com/photo-1433086966358-54859d0ed716?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bmF0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
   },
 ];
 
@@ -49,10 +58,12 @@ function ProfileScreen() {
   const [visible, setVisible] = useState(false);
   const [allPosts, setAllPosts] = useState(posts);
 
+  const {user} = useContext(AuthContext);
+
   const handleSubmit = (values, {resetForm}) => {
     const newPost = {
       postId: Date.now(),
-      userImage: require('../assets/zaid-saleem-image.jpg'),
+      userImage: user.profileImage,
       username: 'Zaid Saleem',
       date: format(new Date()),
       description: values.description,
@@ -60,7 +71,7 @@ function ProfileScreen() {
     };
 
     console.log(values);
-    const newPosts = [...allPosts, newPost];
+    const newPosts = [newPost, ...allPosts];
     setAllPosts(newPosts);
     setVisible(false);
     resetForm();
@@ -71,13 +82,13 @@ function ProfileScreen() {
       <View style={styles.container}>
         <View style={styles.user}>
           <View style={styles.imageContainer}>
-            <Image
-              style={styles.image}
-              source={require('../assets/zaid-saleem-image.jpg')}
-            />
+            <Image style={styles.image} source={{uri: user.profileImage}} />
           </View>
-          <AppText style={styles.title}>Zaid Saleem</AppText>
-          <AppText style={styles.description}>Software Engineer</AppText>
+          <AppText
+            style={
+              styles.title
+            }>{`${user.firstName} ${user.lastName}`}</AppText>
+          <AppText style={styles.description}>{user.category}</AppText>
           <AppButton
             style={styles.button}
             textStyle={styles.textStyle}
@@ -90,7 +101,7 @@ function ProfileScreen() {
           <View style={{marginHorizontal: 10}}>
             <Image
               style={styles.inputImage}
-              source={require('../assets/zaid-saleem-image.jpg')}
+              source={{uri: user.profileImage}}
             />
           </View>
           <View style={{flex: 1}}>

@@ -1,19 +1,42 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import AppHeadingText from '../components/AppHeadingText';
 import ItemSeperator from '../components/ItemSeperator';
 import ListItem from '../components/ListItem';
+import routes from '../routes/routes';
+import AuthContext from './../context/AuthContext';
 
-const personalInfo = [
-  {id: 1, name: 'First Name', description: 'Zaid'},
-  {id: 2, name: 'Last Name', description: 'Saleem'},
-  {id: 3, name: 'Email Address', description: 'xyz@gmail.com'},
-  {id: 4, name: 'Category', description: 'Software Engineer'},
-];
+function PersonalInformationScreen({navigation}) {
+  const {user} = useContext(AuthContext);
 
-function PersonalInformationScreen() {
+  const personalInfo = [
+    {
+      id: 1,
+      name: 'First Name',
+      description: user.firstName,
+      target: routes.USER_INFO_UPDATE,
+    },
+    {
+      id: 2,
+      name: 'Last Name',
+      description: user.lastName,
+      target: routes.USER_INFO_UPDATE,
+    },
+    {
+      id: 3,
+      name: 'Email Address',
+      description: user.email,
+      target: routes.USER_INFO_UPDATE,
+    },
+    {
+      id: 4,
+      name: 'Category',
+      description: user.category,
+      target: routes.USER_CATEGORY_INFO_UPDATE,
+    },
+  ];
   return (
     <View style={styles.container}>
       <AppHeadingText style={styles.heading}>
@@ -30,7 +53,11 @@ function PersonalInformationScreen() {
               alignItems: 'center',
             }}>
             <View style={{flex: 1}}>
-              <ListItem name={item.name} description={item.description} />
+              <ListItem
+                name={item.name}
+                description={item.description}
+                onPress={() => navigation.navigate(item.target)}
+              />
             </View>
             <MaterialCommunityIcons name="chevron-right" size={27} />
           </View>

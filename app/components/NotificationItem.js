@@ -28,7 +28,7 @@ function NotificationItem({
         styles.notificationContainer,
         {backgroundColor: !markAsRead ? '#f5f5f5' : colors.white},
       ]}>
-      <Image style={styles.image} source={image} />
+      <Image style={styles.image} source={{uri: image}} />
       <View style={styles.notificationDescription}>
         <AppText style={styles.text} numberOfLines={1}>
           {description}

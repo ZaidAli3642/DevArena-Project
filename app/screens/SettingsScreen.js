@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -7,8 +7,10 @@ import Icon from '../components/Icon';
 import ItemSeperator from '../components/ItemSeperator';
 import ListItem from '../components/ListItem';
 import AppHeadingText from './../components/AppHeadingText';
+import routes from '../routes/routes';
+import AuthContext from './../context/AuthContext';
 
-function SettingsScreen() {
+function SettingsScreen({navigation}) {
   const settings = [
     {
       id: 1,
@@ -18,6 +20,7 @@ function SettingsScreen() {
         name: 'user',
         backgroundColor: 'tomato',
       },
+      target: routes.PERSONAL_INFORMATION,
     },
     {
       id: 2,
@@ -27,17 +30,20 @@ function SettingsScreen() {
         name: 'security',
         backgroundColor: 'dodgerblue',
       },
+      target: routes.UPDATE_PASSWORD,
     },
   ];
+
+  const {user} = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
       <AppHeadingText style={styles.heading}>Settings</AppHeadingText>
       <ListItem
-        name="Zaid Saleem"
-        image={require('../assets/zaid-saleem-image.jpg')}
+        name={`${user.firstName} ${user.lastName}`}
+        image={user.profileImage}
         roundedImage={true}
-        description="Software Engineer"
+        description={user.category}
       />
       <ItemSeperator />
       <FlatList
@@ -53,6 +59,7 @@ function SettingsScreen() {
                 backgroundColor={item.icon.backgroundColor}
               />
             }
+            onPress={() => navigation.navigate(item.target)}
           />
         )}
         ItemSeparatorComponent={ItemSeperator}

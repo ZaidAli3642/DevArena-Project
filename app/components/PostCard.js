@@ -150,7 +150,7 @@ function PostCard({item}) {
     <inputRefContext.Provider value={inputRef}>
       <View style={styles.container}>
         <View style={styles.userContainer}>
-          <Image style={styles.image} source={userImage} />
+          <Image style={styles.image} source={{uri: userImage}} />
           <View style={styles.userDescription}>
             <AppText style={styles.text}>{username}</AppText>
             {groupName && <AppText style={styles.group}>{groupName}</AppText>}
@@ -160,7 +160,9 @@ function PostCard({item}) {
         {description && (
           <AppText style={styles.description}>{description}</AppText>
         )}
-        {postImage && <Image style={styles.postImage} source={postImage} />}
+        {postImage && (
+          <Image style={styles.postImage} source={{uri: postImage}} />
+        )}
 
         <View style={styles.iconContainer}>
           {icons.map(icon => (

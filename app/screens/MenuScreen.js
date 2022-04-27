@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,6 +10,7 @@ import ListItem from '../components/ListItem';
 import colors from '../config/colors';
 import routes from '../routes/routes';
 import ItemSeperator from './../components/ItemSeperator';
+import AuthContext from './../context/AuthContext';
 
 const menuItems = [
   {
@@ -41,14 +42,16 @@ const menuItems = [
 ];
 
 function MenuScreen({navigation}) {
+  const {user} = useContext(AuthContext);
+
   return (
     <View style={styles.container}>
       <AppHeadingText style={styles.heading}>Account</AppHeadingText>
       <View style={styles.innerContainer}>
         <ListItem
-          name="Zaid Saleem"
-          description="Software Engineer"
-          image={require('../assets/zaid-saleem-image.jpg')}
+          name={`${user.firstName} ${user.lastName}`}
+          description={user.category}
+          image={user.profileImage}
           roundedImage={true}
           onPress={() => navigation.navigate(routes.PROFILE)}
         />

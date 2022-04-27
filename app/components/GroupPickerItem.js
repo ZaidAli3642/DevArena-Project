@@ -5,12 +5,12 @@ import AppText from '../components/AppText';
 import colors from '../config/colors';
 import AppButton from './AppButton';
 
-function GroupItem({item}) {
+function GroupItem({item, onPress}) {
   const {groupName, groupDescription, groupImage} = item;
   return (
-    <TouchableOpacity activeOpacity={0.7}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
       <View style={styles.container}>
-        <Image style={styles.image} source={groupImage} />
+        <Image style={styles.image} source={{uri: groupImage}} />
         <View style={styles.groupDescriptionContainer}>
           <AppText style={styles.text} numberOfLines={1}>
             {groupName}
