@@ -1,6 +1,14 @@
 import React, {useContext, useState} from 'react';
-import {Image, ScrollView, View, StyleSheet} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {format} from 'timeago.js';
+import * as ImagePicker from 'react-native-image-picker';
 
 import AppText from '../components/AppText';
 import AppModalForm from '../components/AppModalForm';
@@ -57,8 +65,27 @@ const posts = [
 function ProfileScreen() {
   const [visible, setVisible] = useState(false);
   const [allPosts, setAllPosts] = useState(posts);
+  const [profileImage, setProfileImage] = useState(null);
 
   const {user} = useContext(AuthContext);
+
+  const handleSelectImage = async () => {
+    const result = await ImagePicker.launchImageLibrary({mediaType: 'photo'});
+    if (!result.didCancel) {
+      setProfileImage(result.assets[0].uri);
+    }
+  };
+
+  const handlePress = () => {
+    if (!profileImage) {
+      handleSelectImage();
+    } else
+      Alert.alert(
+        'Remove Image',
+        'Are you sure you want to remove profile image?',
+        [{text: 'Yes', onPress: () => setProfileImage(null)}, {text: 'No'}],
+      );
+  };
 
   const handleSubmit = (values, {resetForm}) => {
     const newPost = {
@@ -81,14 +108,21 @@ function ProfileScreen() {
     <ScrollView>
       <View style={styles.container}>
         <View style={styles.user}>
-          <View style={styles.imageContainer}>
-            <Image style={styles.image} source={{uri: user.profileImage}} />
-          </View>
+          <TouchableOpacity onPress={handlePress} style={styles.imageContainer}>
+            <Image
+              style={styles.image}
+              source={
+                user.profileImage
+                  ? {uri: user.profileImage}
+                  : require('../assets/profileAvatar.jpeg')
+              }
+            />
+          </TouchableOpacity>
           <AppText
             style={
               styles.title
             }>{`${user.firstName} ${user.lastName}`}</AppText>
-          <AppText style={styles.description}>{user.category}</AppText>
+          <AppText style={styles.description}>{user.category.category}</AppText>
           <AppButton
             style={styles.button}
             textStyle={styles.textStyle}
@@ -101,7 +135,11 @@ function ProfileScreen() {
           <View style={{marginHorizontal: 10}}>
             <Image
               style={styles.inputImage}
-              source={{uri: user.profileImage}}
+              source={
+                user.profileImage
+                  ? {uri: user.profileImage}
+                  : require('../assets/profileAvatar.jpeg')
+              }
             />
           </View>
           <View style={{flex: 1}}>

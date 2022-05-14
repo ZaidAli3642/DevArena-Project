@@ -37,7 +37,14 @@ function AppModalForm({
           onPress={() => setVisible(false)}
         />
         <View style={styles.user}>
-          <Image style={styles.image} source={{uri: user.profileImage}} />
+          <Image
+            style={styles.image}
+            source={
+              user.profileImage
+                ? {uri: user.profileImage}
+                : require('../assets/profileAvatar.jpeg')
+            }
+          />
           <AppText
             style={
               styles.userText

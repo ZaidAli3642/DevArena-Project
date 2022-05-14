@@ -12,90 +12,42 @@ import routes from '../routes/routes';
 const groups = [
   {
     groupId: 1,
-    groupName: 'Group 1',
-    groupDescription: 'Group Description 1',
-    groupImage:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+    groupName: 'Software Engineering Group',
+    groupDescription: 'All about software engineering',
+    groupImage: null,
   },
   {
     groupId: 2,
-    groupName: 'Group 2',
-    groupDescription: 'Group Description 2',
-    groupImage:
-      'https://images.unsplash.com/photo-1500048993953-d23a436266cf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80',
+    groupName: 'Coder Coder',
+    groupDescription: 'Coding Tests',
+    groupImage: null,
   },
   {
     groupId: 3,
-    groupName: 'Group 3',
-    groupDescription: 'Group Description 3',
-    groupImage:
-      'https://images.unsplash.com/photo-1504593811423-6dd665756598?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+    groupName: 'Developers hub',
+    groupDescription: 'Helping other developers',
+    groupImage: null,
   },
   {
     groupId: 4,
-    groupName: 'Group 4',
-    groupDescription: 'Group Description 4',
-    groupImage:
-      'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80',
-  },
-  {
-    groupId: 5,
-    groupName: 'Group 4',
-    groupDescription: 'Group Description 4',
-    groupImage:
-      'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80',
-  },
-  {
-    groupId: 6,
-    groupName: 'Group 4',
-    groupDescription: 'Group Description 4',
-    groupImage:
-      'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80',
-  },
-  {
-    groupId: 7,
-    groupName: 'Group 4',
-    groupDescription: 'Group Description 4',
-    groupImage:
-      'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80',
-  },
-  {
-    groupId: 8,
-    groupName: 'Group 4',
-    groupDescription: 'Group Description 4',
-    groupImage:
-      'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80',
-  },
-  {
-    groupId: 9,
-    groupName: 'Group 4',
-    groupDescription: 'Group Description 4',
-    groupImage:
-      'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80',
-  },
-  {
-    groupId: 10,
-    groupName: 'Group 4',
-    groupDescription: 'Group Description 4',
-    groupImage:
-      'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80',
+    groupName: 'Coding Memes',
+    groupDescription: 'Fun group',
+    groupImage: null,
   },
 ];
 
 const createdGroups = [
   {
     groupId: 1,
-    groupName: 'Group 1',
-    groupDescription: 'Group Description 1',
-    groupImage:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+    groupName: 'Error Handling',
+    groupDescription: 'Removing Bugs in codes',
+    groupImage: null,
   },
   {
     groupId: 2,
-    groupName: 'Group 2',
-    groupDescription: 'Group Description 2',
-    groupImage:
-      'https://images.unsplash.com/photo-1500048993953-d23a436266cf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80',
+    groupName: 'Front End Knowledge Group',
+    groupDescription: 'front end skill developers',
+    groupImage: null,
   },
 ];
 
@@ -122,6 +74,7 @@ function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
             <FlatList
               data={groups}
               keyExtractor={group => group.groupId.toString()}
+              contentContainerStyle={{paddingBottom: 100}}
               ListHeaderComponent={() => (
                 <>
                   <View>
@@ -136,9 +89,20 @@ function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
                         <GroupPickerItem
                           name={item.groupName}
                           description={item.groupDescription}
-                          image={item.groupImage}
+                          image={
+                            item.groupImage ||
+                            'https://icdn.digitaltrends.com/image/digitaltrends/avatars-character-line-up_white_bg-copy.jpg'
+                          }
                           onPress={() =>
-                            navigation.navigate(routes.SINGLE_GROUP)
+                            navigation.navigate(routes.SINGLE_GROUP, {
+                              group: {
+                                groupName: item.groupName,
+                                groupDescription: item.groupDescription,
+                                groupImage:
+                                  item.groupImage ||
+                                  'https://icdn.digitaltrends.com/image/digitaltrends/avatars-character-line-up_white_bg-copy.jpg',
+                              },
+                            })
                           }
                         />
                       )}
@@ -155,8 +119,21 @@ function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
                 <GroupPickerItem
                   name={item.groupName}
                   description={item.groupDescription}
-                  image={item.groupImage}
-                  onPress={() => navigation.navigate(routes.SINGLE_GROUP)}
+                  image={
+                    item.groupImage ||
+                    'https://icdn.digitaltrends.com/image/digitaltrends/avatars-character-line-up_white_bg-copy.jpg'
+                  }
+                  onPress={() =>
+                    navigation.navigate(routes.SINGLE_GROUP, {
+                      group: {
+                        groupName: item.groupName,
+                        groupDescription: item.groupDescription,
+                        groupImage:
+                          item.groupImage ||
+                          'https://icdn.digitaltrends.com/image/digitaltrends/avatars-character-line-up_white_bg-copy.jpg',
+                      },
+                    })
+                  }
                 />
               )}
               ItemSeparatorComponent={ItemSeperator}

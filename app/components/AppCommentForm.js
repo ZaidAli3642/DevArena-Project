@@ -12,13 +12,14 @@ function AppCommentForm({
   handleSubmit,
   keyboardReplyVisible,
   setKeyboardReplyVisible,
+  selectedComment,
 }) {
   return (
     <AppForm initialValues={{comment: ''}} onSubmit={handleSubmit}>
       <View style={{flexDirection: 'column', alignItems: 'flex-start'}}>
         {keyboardReplyVisible && (
           <View style={styles.textContainer}>
-            <AppText style={styles.text}>Zaid Saleem</AppText>
+            <AppText style={styles.text}>{selectedComment.username}</AppText>
             <TouchableWithoutFeedback
               onPress={() => setKeyboardReplyVisible(false)}>
               <MaterialCommunityIcons

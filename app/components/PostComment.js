@@ -5,7 +5,12 @@ import AppText from './AppText';
 import colors from '../config/colors';
 import ResponseComments from './ResponseComments';
 
-function PostComment({item, focusInput, setKeyboardReplyVisible}) {
+function PostComment({
+  item,
+  focusInput,
+  setKeyboardReplyVisible,
+  onSelectComment,
+}) {
   const [like, setLike] = useState(false);
   const [commentsVisible, setCommentVisible] = useState(false);
 
@@ -36,6 +41,7 @@ function PostComment({item, focusInput, setKeyboardReplyVisible}) {
               onPress={() => {
                 setKeyboardReplyVisible(true);
                 focusInput();
+                onSelectComment();
               }}>
               reply
             </AppText>

@@ -52,9 +52,11 @@ const posts = [
   },
 ];
 
-function GroupsScreen() {
+function GroupsScreen({route}) {
   const [allPosts, setAllPosts] = useState(posts);
   const [visible, setVisible] = useState(false);
+
+  const groupItem = route.params.group;
 
   const {user} = useContext(AuthContext);
 
@@ -77,12 +79,16 @@ function GroupsScreen() {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <GroupHeader />
+        <GroupHeader groupItem={groupItem} />
 
         <View style={styles.inputContainer}>
           <Image
             style={styles.profileImage}
-            source={{uri: user.profileImage}}
+            source={
+              user.profileImage
+                ? {uri: user.profileImage}
+                : require('../assets/profileAvatar.jpeg')
+            }
           />
           <AppPostInput
             placeholder="Write Something..."

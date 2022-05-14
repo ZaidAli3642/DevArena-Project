@@ -80,7 +80,14 @@ function NewsFeedScreen() {
         <>
           <View style={styles.input}>
             <View style={{flex: 0.2}}>
-              <Image style={styles.image} source={{uri: user.profileImage}} />
+              <Image
+                style={styles.image}
+                source={
+                  user.profileImage
+                    ? {uri: user.profileImage}
+                    : require('../assets/profileAvatar.jpeg')
+                }
+              />
             </View>
             <View style={{flex: 1}}>
               <AppPostInput
@@ -106,7 +113,14 @@ function NewsFeedScreen() {
           ListHeaderComponent={() => (
             <View style={styles.input}>
               <View style={{flex: 0.2}}>
-                <Image style={styles.image} source={{uri: user.profileImage}} />
+                <Image
+                  style={styles.image}
+                  source={
+                    user.profileImage
+                      ? {uri: user.profileImage}
+                      : require('../assets/profileAvatar.jpeg')
+                  }
+                />
               </View>
               <View style={{flex: 1}}>
                 <AppPostInput

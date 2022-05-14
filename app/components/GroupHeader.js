@@ -5,16 +5,14 @@ import AppHeadingText from '../components/AppHeadingText';
 import AppText from '../components/AppText';
 import colors from '../config/colors';
 
-function GroupHeader() {
+function GroupHeader({groupItem}) {
+  const {groupDescription, groupImage, groupName} = groupItem;
   return (
     <>
       <View style={styles.container}>
-        <Image
-          style={styles.coverImage}
-          source={require('../assets/girl1.jpg')}
-        />
-        <AppHeadingText style={styles.heading}>Group 1</AppHeadingText>
-        <AppText style={styles.description}>Description 1</AppText>
+        <Image style={styles.coverImage} source={{uri: groupImage}} />
+        <AppHeadingText style={styles.heading}>{groupName}</AppHeadingText>
+        <AppText style={styles.description}>{groupDescription}</AppText>
       </View>
     </>
   );

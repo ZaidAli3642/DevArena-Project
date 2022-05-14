@@ -17,7 +17,7 @@ function AppFormField({name, iconName, ...otherProps}) {
         onChangeText={handleChange(name)}
         {...otherProps}
       />
-      <ErrorMessage error={errors[name]} />
+      {errors && <ErrorMessage error={errors[name]} />}
     </>
   );
 }

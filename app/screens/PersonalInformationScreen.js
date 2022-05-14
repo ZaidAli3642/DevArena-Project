@@ -1,12 +1,15 @@
 import React, {useContext} from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import AppHeadingText from '../components/AppHeadingText';
 import ItemSeperator from '../components/ItemSeperator';
 import ListItem from '../components/ListItem';
 import routes from '../routes/routes';
 import AuthContext from './../context/AuthContext';
+import colors from '../config/colors';
+import Icon from '../components/Icon';
 
 function PersonalInformationScreen({navigation}) {
   const {user} = useContext(AuthContext);
@@ -17,24 +20,52 @@ function PersonalInformationScreen({navigation}) {
       name: 'First Name',
       description: user.firstName,
       target: routes.USER_INFO_UPDATE,
+      oldValue: user.firstName,
+      oldText: 'First Name',
+      icon: {
+        iconPackage: MaterialCommunityIcons,
+        backgroundColor: 'tomato',
+        name: 'account',
+      },
     },
     {
       id: 2,
       name: 'Last Name',
       description: user.lastName,
       target: routes.USER_INFO_UPDATE,
+      oldValue: user.lastName,
+      oldText: 'Last Name',
+      icon: {
+        iconPackage: MaterialCommunityIcons,
+        backgroundColor: colors.darkBlue,
+        name: 'account',
+      },
     },
     {
       id: 3,
       name: 'Email Address',
       description: user.email,
       target: routes.USER_INFO_UPDATE,
+      oldValue: user.email,
+      oldText: 'Email',
+      icon: {
+        iconPackage: MaterialCommunityIcons,
+        backgroundColor: 'purple',
+        name: 'email',
+      },
     },
     {
       id: 4,
       name: 'Category',
-      description: user.category,
+      description: user.category.category,
       target: routes.USER_CATEGORY_INFO_UPDATE,
+      oldValue: user.oldCategory,
+      oldText: 'Category',
+      icon: {
+        iconPackage: MaterialIcons,
+        backgroundColor: 'orange',
+        name: 'groups',
+      },
     },
   ];
   return (
@@ -56,7 +87,19 @@ function PersonalInformationScreen({navigation}) {
               <ListItem
                 name={item.name}
                 description={item.description}
-                onPress={() => navigation.navigate(item.target)}
+                IconComponent={
+                  <Icon
+                    IconPackage={item.icon.iconPackage}
+                    name={item.icon.name}
+                    backgroundColor={item.icon.backgroundColor}
+                  />
+                }
+                onPress={() =>
+                  navigation.navigate(item.target, {
+                    oldTextName: item.oldText,
+                    oldValue: item.oldValue,
+                  })
+                }
               />
             </View>
             <MaterialCommunityIcons name="chevron-right" size={27} />

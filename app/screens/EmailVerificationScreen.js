@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useContext} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import * as yup from 'yup';
 
@@ -8,6 +8,8 @@ import colors from '../config/colors';
 import AppForm from '../components/AppForm';
 import AppFormField from '../components/AppFormField';
 import SubmitButton from '../components/SubmitButton';
+import AuthContext from './../context/AuthContext';
+import ErrorMessage from '../components/ErrorMessage';
 
 const validationSchema = yup.object().shape({
   verificationCode: yup
@@ -19,13 +21,35 @@ const validationSchema = yup.object().shape({
     .label('Verification Code'),
 });
 
-function EmailVerificationScreen(props) {
+function EmailVerificationScreen({route}) {
+  const [verifyFailed, setverifyFailed] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const secretKey = '123456';
+
+  const {setUser} = useContext(AuthContext);
+
+  const verifyUser = values => {
+    const user = {
+      id: Date.now(),
+      ...route.params.values,
+      profileImage: null,
+    };
+    console.log(user);
+    if (values.verificationCode === secretKey) {
+      setUser(user);
+    } else {
+      setErrorMessage('Verification code not matched.');
+      setverifyFailed(true);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <AppKeyboardView>
         <AppForm
           initialValues={{verificationCode: ''}}
-          onSubmit={values => console.log(values)}
+          onSubmit={verifyUser}
           validationSchema={validationSchema}>
           <View style={styles.icon}>
             <Image
@@ -37,6 +61,7 @@ function EmailVerificationScreen(props) {
           <AppText style={styles.codeText}>
             Please Enter 6 digit code sent to your xyz@gmail.com.
           </AppText>
+          {verifyFailed && <ErrorMessage error={errorMessage} />}
           <AppFormField
             iconName="email-check-outline"
             name="verificationCode"

@@ -37,7 +37,7 @@ function RegisterScreen({navigation}) {
             category: null,
           }}
           onSubmit={(values, {resetForm}) => {
-            console.log(values);
+            navigation.navigate(routes.EMAIL_VERIFY, {values});
             resetForm();
           }}
           validationSchema={validationSchema}>

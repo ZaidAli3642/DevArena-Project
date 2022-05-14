@@ -10,7 +10,14 @@ function GroupItem({item, onPress}) {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
       <View style={styles.container}>
-        <Image style={styles.image} source={{uri: groupImage}} />
+        <Image
+          style={styles.image}
+          source={{
+            uri:
+              groupImage ||
+              'https://icdn.digitaltrends.com/image/digitaltrends/avatars-character-line-up_white_bg-copy.jpg',
+          }}
+        />
         <View style={styles.groupDescriptionContainer}>
           <AppText style={styles.text} numberOfLines={1}>
             {groupName}
