@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   Image,
   FlatList,
@@ -119,6 +119,7 @@ function PostCard({item}) {
   const [visible, setVisible] = useState(false);
   const [postComments, setPostComments] = useState(comments);
   const [keyboardReplyVisible, setKeyboardReplyVisible] = useState(false);
+  const [selectedComment, setSelectedComment] = useState();
   const {description, postImage, userImage, groupName, username, date} = item;
 
   const inputRef = useRef();
@@ -134,15 +135,21 @@ function PostCard({item}) {
       username: 'Zaid Saleem',
       description: values.comment,
       date: format(new Date()),
+      commentResponses: [],
     };
 
-    postComments.forEach(comment => {
-      if (comment.commentId === 1) {
-        comment.commentResponses.push(newComment);
-        console.log('pressed');
-      } else return comment.commentResponses;
-    });
-    const newComments = [...postComments];
+    if (keyboardReplyVisible) {
+      postComments.forEach(comment => {
+        if (comment.commentId === selectedComment.commentId) {
+          comment.commentResponses.push(newComment);
+        } else return comment.commentResponses;
+      });
+      const newComments = [...postComments];
+      setPostComments(newComments);
+      return;
+    }
+
+    const newComments = [...postComments, newComment];
     setPostComments(newComments);
   };
 
@@ -192,12 +199,14 @@ function PostCard({item}) {
                 <PostComment
                   setKeyboardReplyVisible={setKeyboardReplyVisible}
                   focusInput={focusInput}
+                  onSelectComment={() => setSelectedComment(item)}
                   item={item}
                 />
               )}
               showsVerticalScrollIndicator={false}
             />
             <AppCommentForm
+              selectedComment={selectedComment}
               keyboardReplyVisible={keyboardReplyVisible}
               setKeyboardReplyVisible={setKeyboardReplyVisible}
               handleSubmit={handleCommentSubmit}

@@ -43,7 +43,7 @@ function SettingsScreen({navigation}) {
         name={`${user.firstName} ${user.lastName}`}
         image={user.profileImage}
         roundedImage={true}
-        description={user.category}
+        description={user.category.category}
       />
       <ItemSeperator />
       <FlatList

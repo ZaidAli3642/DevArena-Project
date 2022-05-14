@@ -10,10 +10,12 @@ import SubmitButton from '../components/SubmitButton';
 import colors from '../config/colors';
 import AppText from './../components/AppText';
 
-function InfoUpdateScreen() {
+function InfoUpdateScreen({route}) {
   const validationSchema = yup.object().shape({
     data: yup.string().required('Data is required').label('Data'),
   });
+
+  const {oldTextName, oldValue} = route.params;
 
   const handleSubmit = values => {
     const inputKey = 'firstname';
@@ -25,8 +27,12 @@ function InfoUpdateScreen() {
 
   return (
     <View style={styles.container}>
-      <AppHeadingText style={styles.heading}>Update heading</AppHeadingText>
-      <AppText style={styles.text}>Old name: Zaid Saleem</AppText>
+      <AppHeadingText style={styles.heading}>
+        Update {oldTextName}
+      </AppHeadingText>
+      <AppText style={styles.text}>
+        Old {oldTextName}: {oldValue}
+      </AppText>
       <AppForm
         initialValues={{data: ''}}
         onSubmit={handleSubmit}
@@ -34,7 +40,7 @@ function InfoUpdateScreen() {
         <AppKeyboardView>
           <AppFormField
             name="data"
-            placeholder="First Name"
+            placeholder={oldTextName}
             textColor="black"
             autoFocus
             autoCorrect={false}

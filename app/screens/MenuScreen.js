@@ -31,18 +31,10 @@ const menuItems = [
     },
     target: routes.GROUPS,
   },
-  {
-    title: 'Logout',
-    icon: {
-      iconPackage: MaterialCommunityIcons,
-      backgroundColor: colors.yellow,
-      name: 'logout',
-    },
-  },
 ];
 
 function MenuScreen({navigation}) {
-  const {user} = useContext(AuthContext);
+  const {user, setUser} = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
@@ -50,7 +42,7 @@ function MenuScreen({navigation}) {
       <View style={styles.innerContainer}>
         <ListItem
           name={`${user.firstName} ${user.lastName}`}
-          description={user.category}
+          description={user.category.category}
           image={user.profileImage}
           roundedImage={true}
           onPress={() => navigation.navigate(routes.PROFILE)}
@@ -75,6 +67,18 @@ function MenuScreen({navigation}) {
             />
           )}
           ItemSeparatorComponent={ItemSeperator}
+        />
+
+        <ListItem
+          name="Logout"
+          IconComponent={
+            <Icon
+              IconPackage={MaterialCommunityIcons}
+              backgroundColor={colors.yellow}
+              name="logout"
+            />
+          }
+          onPress={() => setUser(null)}
         />
       </View>
     </View>

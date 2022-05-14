@@ -22,6 +22,13 @@ function GroupItem({
             source={{uri: image}}
           />
         )}
+        {!image && !IconComponent && (
+          <Image
+            style={[styles.image, {borderRadius: roundedImage ? 40 : 10}]}
+            source={require('../assets/profileAvatar.jpeg')}
+          />
+        )}
+
         <View style={styles.descriptionContainer}>
           <AppText style={styles.text} numberOfLines={1}>
             {name}

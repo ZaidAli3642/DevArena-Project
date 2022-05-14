@@ -20,7 +20,7 @@ const allNotifications = [
     notificationId: 2,
     image:
       'https://images.unsplash.com/photo-1500048993953-d23a436266cf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80',
-    description: 'Hey There Boy1',
+    description: 'Tony liked your post',
     date: 'date',
     markAsRead: false,
   },
@@ -28,7 +28,7 @@ const allNotifications = [
     notificationId: 3,
     image:
       'https://images.unsplash.com/photo-1504593811423-6dd665756598?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-    description: 'Hey There Boy2',
+    description: 'John commented on your post',
     date: 'date',
     markAsRead: false,
   },
@@ -36,7 +36,7 @@ const allNotifications = [
     notificationId: 4,
     image:
       'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80',
-    description: 'Hey There Girl2',
+    description: 'Selena posted something.',
     date: 'date',
     markAsRead: false,
   },

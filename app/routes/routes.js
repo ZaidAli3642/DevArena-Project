@@ -1,6 +1,7 @@
 export default {
   CODE: 'Code',
   CREATE_GROUP: 'CreateGroup',
+  EMAIL_VERIFY: 'Email',
   FOR_YOU: 'ForYou',
   GROUPS: 'Group',
   HOME: 'Home',
