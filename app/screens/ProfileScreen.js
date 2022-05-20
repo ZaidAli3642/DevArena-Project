@@ -1,12 +1,5 @@
-import React, {useContext, useState} from 'react';
-import {
-  Image,
-  ScrollView,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {Image, ScrollView, View, StyleSheet, Alert} from 'react-native';
 import {format} from 'timeago.js';
 import * as ImagePicker from 'react-native-image-picker';
 
@@ -18,6 +11,8 @@ import ItemSeperator from '../components/ItemSeperator';
 import colors from '../config/colors';
 import AppButton from '../components/AppButton';
 import AuthContext from './../context/AuthContext';
+import apiClient from './../api/client';
+import AppFormImagePicker from '../components/AppFormImagePicker';
 
 const posts = [
   {
@@ -65,26 +60,70 @@ const posts = [
 function ProfileScreen() {
   const [visible, setVisible] = useState(false);
   const [allPosts, setAllPosts] = useState(posts);
-  const [profileImage, setProfileImage] = useState(null);
+  const [image, setImage] = useState();
 
   const {user} = useContext(AuthContext);
 
-  const handleSelectImage = async () => {
-    const result = await ImagePicker.launchImageLibrary({mediaType: 'photo'});
-    if (!result.didCancel) {
-      setProfileImage(result.assets[0].uri);
+  const getUserImage = async () => {
+    try {
+      const {data} = await apiClient.get(`/image/${user.user_id}`);
+
+      if (data.imageUri) {
+        setImage(data.imageUri);
+      }
+    } catch (error) {
+      console.log('Error getting image', error);
     }
   };
 
+  useEffect(() => {
+    getUserImage();
+  }, [image]);
+
+  const handleSelectImage = async () => {
+    const result = await ImagePicker.launchImageLibrary({mediaType: 'photo'});
+
+    if (result.didCancel || result.errorCode) return;
+    const {uri, fileName, type} = result.assets[0];
+    setImage(uri);
+    // const newImageUri = 'file:///' + image?.split('file:/').join('');
+    const photo = {
+      uri: uri,
+      name: fileName,
+      type: type,
+    };
+
+    try {
+      const formdata = new FormData();
+
+      formdata.append('image', photo);
+
+      formdata.append('user_id', user.user_id);
+      const response = await apiClient.post('/image_upload', formdata, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteUserProfile = async () => {
+    const response = await apiClient.delete(`/image_delete/${user.user_id}`);
+    setImage(null);
+    console.log(response.data);
+  };
+
   const handlePress = () => {
-    if (!profileImage) {
-      handleSelectImage();
-    } else
-      Alert.alert(
-        'Remove Image',
-        'Are you sure you want to remove profile image?',
-        [{text: 'Yes', onPress: () => setProfileImage(null)}, {text: 'No'}],
-      );
+    if (!image) handleSelectImage();
+    else
+      Alert.alert('Delete Image', 'Are you sure you want to remove?', [
+        {text: 'Yes', onPress: deleteUserProfile},
+        {text: 'No'},
+      ]);
   };
 
   const handleSubmit = (values, {resetForm}) => {
@@ -108,21 +147,18 @@ function ProfileScreen() {
     <ScrollView>
       <View style={styles.container}>
         <View style={styles.user}>
-          <TouchableOpacity onPress={handlePress} style={styles.imageContainer}>
-            <Image
-              style={styles.image}
-              source={
-                user.profileImage
-                  ? {uri: user.profileImage}
-                  : require('../assets/profileAvatar.jpeg')
-              }
-            />
-          </TouchableOpacity>
+          <AppFormImagePicker
+            name="image"
+            image={image}
+            handleSelectImage={handlePress}
+            user_id={user.user_id}
+          />
+
           <AppText
             style={
               styles.title
-            }>{`${user.firstName} ${user.lastName}`}</AppText>
-          <AppText style={styles.description}>{user.category.category}</AppText>
+            }>{`${user.firstname} ${user.lastname}`}</AppText>
+          <AppText style={styles.description}>{user.category}</AppText>
           <AppButton
             style={styles.button}
             textStyle={styles.textStyle}
@@ -136,9 +172,7 @@ function ProfileScreen() {
             <Image
               style={styles.inputImage}
               source={
-                user.profileImage
-                  ? {uri: user.profileImage}
-                  : require('../assets/profileAvatar.jpeg')
+                image ? {uri: image} : require('../assets/profileAvatar.jpeg')
               }
             />
           </View>
@@ -169,6 +203,7 @@ function ProfileScreen() {
         )}
 
         <AppModalForm
+          image={image}
           placeholder="What's On Your Mind?"
           setVisible={setVisible}
           userTitle="Muhammad Zaid Saleem"
@@ -194,18 +229,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 20,
   },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-  imageContainer: {
-    borderWidth: 4,
-    borderColor: 'dodgerblue',
-    width: 140,
-    height: 140,
-    borderRadius: 140 / 2,
-    overflow: 'hidden',
-  },
+
   input: {
     flexDirection: 'row',
     alignItems: 'center',

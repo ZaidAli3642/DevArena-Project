@@ -11,6 +11,8 @@ import AppFormPart1 from '../components/AppFormPart1';
 import AppFormPart2 from '../components/AppFormPart2';
 import AppButton from '../components/AppButton';
 import routes from '../routes/routes';
+import apiClient from '../api/client';
+import ErrorMessage from '../components/ErrorMessage';
 
 const validationSchema = yup.object().shape({
   firstName: yup.string().required().label('First Name'),
@@ -24,6 +26,32 @@ const steps = [<AppFormPart1 />, <AppFormPart2 />];
 
 function RegisterScreen({navigation}) {
   const [page, setPage] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [registerFailed, setRegisterFailed] = useState(false);
+
+  const handleRegister = async (values, {resetForm}) => {
+    try {
+      const user = {
+        firstname: values.firstName,
+        lastname: values.lastName,
+        email: values.email,
+        category: values.category.category,
+        password: values.password,
+      };
+
+      const result = await apiClient.post('/email_verify', {email: user.email});
+      if (result.data.message === 'User already exist.') {
+        setErrorMessage('Email Already Exist.');
+        setRegisterFailed(true);
+        return;
+      }
+      setRegisterFailed(false);
+      user.sixDigitCode = result.data.sixDigitCode;
+      navigation.navigate(routes.EMAIL_VERIFY, {user});
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -36,11 +64,9 @@ function RegisterScreen({navigation}) {
             password: '',
             category: null,
           }}
-          onSubmit={(values, {resetForm}) => {
-            navigation.navigate(routes.EMAIL_VERIFY, {values});
-            resetForm();
-          }}
+          onSubmit={handleRegister}
           validationSchema={validationSchema}>
+          {registerFailed && <ErrorMessage error={errorMessage} />}
           {steps[page]}
           {page === steps.length - 1 ? (
             <>

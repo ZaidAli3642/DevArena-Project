@@ -1,6 +1,7 @@
 import React, {useState, useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
 import * as yup from 'yup';
+import jwtDecode from 'jwt-decode';
 
 import colors from '../config/colors';
 import AppText from '../components/AppText';
@@ -11,6 +12,7 @@ import AppHeadingText from './../components/AppHeadingText';
 import routes from '../routes/routes';
 import AuthContext from './../context/AuthContext';
 import ErrorMessage from '../components/ErrorMessage';
+import apiClient from '../api/client';
 
 const validationSchema = yup.object().shape({
   email: yup.string().required().email().label('Email'),
@@ -53,21 +55,27 @@ const users = [
 function LoginScreen({navigation}) {
   const [loginFailed, setLoginFailed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const authContext = useContext(AuthContext);
+  const {setUser} = useContext(AuthContext);
 
-  const handleLogin = values => {
-    const user = users.find(user => user.email === values.email);
+  const handleLogin = async values => {
+    const loginUser = {
+      email: values.email,
+      password: values.password,
+    };
+    try {
+      const {data} = await apiClient.post('/login', loginUser);
 
-    if (user) {
-      if (user.password === values.password) {
-        authContext.setUser(user);
-      } else {
-        setErrorMessage('Password not matched.');
+      if (data.message) {
+        setErrorMessage(data.message);
         setLoginFailed(true);
+        return;
       }
-    } else {
-      setErrorMessage('Email is not registered.');
-      setLoginFailed(true);
+
+      const decodedUser = jwtDecode(data.token);
+      console.log(decodedUser);
+      setUser(decodedUser);
+    } catch (error) {
+      console.log(error);
     }
   };
 

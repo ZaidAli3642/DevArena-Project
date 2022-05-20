@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {View, FlatList, Image, StyleSheet} from 'react-native';
 import {format} from 'timeago.js';
 
@@ -8,6 +8,7 @@ import PostCard from '../components/PostCard';
 import colors from '../config/colors';
 import AppText from '../components/AppText';
 import AuthContext from './../context/AuthContext';
+import apiClient from '../api/client';
 
 const posts = [
   {
@@ -55,8 +56,26 @@ const posts = [
 function NewsFeedScreen() {
   const [visible, setVisible] = useState(false);
   const [allPosts, setAllPosts] = useState(posts);
+  const [image, setImage] = useState();
 
   const {user} = useContext(AuthContext);
+
+  const getUserImage = async () => {
+    try {
+      const {data} = await apiClient.get(`/image/${user.user_id}`);
+
+      if (data.imageUri) {
+        setImage(data.imageUri);
+      }
+      console.log(image);
+    } catch (error) {
+      console.log('Error getting image', error);
+    }
+  };
+
+  useEffect(() => {
+    getUserImage();
+  }, [image]);
 
   const handleSubmit = (values, {resetForm}) => {
     const newPost = {
@@ -83,9 +102,7 @@ function NewsFeedScreen() {
               <Image
                 style={styles.image}
                 source={
-                  user.profileImage
-                    ? {uri: user.profileImage}
-                    : require('../assets/profileAvatar.jpeg')
+                  image ? {uri: image} : require('../assets/profileAvatar.jpeg')
                 }
               />
             </View>
@@ -116,8 +133,8 @@ function NewsFeedScreen() {
                 <Image
                   style={styles.image}
                   source={
-                    user.profileImage
-                      ? {uri: user.profileImage}
+                    image
+                      ? {uri: image}
                       : require('../assets/profileAvatar.jpeg')
                   }
                 />
@@ -137,6 +154,7 @@ function NewsFeedScreen() {
       )}
 
       <AppModalForm
+        image={image}
         placeholder="What's On Your Mind?"
         setVisible={setVisible}
         userTitle="Muhammad Zaid Saleem"
