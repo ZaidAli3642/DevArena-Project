@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,6 +11,7 @@ import colors from '../config/colors';
 import routes from '../routes/routes';
 import ItemSeperator from './../components/ItemSeperator';
 import AuthContext from './../context/AuthContext';
+import apiClient from '../api/client';
 
 const menuItems = [
   {
@@ -35,15 +36,33 @@ const menuItems = [
 
 function MenuScreen({navigation}) {
   const {user, setUser} = useContext(AuthContext);
+  const [image, setImage] = useState();
+
+  const getUserImage = async () => {
+    try {
+      const {data} = await apiClient.get(`/image/${user.user_id}`);
+
+      if (data.imageUri) {
+        setImage(data.imageUri);
+      }
+      console.log(image);
+    } catch (error) {
+      console.log('Error getting image', error);
+    }
+  };
+
+  useEffect(() => {
+    getUserImage();
+  }, [image]);
 
   return (
     <View style={styles.container}>
       <AppHeadingText style={styles.heading}>Account</AppHeadingText>
       <View style={styles.innerContainer}>
         <ListItem
-          name={`${user.firstName} ${user.lastName}`}
-          description={user.category.category}
-          image={user.profileImage}
+          name={`${user.firstname} ${user.lastname}`}
+          description={user.category}
+          image={image}
           roundedImage={true}
           onPress={() => navigation.navigate(routes.PROFILE)}
         />

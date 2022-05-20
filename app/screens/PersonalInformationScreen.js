@@ -18,9 +18,9 @@ function PersonalInformationScreen({navigation}) {
     {
       id: 1,
       name: 'First Name',
-      description: user.firstName,
+      description: user.firstname,
       target: routes.USER_INFO_UPDATE,
-      oldValue: user.firstName,
+      oldValue: user.firstname,
       oldText: 'First Name',
       icon: {
         iconPackage: MaterialCommunityIcons,
@@ -31,9 +31,9 @@ function PersonalInformationScreen({navigation}) {
     {
       id: 2,
       name: 'Last Name',
-      description: user.lastName,
+      description: user.lastname,
       target: routes.USER_INFO_UPDATE,
-      oldValue: user.lastName,
+      oldValue: user.lastname,
       oldText: 'Last Name',
       icon: {
         iconPackage: MaterialCommunityIcons,
@@ -57,9 +57,9 @@ function PersonalInformationScreen({navigation}) {
     {
       id: 4,
       name: 'Category',
-      description: user.category.category,
+      description: user.category,
       target: routes.USER_CATEGORY_INFO_UPDATE,
-      oldValue: user.oldCategory,
+      oldValue: user.category,
       oldText: 'Category',
       icon: {
         iconPackage: MaterialIcons,

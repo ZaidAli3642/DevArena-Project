@@ -1,6 +1,7 @@
 import React, {useState, useContext} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import * as yup from 'yup';
+import jwt from 'jwt-decode';
 
 import AppText from '../components/AppText';
 import AppKeyboardView from '../components/AppKeyboardView';
@@ -10,6 +11,7 @@ import AppFormField from '../components/AppFormField';
 import SubmitButton from '../components/SubmitButton';
 import AuthContext from './../context/AuthContext';
 import ErrorMessage from '../components/ErrorMessage';
+import apiClient from '../api/client';
 
 const validationSchema = yup.object().shape({
   verificationCode: yup
@@ -25,19 +27,19 @@ function EmailVerificationScreen({route}) {
   const [verifyFailed, setverifyFailed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const secretKey = '123456';
-
   const {setUser} = useContext(AuthContext);
 
-  const verifyUser = values => {
+  const verifyUser = async values => {
     const user = {
-      id: Date.now(),
-      ...route.params.values,
-      profileImage: null,
+      ...route.params.user,
     };
-    console.log(user);
-    if (values.verificationCode === secretKey) {
-      setUser(user);
+
+    if (values.verificationCode === user.sixDigitCode.toString()) {
+      const {data} = await apiClient.post('/register', user);
+
+      const decodedUser = jwt(data.token);
+
+      setUser(decodedUser);
     } else {
       setErrorMessage('Verification code not matched.');
       setverifyFailed(true);

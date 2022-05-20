@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {Image, View, StyleSheet, FlatList} from 'react-native';
 import {format} from 'timeago.js';
 
@@ -8,6 +8,7 @@ import AppPostInput from '../components/AppPostInput';
 import colors from '../config/colors';
 import PostCard from '../components/PostCard';
 import AuthContext from './../context/AuthContext';
+import apiClient from '../api/client';
 
 const queries = [
   {
@@ -56,8 +57,26 @@ const queries = [
 function QueryFeedScreen() {
   const [visible, setVisible] = useState(false);
   const [allQueries, setAllQueries] = useState(queries);
+  const [image, setImage] = useState();
 
   const {user} = useContext(AuthContext);
+
+  const getUserImage = async () => {
+    try {
+      const {data} = await apiClient.get(`/image/${user.user_id}`);
+
+      if (data.imageUri) {
+        setImage(data.imageUri);
+      }
+      console.log(image);
+    } catch (error) {
+      console.log('Error getting image', error);
+    }
+  };
+
+  useEffect(() => {
+    getUserImage();
+  }, [image]);
 
   const handleSubmit = (values, {resetForm}) => {
     const newQueryPost = {
@@ -88,9 +107,7 @@ function QueryFeedScreen() {
               <Image
                 style={styles.image}
                 source={
-                  user.profileImage
-                    ? {uri: user.profileImage}
-                    : require('../assets/profileAvatar.jpeg')
+                  image ? {uri: image} : require('../assets/profileAvatar.jpeg')
                 }
               />
             </View>
@@ -117,6 +134,7 @@ function QueryFeedScreen() {
         )}
       />
       <AppModalForm
+        image={image}
         placeholder="DO YOU HAVE A QUERY?"
         setVisible={setVisible}
         userTitle="Muhammad Zaid Saleem"

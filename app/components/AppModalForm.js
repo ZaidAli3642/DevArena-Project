@@ -16,13 +16,7 @@ const validationSchema = yup.object().shape({
   description: yup.string().required().label('Description'),
 });
 
-function AppModalForm({
-  visible,
-  setVisible,
-  placeholder,
-  userTitle,
-  handleSubmit,
-}) {
+function AppModalForm({visible, setVisible, placeholder, image, handleSubmit}) {
   const {user} = useContext(AuthContext);
 
   return (
@@ -40,15 +34,13 @@ function AppModalForm({
           <Image
             style={styles.image}
             source={
-              user.profileImage
-                ? {uri: user.profileImage}
-                : require('../assets/profileAvatar.jpeg')
+              image ? {uri: image} : require('../assets/profileAvatar.jpeg')
             }
           />
           <AppText
             style={
               styles.userText
-            }>{`${user.firstName} ${user.lastName}`}</AppText>
+            }>{`${user.firstname} ${user.lastname}`}</AppText>
         </View>
         <AppForm
           initialValues={{description: '', image: null}}

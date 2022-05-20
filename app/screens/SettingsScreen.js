@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -9,6 +9,7 @@ import ListItem from '../components/ListItem';
 import AppHeadingText from './../components/AppHeadingText';
 import routes from '../routes/routes';
 import AuthContext from './../context/AuthContext';
+import apiClient from '../api/client';
 
 function SettingsScreen({navigation}) {
   const settings = [
@@ -36,14 +37,33 @@ function SettingsScreen({navigation}) {
 
   const {user} = useContext(AuthContext);
 
+  const [image, setImage] = useState();
+
+  const getUserImage = async () => {
+    try {
+      const {data} = await apiClient.get(`/image/${user.user_id}`);
+
+      if (data.imageUri) {
+        setImage(data.imageUri);
+      }
+      console.log(image);
+    } catch (error) {
+      console.log('Error getting image', error);
+    }
+  };
+
+  useEffect(() => {
+    getUserImage();
+  }, [image]);
+
   return (
     <View style={styles.container}>
       <AppHeadingText style={styles.heading}>Settings</AppHeadingText>
       <ListItem
-        name={`${user.firstName} ${user.lastName}`}
-        image={user.profileImage}
+        name={`${user.firstname} ${user.lastname}`}
+        image={image}
         roundedImage={true}
-        description={user.category.category}
+        description={user.category}
       />
       <ItemSeperator />
       <FlatList
