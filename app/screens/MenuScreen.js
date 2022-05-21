@@ -35,25 +35,7 @@ const menuItems = [
 ];
 
 function MenuScreen({navigation}) {
-  const {user, setUser} = useContext(AuthContext);
-  const [image, setImage] = useState();
-
-  const getUserImage = async () => {
-    try {
-      const {data} = await apiClient.get(`/image/${user.user_id}`);
-
-      if (data.imageUri) {
-        setImage(data.imageUri);
-      }
-      console.log(image);
-    } catch (error) {
-      console.log('Error getting image', error);
-    }
-  };
-
-  useEffect(() => {
-    getUserImage();
-  }, [image]);
+  const {user, setUser, image, setImage} = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
@@ -97,7 +79,10 @@ function MenuScreen({navigation}) {
               name="logout"
             />
           }
-          onPress={() => setUser(null)}
+          onPress={() => {
+            setUser(null);
+            setImage(null);
+          }}
         />
       </View>
     </View>

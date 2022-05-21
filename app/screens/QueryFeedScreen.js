@@ -57,26 +57,8 @@ const queries = [
 function QueryFeedScreen() {
   const [visible, setVisible] = useState(false);
   const [allQueries, setAllQueries] = useState(queries);
-  const [image, setImage] = useState();
 
-  const {user} = useContext(AuthContext);
-
-  const getUserImage = async () => {
-    try {
-      const {data} = await apiClient.get(`/image/${user.user_id}`);
-
-      if (data.imageUri) {
-        setImage(data.imageUri);
-      }
-      console.log(image);
-    } catch (error) {
-      console.log('Error getting image', error);
-    }
-  };
-
-  useEffect(() => {
-    getUserImage();
-  }, [image]);
+  const {user, image} = useContext(AuthContext);
 
   const handleSubmit = (values, {resetForm}) => {
     const newQueryPost = {

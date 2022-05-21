@@ -55,7 +55,17 @@ const users = [
 function LoginScreen({navigation}) {
   const [loginFailed, setLoginFailed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const {setUser} = useContext(AuthContext);
+  const {setUser, setImage, user} = useContext(AuthContext);
+
+  const getUserImage = async user_id => {
+    try {
+      const {data} = await apiClient.get(`/image/${user_id}`);
+      setImage(data.imageUri);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleLogin = async values => {
     const loginUser = {
@@ -72,8 +82,9 @@ function LoginScreen({navigation}) {
       }
 
       const decodedUser = jwtDecode(data.token);
-      console.log(decodedUser);
       setUser(decodedUser);
+
+      if (decodedUser.user_id) getUserImage(decodedUser.user_id);
     } catch (error) {
       console.log(error);
     }
