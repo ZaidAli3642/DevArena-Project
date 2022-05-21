@@ -1,4 +1,4 @@
-import React, {useState, useRef, memo} from 'react';
+import React, {useState, useEffect, useRef, memo} from 'react';
 import {
   Image,
   FlatList,
@@ -16,21 +16,38 @@ import AppText from './AppText';
 import colors from '../config/colors';
 import PostComment from './PostComment';
 import inputRefContext from './../context/inputRefContext';
+import apiClient from '../api/client';
 
 function PostCard({item, image, user}) {
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
+  const [liked, setLiked] = useState(item.like_post);
+  const [disliked, setDisliked] = useState(item.dislike_post);
+  const [allLikes, setAllLikes] = useState([]);
 
-  const handleLike = () => {
+  const handleLike = async () => {
     setDisliked(false);
+
+    const likeDetails = {
+      user_id: user.user_id,
+      post_id: item.post_id,
+    };
+
+    const response = await apiClient.post('/like', likeDetails);
+    console.log(response.data);
     if (!liked) {
       return setLiked(true);
     }
     return setLiked(false);
   };
 
-  const handleDislike = () => {
+  const handleDislike = async () => {
     setLiked(false);
+
+    const dislikeDetails = {
+      user_id: user.user_id,
+      post_id: item.post_id,
+    };
+
+    const response = await apiClient.post('/dislike', dislikeDetails);
     if (!disliked) {
       return setDisliked(true);
     }
@@ -120,8 +137,7 @@ function PostCard({item, image, user}) {
   const [postComments, setPostComments] = useState(comments);
   const [keyboardReplyVisible, setKeyboardReplyVisible] = useState(false);
   const [selectedComment, setSelectedComment] = useState();
-  const {description, imageUri, groupName, created_at, firstname, lastname} =
-    item;
+  const {description, imageUri, groupName, created_at} = item;
 
   const inputRef = useRef();
 
