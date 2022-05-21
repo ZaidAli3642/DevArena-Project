@@ -61,7 +61,7 @@ function NewsFeedScreen() {
   const {user, image} = useContext(AuthContext);
 
   const getUserPosts = async () => {
-    const {data} = await apiClient.get('/post');
+    const {data} = await apiClient.get(`/posts/${user.user_id}`);
     data.allUsersPosts.sort(function (o1, o2) {
       if (o1.created_at > o2.created_at) return -1;
       else if (o1.created_at < o2.created_at) return 1;
