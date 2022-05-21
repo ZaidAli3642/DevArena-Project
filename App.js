@@ -8,9 +8,10 @@ import AuthContext from './app/context/AuthContext';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [image, setImage] = useState();
 
   return (
-    <AuthContext.Provider value={{user, setUser}}>
+    <AuthContext.Provider value={{user, setUser, image, setImage}}>
       <NavigationContainer>
         {user ? <MainNavigator /> : <AuthNavigator />}
       </NavigationContainer>

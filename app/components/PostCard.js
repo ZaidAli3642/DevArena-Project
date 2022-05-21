@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, memo} from 'react';
 import {
   Image,
   FlatList,
@@ -17,7 +17,7 @@ import colors from '../config/colors';
 import PostComment from './PostComment';
 import inputRefContext from './../context/inputRefContext';
 
-function PostCard({item}) {
+function PostCard({item, image, user}) {
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
 
@@ -120,7 +120,8 @@ function PostCard({item}) {
   const [postComments, setPostComments] = useState(comments);
   const [keyboardReplyVisible, setKeyboardReplyVisible] = useState(false);
   const [selectedComment, setSelectedComment] = useState();
-  const {description, postImage, userImage, groupName, username, date} = item;
+  const {description, imageUri, groupName, created_at, firstname, lastname} =
+    item;
 
   const inputRef = useRef();
 
@@ -157,18 +158,27 @@ function PostCard({item}) {
     <inputRefContext.Provider value={inputRef}>
       <View style={styles.container}>
         <View style={styles.userContainer}>
-          <Image style={styles.image} source={{uri: userImage}} />
+          <Image
+            style={styles.image}
+            source={
+              item.profile_imageUri || image
+                ? {uri: item.profile_imageUri || image}
+                : require('../assets/profileAvatar.jpeg')
+            }
+          />
           <View style={styles.userDescription}>
-            <AppText style={styles.text}>{username}</AppText>
+            <AppText style={styles.text}>{`${
+              item.firstname || user?.firstname
+            } ${item.lastname || user?.lastname}`}</AppText>
             {groupName && <AppText style={styles.group}>{groupName}</AppText>}
-            <AppText style={styles.date}>{date}</AppText>
+            <AppText style={styles.date}>{format(created_at)}</AppText>
           </View>
         </View>
         {description && (
           <AppText style={styles.description}>{description}</AppText>
         )}
-        {postImage && (
-          <Image style={styles.postImage} source={{uri: postImage}} />
+        {imageUri && (
+          <Image style={styles.postImage} source={{uri: imageUri}} />
         )}
 
         <View style={styles.iconContainer}>
@@ -272,4 +282,4 @@ const styles = StyleSheet.create({
     height: 250,
   },
 });
-export default PostCard;
+export default memo(PostCard);

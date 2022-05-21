@@ -55,42 +55,53 @@ const posts = [
 
 function NewsFeedScreen() {
   const [visible, setVisible] = useState(false);
-  const [allPosts, setAllPosts] = useState(posts);
-  const [image, setImage] = useState();
+  const [allPosts, setAllPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const {user} = useContext(AuthContext);
+  const {user, image} = useContext(AuthContext);
 
-  const getUserImage = async () => {
-    try {
-      const {data} = await apiClient.get(`/image/${user.user_id}`);
-
-      if (data.imageUri) {
-        setImage(data.imageUri);
-      }
-      console.log(image);
-    } catch (error) {
-      console.log('Error getting image', error);
-    }
+  const getUserPosts = async () => {
+    const {data} = await apiClient.get('/post');
+    data.allUsersPosts.sort(function (o1, o2) {
+      if (o1.created_at > o2.created_at) return -1;
+      else if (o1.created_at < o2.created_at) return 1;
+      else return 0;
+    });
+    setAllPosts(data.allUsersPosts);
   };
 
   useEffect(() => {
-    getUserImage();
-  }, [image]);
+    getUserPosts();
+  }, [setAllPosts]);
 
-  const handleSubmit = (values, {resetForm}) => {
-    const newPost = {
-      postId: Date.now(),
-      userImage: user.profileImage,
-      username: 'Zaid Saleem',
-      date: format(new Date()),
-      description: values.description,
-      postImage: values.image,
-    };
+  const handleSubmit = async (values, {resetForm}) => {
+    const formdata = new FormData();
 
-    const newPosts = [newPost, ...allPosts];
-    setAllPosts(newPosts);
+    if (values.image) {
+      const photo = {
+        uri: values.image.uri,
+        type: values.image.type,
+        name: values.image.fileName,
+      };
+      formdata.append('image', photo);
+    }
+
+    formdata.append('description', values.description);
+    formdata.append('user_id', user.user_id);
+
+    setRefreshing(true);
+    const response = await apiClient.post('/post', formdata, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    setAllPosts([...response.data, ...allPosts]);
+
     setVisible(false);
     resetForm();
+    setRefreshing(false);
   };
 
   return (
@@ -126,7 +137,7 @@ function NewsFeedScreen() {
         <FlatList
           contentContainerStyle={{flexGrow: 1}}
           data={allPosts}
-          keyExtractor={post => post.postId.toString()}
+          keyExtractor={post => post.post_id.toString()}
           ListHeaderComponent={() => (
             <View style={styles.input}>
               <View style={{flex: 0.2}}>
@@ -148,7 +159,11 @@ function NewsFeedScreen() {
             </View>
           )}
           renderItem={({item}) => {
-            return <PostCard item={item} />;
+            return <PostCard user={user} image={image} item={item} />;
+          }}
+          refreshing={refreshing}
+          onRefresh={() => {
+            getUserPosts();
           }}
         />
       )}

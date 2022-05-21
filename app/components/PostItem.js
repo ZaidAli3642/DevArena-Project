@@ -15,7 +15,8 @@ function PostItem({title, name, iconName, iconColor, textStyle}) {
   const handleSelectImage = async () => {
     const result = await ImagePicker.launchImageLibrary({mediaType: 'photo'});
     if (!result.didCancel) {
-      setFieldValue(name, result.assets[0].uri);
+      const {uri, type, fileName} = result.assets[0];
+      setFieldValue(name, {uri, type, fileName});
     }
   };
 
@@ -45,7 +46,7 @@ function PostItem({title, name, iconName, iconColor, textStyle}) {
             <AppText style={[styles.text, textStyle]}>{title}</AppText>
           </>
         ) : (
-          <Image style={styles.image} source={{uri: imageUri}} />
+          <Image style={styles.image} source={{uri: imageUri.uri}} />
         )}
       </TouchableOpacity>
     </>
