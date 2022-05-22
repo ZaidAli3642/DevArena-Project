@@ -10,6 +10,7 @@ import AccountSettingsNavigator from './AccountSettingsNavigator';
 import MainGroupsNavigator from './MainGroupsNavigator';
 import GroupsScreen from './../screens/GroupsScreen';
 import GroupsNavigator from './GroupsNavigator';
+import AppComments from '../components/AppComments';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +63,15 @@ const MainNavigator = () => (
         headerTintColor: colors.red,
       }}
       component={GroupsScreen}
+    />
+    <Stack.Screen
+      name="APP_COMMENT"
+      options={{
+        animation: 'slide_from_left',
+        title: 'Comments',
+        headerTintColor: colors.red,
+      }}
+      component={AppComments}
     />
   </Stack.Navigator>
 );

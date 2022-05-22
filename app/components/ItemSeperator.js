@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 
-function ItemSeperator() {
+function ItemSeperator({comment}) {
   return <View style={styles.line}></View>;
 }
 

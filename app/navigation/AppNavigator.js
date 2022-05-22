@@ -10,7 +10,6 @@ import NotificationScreen from './../screens/NotificationScreen';
 import QueryFeedScreen from './../screens/QueryFeedScreen';
 import routes from '../routes/routes';
 import colors from '../config/colors';
-import NotificationNavigator from './NatificationNavigator';
 import AppHeader from '../components/AppHeader';
 
 const Top = createMaterialTopTabNavigator();
