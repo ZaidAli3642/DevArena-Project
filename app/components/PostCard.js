@@ -1,7 +1,6 @@
-import React, {useState, useEffect, useRef, memo} from 'react';
+import React, {useState, memo} from 'react';
 import {
   Image,
-  FlatList,
   View,
   Modal,
   StyleSheet,
@@ -9,23 +8,19 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {format} from 'timeago.js';
-import {useNavigation} from '@react-navigation/native';
 
 import AppButton from './AppButton';
-import AppCommentForm from './AppCommentForm';
 import AppText from './AppText';
 import colors from '../config/colors';
-import PostComment from './PostComment';
 import apiClient from '../api/client';
-import ItemSeperator from './ItemSeperator';
+import AppComments from './AppComments';
 
 function PostCard({item, image, user}) {
   const [liked, setLiked] = useState(item.like_post);
   const [disliked, setDisliked] = useState(item.dislike_post);
+  const [visible, setVisible] = useState(false);
 
-  const navigation = useNavigation();
-
-  const {description, imageUri, groupName, created_at} = item;
+  const {description, imageUri, groupName, created_at, post_id} = item;
 
   const handleLike = async () => {
     setDisliked(false);
@@ -77,8 +72,7 @@ function PostCard({item, image, user}) {
       id: 3,
       iconName: 'comment-outline',
       title: 'Comment',
-      onPress: () =>
-        navigation.navigate('APP_COMMENT', {comments: item.comments}),
+      onPress: () => setVisible(true),
     },
     {
       id: 4,
@@ -94,8 +88,8 @@ function PostCard({item, image, user}) {
         <Image
           style={styles.image}
           source={
-            item.profile_imageUri || image
-              ? {uri: item.profile_imageUri || image}
+            item.profile_imageUri
+              ? {uri: item.profile_imageUri}
               : require('../assets/profileAvatar.jpeg')
           }
         />
@@ -126,6 +120,14 @@ function PostCard({item, image, user}) {
           </TouchableWithoutFeedback>
         ))}
       </View>
+      <Modal visible={visible} animationType="slide">
+        <AppButton
+          title={'CLOSE'}
+          color={colors.red}
+          onPress={() => setVisible(false)}
+        />
+        <AppComments image={image} post_id={post_id} user={user} />
+      </Modal>
     </View>
   );
 }

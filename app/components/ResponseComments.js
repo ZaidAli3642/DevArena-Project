@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Image, StyleSheet} from 'react-native';
+import {format} from 'timeago.js';
 
 import AppText from './AppText';
 import colors from '../config/colors';
@@ -7,11 +8,14 @@ import colors from '../config/colors';
 function ResponseComments({item}) {
   return (
     <View style={styles.responseCommentContainer}>
-      <Image style={styles.responseImage} source={item.userImage} />
-      <View>
-        <AppText style={styles.responseUsername}>{item.username}</AppText>
+      <Image style={styles.responseImage} source={{uri: item.profile_image}} />
+      <View style={{flex: 1}}>
+        <AppText
+          style={
+            styles.responseUsername
+          }>{`${item.firstname} ${item.lastname}`}</AppText>
         <AppText style={styles.description}>{item.description}</AppText>
-        <AppText style={styles.text}>{item.date}</AppText>
+        <AppText style={styles.text}>{format(item.created_at)}</AppText>
       </View>
     </View>
   );
@@ -37,6 +41,7 @@ const styles = StyleSheet.create({
   responseUsername: {
     fontSize: 15,
     fontWeight: 'bold',
+    flexWrap: 'wrap',
   },
   text: {
     fontSize: 13,

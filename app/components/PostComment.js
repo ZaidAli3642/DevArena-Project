@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {FlatList, Image, View, StyleSheet} from 'react-native';
+import {format} from 'timeago.js';
 
 import AppText from './AppText';
 import colors from '../config/colors';
@@ -11,10 +12,28 @@ function PostComment({
   focusInput,
   setKeyboardReplyVisible,
   onSelectComment,
+  user_id,
 }) {
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(item.like_comment);
   const [commentsVisible, setCommentVisible] = useState(false);
-  const {profile_image, firstname, lastname, description} = item;
+  const {
+    profile_image,
+    firstname,
+    lastname,
+    description,
+    created_at,
+    comment_id,
+    comment_response,
+  } = item;
+
+  const likeComment = async () => {
+    setLike(!like);
+    const {data} = await apiClient.post('/like_comments', {
+      comment_id,
+      user_id,
+    });
+    console.log(data);
+  };
 
   return (
     <View>
@@ -24,16 +43,15 @@ function PostComment({
           <AppText>{`${firstname} ${lastname}`}</AppText>
           <AppText style={styles.description}>{description}</AppText>
           <View style={styles.iconsContainer}>
+            <AppText style={styles.text}>{format(created_at)}</AppText>
             <AppText
               style={[
                 styles.text,
                 styles.like,
                 {color: like ? colors.red : colors.lightBrown},
               ]}
-              onPress={() => {
-                setLike(!like);
-              }}>
-              like
+              onPress={likeComment}>
+              {like ? 'liked' : 'like'}
             </AppText>
             <AppText
               style={[styles.text, styles.reply]}
@@ -47,7 +65,7 @@ function PostComment({
           </View>
         </View>
       </View>
-      {/* {commentResponses.length !== 0 && (
+      {comment_response.length !== 0 && (
         <>
           {!commentsVisible ? (
             <AppText
@@ -58,16 +76,16 @@ function PostComment({
           ) : (
             <>
               <FlatList
-                data={commentResponses}
+                data={comment_response}
                 keyExtractor={commentResponse =>
-                  commentResponse.commentId.toString()
+                  commentResponse.comment_response_id.toString()
                 }
                 renderItem={({item}) => <ResponseComments item={item} />}
               />
             </>
           )}
         </>
-      )} */}
+      )}
     </View>
   );
 }
