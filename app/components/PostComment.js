@@ -4,6 +4,7 @@ import {FlatList, Image, View, StyleSheet} from 'react-native';
 import AppText from './AppText';
 import colors from '../config/colors';
 import ResponseComments from './ResponseComments';
+import apiClient from '../api/client';
 
 function PostComment({
   item,
@@ -13,18 +14,16 @@ function PostComment({
 }) {
   const [like, setLike] = useState(false);
   const [commentsVisible, setCommentVisible] = useState(false);
+  const {profile_image, firstname, lastname, description} = item;
 
-  const {userImage, username, description, date, commentResponses} = item;
-  console.log(commentResponses);
   return (
     <View>
       <View style={styles.container}>
-        <Image source={userImage} style={styles.image} />
+        <Image source={{uri: profile_image}} style={styles.image} />
         <View style={styles.descriptionContainer}>
-          <AppText>{username}</AppText>
+          <AppText>{`${firstname} ${lastname}`}</AppText>
           <AppText style={styles.description}>{description}</AppText>
           <View style={styles.iconsContainer}>
-            <AppText style={styles.text}>{date}</AppText>
             <AppText
               style={[
                 styles.text,
@@ -48,7 +47,7 @@ function PostComment({
           </View>
         </View>
       </View>
-      {commentResponses.length !== 0 && (
+      {/* {commentResponses.length !== 0 && (
         <>
           {!commentsVisible ? (
             <AppText
@@ -68,7 +67,7 @@ function PostComment({
             </>
           )}
         </>
-      )}
+      )} */}
     </View>
   );
 }

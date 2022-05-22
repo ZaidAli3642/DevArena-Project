@@ -9,19 +9,23 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {format} from 'timeago.js';
+import {useNavigation} from '@react-navigation/native';
 
 import AppButton from './AppButton';
 import AppCommentForm from './AppCommentForm';
 import AppText from './AppText';
 import colors from '../config/colors';
 import PostComment from './PostComment';
-import inputRefContext from './../context/inputRefContext';
 import apiClient from '../api/client';
+import ItemSeperator from './ItemSeperator';
 
 function PostCard({item, image, user}) {
   const [liked, setLiked] = useState(item.like_post);
   const [disliked, setDisliked] = useState(item.dislike_post);
-  const [allLikes, setAllLikes] = useState([]);
+
+  const navigation = useNavigation();
+
+  const {description, imageUri, groupName, created_at} = item;
 
   const handleLike = async () => {
     setDisliked(false);
@@ -47,7 +51,7 @@ function PostCard({item, image, user}) {
       post_id: item.post_id,
     };
 
-    const response = await apiClient.post('/dislike', dislikeDetails);
+    await apiClient.post('/dislike', dislikeDetails);
     if (!disliked) {
       return setDisliked(true);
     }
@@ -73,7 +77,8 @@ function PostCard({item, image, user}) {
       id: 3,
       iconName: 'comment-outline',
       title: 'Comment',
-      onPress: () => setVisible(true),
+      onPress: () =>
+        navigation.navigate('APP_COMMENT', {comments: item.comments}),
     },
     {
       id: 4,
@@ -83,164 +88,45 @@ function PostCard({item, image, user}) {
     },
   ];
 
-  const comments = [
-    {
-      commentId: 1,
-      userImage: require('../assets/girl1.jpg'),
-      username: 'Emma Watson',
-      description: 'Need some sunlight!',
-      date: format(new Date()),
-      commentResponses: [
-        {
-          commentId: 1,
-          userImage: require('../assets/girl1.jpg'),
-          username: 'Emma Watson',
-          description: 'Need some little sunlight!',
-          date: format(new Date()),
-        },
-        {
-          commentId: 2,
-          userImage: require('../assets/zaid-saleem-image.jpg'),
-          username: 'Zaid Saleem',
-          description: 'Need some more sunlight!',
-          date: format(new Date()),
-        },
-      ],
-    },
-    {
-      commentId: 2,
-      userImage: require('../assets/boy1.jpg'),
-      username: 'Tony Stark',
-      description: 'Yoooooo!',
-      date: format(new Date()),
-      commentResponses: [],
-    },
-    {
-      commentId: 3,
-      userImage: require('../assets/girl2.jpg'),
-      username: 'Selena',
-      description: 'helloooooooo!',
-      date: format(new Date()),
-      commentResponses: [],
-    },
-    {
-      commentId: 4,
-      userImage: require('../assets/boy2.jpg'),
-      username: 'John',
-      description: 'Good Night',
-      date: format(new Date()),
-      commentResponses: [],
-    },
-  ];
-
-  const [visible, setVisible] = useState(false);
-  const [postComments, setPostComments] = useState(comments);
-  const [keyboardReplyVisible, setKeyboardReplyVisible] = useState(false);
-  const [selectedComment, setSelectedComment] = useState();
-  const {description, imageUri, groupName, created_at} = item;
-
-  const inputRef = useRef();
-
-  const focusInput = () => {
-    inputRef.current.focus();
-  };
-
-  const handleCommentSubmit = values => {
-    const newComment = {
-      commentId: Date.now(),
-      userImage: require('../assets/zaid-saleem-image.jpg'),
-      username: 'Zaid Saleem',
-      description: values.comment,
-      date: format(new Date()),
-      commentResponses: [],
-    };
-
-    if (keyboardReplyVisible) {
-      postComments.forEach(comment => {
-        if (comment.commentId === selectedComment.commentId) {
-          comment.commentResponses.push(newComment);
-        } else return comment.commentResponses;
-      });
-      const newComments = [...postComments];
-      setPostComments(newComments);
-      return;
-    }
-
-    const newComments = [...postComments, newComment];
-    setPostComments(newComments);
-  };
-
   return (
-    <inputRefContext.Provider value={inputRef}>
-      <View style={styles.container}>
-        <View style={styles.userContainer}>
-          <Image
-            style={styles.image}
-            source={
-              item.profile_imageUri || image
-                ? {uri: item.profile_imageUri || image}
-                : require('../assets/profileAvatar.jpeg')
-            }
-          />
-          <View style={styles.userDescription}>
-            <AppText style={styles.text}>{`${
-              item.firstname || user?.firstname
-            } ${item.lastname || user?.lastname}`}</AppText>
-            {groupName && <AppText style={styles.group}>{groupName}</AppText>}
-            <AppText style={styles.date}>{format(created_at)}</AppText>
-          </View>
+    <View style={styles.container}>
+      <View style={styles.userContainer}>
+        <Image
+          style={styles.image}
+          source={
+            item.profile_imageUri || image
+              ? {uri: item.profile_imageUri || image}
+              : require('../assets/profileAvatar.jpeg')
+          }
+        />
+        <View style={styles.userDescription}>
+          <AppText style={styles.text}>{`${item.firstname || user?.firstname} ${
+            item.lastname || user?.lastname
+          }`}</AppText>
+          {groupName && <AppText style={styles.group}>{groupName}</AppText>}
+          <AppText style={styles.date}>{format(created_at)}</AppText>
         </View>
-        {description && (
-          <AppText style={styles.description}>{description}</AppText>
-        )}
-        {imageUri && (
-          <Image style={styles.postImage} source={{uri: imageUri}} />
-        )}
-
-        <View style={styles.iconContainer}>
-          {icons.map(icon => (
-            <TouchableWithoutFeedback key={icon.id} onPress={icon.onPress}>
-              <View style={styles.singleIcon}>
-                <MaterialCommunityIcons
-                  name={icon.iconName}
-                  size={25}
-                  color={icon.color || colors.mediumGrey}
-                />
-                <AppText style={styles.iconTitle}>{icon.title}</AppText>
-              </View>
-            </TouchableWithoutFeedback>
-          ))}
-        </View>
-        <Modal visible={visible} animationType="slide">
-          <View style={{flex: 1, paddingHorizontal: 10}}>
-            <AppButton
-              title="CLOSE"
-              color={colors.red}
-              onPress={() => setVisible(false)}
-            />
-            <FlatList
-              data={postComments}
-              keyExtractor={comment => comment.commentId.toString()}
-              renderItem={({item}) => (
-                <PostComment
-                  setKeyboardReplyVisible={setKeyboardReplyVisible}
-                  focusInput={focusInput}
-                  onSelectComment={() => setSelectedComment(item)}
-                  item={item}
-                />
-              )}
-              showsVerticalScrollIndicator={false}
-            />
-            <AppCommentForm
-              selectedComment={selectedComment}
-              keyboardReplyVisible={keyboardReplyVisible}
-              setKeyboardReplyVisible={setKeyboardReplyVisible}
-              handleSubmit={handleCommentSubmit}
-            />
-          </View>
-        </Modal>
       </View>
-    </inputRefContext.Provider>
+      {description && (
+        <AppText style={styles.description}>{description}</AppText>
+      )}
+      {imageUri && <Image style={styles.postImage} source={{uri: imageUri}} />}
+
+      <View style={styles.iconContainer}>
+        {icons.map(icon => (
+          <TouchableWithoutFeedback key={icon.id} onPress={icon.onPress}>
+            <View style={styles.singleIcon}>
+              <MaterialCommunityIcons
+                name={icon.iconName}
+                size={25}
+                color={icon.color || colors.mediumGrey}
+              />
+              <AppText style={styles.iconTitle}>{icon.title}</AppText>
+            </View>
+          </TouchableWithoutFeedback>
+        ))}
+      </View>
+    </View>
   );
 }
 
