@@ -56,25 +56,58 @@ const queries = [
 
 function QueryFeedScreen() {
   const [visible, setVisible] = useState(false);
-  const [allQueries, setAllQueries] = useState(queries);
+  const [allQueries, setAllQueries] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const {user, image} = useContext(AuthContext);
 
-  const handleSubmit = (values, {resetForm}) => {
-    const newQueryPost = {
-      queryId: Date.now(),
-      userImage: user.profileImage,
-      username: 'Zaid Saleem',
-      date: format(new Date()),
-      description: values.description,
-      postImage: values.image,
-    };
+  const getQueries = async () => {
+    try {
+      const {data} = await apiClient.get(`/posts/${user.user_id}/query`);
+      data.allUsersPosts.sort(function (o1, o2) {
+        if (o1.created_at > o2.created_at) return -1;
+        else if (o1.created_at < o2.created_at) return 1;
+        else return 0;
+      });
+      setAllQueries(data.allUsersPosts);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    console.log(values);
-    const newQueries = [newQueryPost, ...allQueries];
-    setAllQueries(newQueries);
+  useEffect(() => {
+    getQueries();
+  }, []);
+
+  const handleSubmit = async (values, {resetForm}) => {
+    const formdata = new FormData();
+
+    if (values.image) {
+      const photo = {
+        uri: values.image.uri,
+        type: values.image.type,
+        name: values.image.fileName,
+      };
+      formdata.append('image', photo);
+    }
+
+    formdata.append('description', values.description);
+    formdata.append('user_id', user.user_id);
+    formdata.append('post_type', 'query');
+
+    setRefreshing(true);
+    const response = await apiClient.post('/post', formdata, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    setAllQueries([...response.data, ...allQueries]);
+
     setVisible(false);
     resetForm();
+    setRefreshing(false);
   };
 
   return (
@@ -82,7 +115,7 @@ function QueryFeedScreen() {
       <FlatList
         contentContainerStyle={{flexGrow: 1}}
         data={allQueries}
-        keyExtractor={query => query.queryId.toString()}
+        keyExtractor={query => query.post_id.toString()}
         ListHeaderComponent={() => (
           <View style={styles.input}>
             <View style={{flex: 0.2}}>
@@ -102,7 +135,7 @@ function QueryFeedScreen() {
           </View>
         )}
         renderItem={({item}) => {
-          return <PostCard item={item} />;
+          return <PostCard item={item} user={user} />;
         }}
         ListEmptyComponent={() => (
           <View
@@ -114,6 +147,8 @@ function QueryFeedScreen() {
             <AppText>No posts for now!</AppText>
           </View>
         )}
+        refreshing={refreshing}
+        onRefresh={() => getQueries()}
       />
       <AppModalForm
         image={image}
