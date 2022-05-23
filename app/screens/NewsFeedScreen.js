@@ -17,13 +17,17 @@ function NewsFeedScreen() {
   const {user, image} = useContext(AuthContext);
 
   const getUserPosts = async () => {
-    const {data} = await apiClient.get(`/posts/${user.user_id}`);
-    data.allUsersPosts.sort(function (o1, o2) {
-      if (o1.created_at > o2.created_at) return -1;
-      else if (o1.created_at < o2.created_at) return 1;
-      else return 0;
-    });
-    setAllPosts(data.allUsersPosts);
+    try {
+      const {data} = await apiClient.get(`/posts/${user.user_id}/post`);
+      data.allUsersPosts.sort(function (o1, o2) {
+        if (o1.created_at > o2.created_at) return -1;
+        else if (o1.created_at < o2.created_at) return 1;
+        else return 0;
+      });
+      setAllPosts(data.allUsersPosts);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -44,6 +48,7 @@ function NewsFeedScreen() {
 
     formdata.append('description', values.description);
     formdata.append('user_id', user.user_id);
+    formdata.append('post_type', 'post');
 
     setRefreshing(true);
     const response = await apiClient.post('/post', formdata, {

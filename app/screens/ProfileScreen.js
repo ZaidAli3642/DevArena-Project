@@ -21,8 +21,13 @@ function ProfileScreen() {
   const {user, setImage, image} = useContext(AuthContext);
 
   const getUserPosts = async () => {
-    const {data} = await apiClient.get(`/post/${user.user_id}`);
-    setAllPosts(data.userPosts);
+    try {
+      const {data} = await apiClient.get(`/post/${user.user_id}`);
+      setAllPosts(data.userPosts);
+    } catch (error) {
+      console.log(error);
+    }
+    // setAllPosts(data.userPosts || []);
   };
 
   useEffect(() => {
