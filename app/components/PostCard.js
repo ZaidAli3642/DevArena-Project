@@ -4,7 +4,8 @@ import {
   View,
   Modal,
   StyleSheet,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {format} from 'timeago.js';
@@ -25,9 +26,11 @@ function PostCard({item, image, user}) {
 
   const getSharedPostUser = async () => {
     try {
-      const response = await apiClient.get(`/user/${item.shared_user_id}`);
-      const {firstname, lastname} = response.data.user[0];
-      setSharedUser(firstname + ' ' + lastname);
+      if (item.shared_user_id) {
+        const response = await apiClient.get(`/user/${item.shared_user_id}`);
+        const {firstname, lastname} = response.data.user[0];
+        setSharedUser(firstname + ' ' + lastname);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -45,12 +48,13 @@ function PostCard({item, image, user}) {
       post_id: item.post_id,
     };
 
-    const response = await apiClient.post('/like', likeDetails);
-    console.log(response.data);
-    if (!liked) {
-      return setLiked(true);
+    try {
+      setLiked(!liked);
+      const response = await apiClient.post('/like', likeDetails);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
     }
-    return setLiked(false);
   };
 
   const handleDislike = async () => {
@@ -61,11 +65,12 @@ function PostCard({item, image, user}) {
       post_id: item.post_id,
     };
 
-    await apiClient.post('/dislike', dislikeDetails);
-    if (!disliked) {
-      return setDisliked(true);
+    try {
+      setDisliked(!disliked);
+      await apiClient.post('/dislike', dislikeDetails);
+    } catch (error) {
+      console.log(error);
     }
-    return setDisliked(false);
   };
 
   const handleShare = async () => {
@@ -82,8 +87,11 @@ function PostCard({item, image, user}) {
       sharePost.mimetype = item.post_mimetype;
       sharePost.size = item.post_size;
     }
-
-    await apiClient.post('/share_post', sharePost);
+    try {
+      await apiClient.post('/share_post', sharePost);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const icons = [
@@ -148,7 +156,10 @@ function PostCard({item, image, user}) {
 
       <View style={styles.iconContainer}>
         {icons.map(icon => (
-          <TouchableWithoutFeedback key={icon.id} onPress={icon.onPress}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            key={icon.id}
+            onPress={icon.onPress}>
             <View style={styles.singleIcon}>
               <MaterialCommunityIcons
                 name={icon.iconName}
@@ -157,7 +168,7 @@ function PostCard({item, image, user}) {
               />
               <AppText style={styles.iconTitle}>{icon.title}</AppText>
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         ))}
       </View>
       <Modal visible={visible} animationType="slide">

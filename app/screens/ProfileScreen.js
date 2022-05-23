@@ -23,11 +23,16 @@ function ProfileScreen() {
   const getUserPosts = async () => {
     try {
       const {data} = await apiClient.get(`/post/${user.user_id}`);
+      data.userPosts.sort(function (o1, o2) {
+        if (o1.created_at > o2.created_at) return -1;
+        else if (o1.created_at < o2.created_at) return 1;
+        else return 0;
+      });
+      console.log(data.userPosts);
       setAllPosts(data.userPosts);
     } catch (error) {
       console.log(error);
     }
-    // setAllPosts(data.userPosts || []);
   };
 
   useEffect(() => {
