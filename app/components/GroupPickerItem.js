@@ -6,7 +6,7 @@ import colors from '../config/colors';
 import AppButton from './AppButton';
 
 function GroupItem({item, onPress}) {
-  const {groupName, groupDescription, groupImage} = item;
+  const {group_name, group_description, group_image} = item;
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
       <View style={styles.container}>
@@ -14,16 +14,16 @@ function GroupItem({item, onPress}) {
           style={styles.image}
           source={{
             uri:
-              groupImage ||
+              group_image ||
               'https://icdn.digitaltrends.com/image/digitaltrends/avatars-character-line-up_white_bg-copy.jpg',
           }}
         />
         <View style={styles.groupDescriptionContainer}>
           <AppText style={styles.text} numberOfLines={1}>
-            {groupName}
+            {group_name}
           </AppText>
           <AppText style={styles.description} numberOfLines={1}>
-            {groupDescription}
+            {group_description}
           </AppText>
         </View>
         <AppButton

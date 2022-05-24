@@ -1,5 +1,5 @@
-import React from 'react';
-import {FlatList, View, StyleSheet, ScrollView} from 'react-native';
+import React, {useContext, useState, useEffect} from 'react';
+import {FlatList, View, StyleSheet} from 'react-native';
 
 import ItemSeperator from './../components/ItemSeperator';
 import AppText from './../components/AppText';
@@ -8,57 +8,48 @@ import colors from '../config/colors';
 import AppHeadingText from '../components/AppHeadingText';
 import ListItem from './../components/ListItem';
 import routes from '../routes/routes';
+import apiClient from '../api/client';
+import AuthContext from '../context/AuthContext';
 
-const groups = [
-  {
-    groupId: 1,
-    groupName: 'Software Engineering Group',
-    groupDescription: 'All about software engineering',
-    groupImage: null,
-  },
-  {
-    groupId: 2,
-    groupName: 'Coder Coder',
-    groupDescription: 'Coding Tests',
-    groupImage: null,
-  },
-  {
-    groupId: 3,
-    groupName: 'Developers hub',
-    groupDescription: 'Helping other developers',
-    groupImage: null,
-  },
-  {
-    groupId: 4,
-    groupName: 'Coding Memes',
-    groupDescription: 'Fun group',
-    groupImage: null,
-  },
-];
-
-const createdGroups = [
-  {
-    groupId: 1,
-    groupName: 'Error Handling',
-    groupDescription: 'Removing Bugs in codes',
-    groupImage: null,
-  },
-  {
-    groupId: 2,
-    groupName: 'Front End Knowledge Group',
-    groupDescription: 'front end skill developers',
-    groupImage: null,
-  },
-];
+const groups = [];
 
 // List all the Groups that you have joined
 function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
+  const [userCreatedGroups, setUserCreatedGroups] = useState([]);
+  const [userJoinedGroups, setUserJoinedGroups] = useState([]);
+
+  const {user} = useContext(AuthContext);
+
+  const getUserCreatedGroups = async () => {
+    try {
+      const {data} = await apiClient.get(`/user_group/${user.user_id}`);
+      console.log(data);
+      setUserCreatedGroups([...data.allUserGroups]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getJoinedUserGroups = async () => {
+    try {
+      const {data} = await apiClient.get(`/joined_group/${user.user_id}`);
+      setUserJoinedGroups(data.joinedGroups);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUserCreatedGroups();
+    getJoinedUserGroups();
+  }, []);
+
   return (
     <>
-      {groups.length === 0 ? (
+      {userCreatedGroups.length === 0 && userJoinedGroups.length === 0 ? (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <AppText style={styles.emptyTextMessage}>
-            You haven't joined any group.
+            You haven't created or joined any group.
           </AppText>
           <AppButton
             textStyle={styles.textStyle}
@@ -72,8 +63,8 @@ function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
 
           <View>
             <FlatList
-              data={groups}
-              keyExtractor={group => group.groupId.toString()}
+              data={userJoinedGroups}
+              keyExtractor={group => group.group_id.toString()}
               contentContainerStyle={{paddingBottom: 100}}
               ListHeaderComponent={() => (
                 <>
@@ -81,27 +72,21 @@ function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
                     <AppText style={styles.text}>Your Created Groups</AppText>
                     <FlatList
                       scrollEnabled={false}
-                      data={createdGroups}
+                      data={userCreatedGroups}
                       keyExtractor={createdGroup =>
-                        createdGroup.groupId.toString()
+                        createdGroup.group_id.toString()
                       }
                       renderItem={({item}) => (
                         <GroupPickerItem
-                          name={item.groupName}
-                          description={item.groupDescription}
+                          name={item.group_name}
+                          description={item.group_description}
                           image={
-                            item.groupImage ||
+                            item.group_image ||
                             'https://icdn.digitaltrends.com/image/digitaltrends/avatars-character-line-up_white_bg-copy.jpg'
                           }
                           onPress={() =>
                             navigation.navigate(routes.SINGLE_GROUP, {
-                              group: {
-                                groupName: item.groupName,
-                                groupDescription: item.groupDescription,
-                                groupImage:
-                                  item.groupImage ||
-                                  'https://icdn.digitaltrends.com/image/digitaltrends/avatars-character-line-up_white_bg-copy.jpg',
-                              },
+                              group: item,
                             })
                           }
                         />
@@ -117,21 +102,15 @@ function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
               )}
               renderItem={({item}) => (
                 <GroupPickerItem
-                  name={item.groupName}
-                  description={item.groupDescription}
+                  name={item.group_name}
+                  description={item.group_description}
                   image={
-                    item.groupImage ||
+                    item.group_image ||
                     'https://icdn.digitaltrends.com/image/digitaltrends/avatars-character-line-up_white_bg-copy.jpg'
                   }
                   onPress={() =>
                     navigation.navigate(routes.SINGLE_GROUP, {
-                      group: {
-                        groupName: item.groupName,
-                        groupDescription: item.groupDescription,
-                        groupImage:
-                          item.groupImage ||
-                          'https://icdn.digitaltrends.com/image/digitaltrends/avatars-character-line-up_white_bg-copy.jpg',
-                      },
+                      group: item,
                     })
                   }
                 />

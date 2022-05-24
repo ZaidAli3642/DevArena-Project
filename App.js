@@ -1,14 +1,41 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
+import jwtDecode from 'jwt-decode';
 
 import MainNavigator from './app/navigation/MainNavigator';
 import AuthNavigator from './app/navigation/AuthNavigator';
 import AuthContext from './app/context/AuthContext';
+import authStorage from './app/context/auth/authStorage';
+import apiClient from './app/api/client';
 
 function App() {
   const [user, setUser] = useState(null);
-  const [image, setImage] = useState();
+  const [image, setImage] = useState(null);
+
+  const getUserImage = async user_id => {
+    try {
+      const {data} = await apiClient.get(`/image/${user_id}`);
+      setImage(data.imageUri);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const restoreToken = async () => {
+    const token = await authStorage.getToken();
+    if (!token) return;
+
+    const decodedUser = jwtDecode(token);
+    setUser(decodedUser);
+
+    if (decodedUser.user_id) getUserImage(decodedUser.user_id);
+  };
+
+  useEffect(() => {
+    restoreToken();
+  }, []);
 
   return (
     <AuthContext.Provider value={{user, setUser, image, setImage}}>

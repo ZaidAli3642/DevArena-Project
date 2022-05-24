@@ -5,14 +5,21 @@ import AppHeadingText from '../components/AppHeadingText';
 import AppText from '../components/AppText';
 import colors from '../config/colors';
 
-function GroupHeader({groupItem}) {
-  const {groupDescription, groupImage, groupName} = groupItem;
+function GroupHeader({group}) {
+  const {group_description, group_image, group_name} = group;
   return (
     <>
       <View style={styles.container}>
-        <Image style={styles.coverImage} source={{uri: groupImage}} />
-        <AppHeadingText style={styles.heading}>{groupName}</AppHeadingText>
-        <AppText style={styles.description}>{groupDescription}</AppText>
+        <Image
+          style={styles.coverImage}
+          source={{
+            uri:
+              group_image ||
+              'https://icdn.digitaltrends.com/image/digitaltrends/avatars-character-line-up_white_bg-copy.jpg',
+          }}
+        />
+        <AppHeadingText style={styles.heading}>{group_name}</AppHeadingText>
+        <AppText style={styles.description}>{group_description}</AppText>
       </View>
     </>
   );

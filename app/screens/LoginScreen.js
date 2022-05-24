@@ -13,49 +13,17 @@ import routes from '../routes/routes';
 import AuthContext from './../context/AuthContext';
 import ErrorMessage from '../components/ErrorMessage';
 import apiClient from '../api/client';
+import authStorage from '../context/auth/authStorage';
 
 const validationSchema = yup.object().shape({
   email: yup.string().required().email().label('Email'),
   password: yup.string().required().min(8).label('Password'),
 });
 
-const users = [
-  {
-    id: 1,
-    firstName: 'Zaid',
-    lastName: 'Saleem',
-    email: 'zaid@gmail.com',
-    password: '12345678',
-    profileImage:
-      'https://scontent.flhe2-2.fna.fbcdn.net/v/t1.6435-9/118771478_1214683868899290_5857139491770958704_n.jpg?_nc_cat=108&ccb=1-5&_nc_sid=09cbfe&_nc_eui2=AeFFToHulY2JIFDm9dbenBTMDOmBmhKGJLsM6YGaEoYku8-hHI69taiSTrg_vUNGKAYtzVsVUJolOksE50V0rVf2&_nc_ohc=Vkxms7h13KkAX_qwv0y&_nc_ht=scontent.flhe2-2.fna&oh=00_AT-0DqaX95U2DMPP_L8dvsy7PAB-5FHtrZFc3_YgdoWgfg&oe=628F74B5',
-    category: {id: 1, category: 'Software Engineer'},
-  },
-  {
-    id: 2,
-    firstName: 'John',
-    lastName: 'Clarke',
-    email: 'john@gmail.com',
-    password: '12345678',
-    profileImage:
-      'https://images.unsplash.com/photo-1508852951744-beab078a4b2b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-    category: {id: 2, category: 'Coding Tester'},
-  },
-  {
-    id: 3,
-    firstName: 'Jordan',
-    lastName: 'Kent',
-    email: 'jordan@gmail.com',
-    password: '12345678',
-    profileImage:
-      'https://images.unsplash.com/photo-1483726234545-481d6e880fc6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-    category: {id: 3, category: 'Learner'},
-  },
-];
-
 function LoginScreen({navigation}) {
   const [loginFailed, setLoginFailed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const {setUser, setImage, user} = useContext(AuthContext);
+  const {setUser, setImage} = useContext(AuthContext);
 
   const getUserImage = async user_id => {
     try {
@@ -81,6 +49,7 @@ function LoginScreen({navigation}) {
         return;
       }
 
+      authStorage.storeToken(data.token);
       const decodedUser = jwtDecode(data.token);
       setUser(decodedUser);
 

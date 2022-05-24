@@ -1,12 +1,5 @@
 import React, {useState, memo, useEffect} from 'react';
-import {
-  Image,
-  View,
-  Modal,
-  StyleSheet,
-  TouchableOpacity,
-  ToastAndroid,
-} from 'react-native';
+import {Image, View, Modal, StyleSheet, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {format} from 'timeago.js';
 
@@ -21,6 +14,7 @@ function PostCard({item, image, user}) {
   const [disliked, setDisliked] = useState(item.dislike_post);
   const [visible, setVisible] = useState(false);
   const [sharedUser, setSharedUser] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const {description, imageUri, groupName, created_at, post_id} = item;
 
@@ -37,7 +31,12 @@ function PostCard({item, image, user}) {
   };
 
   useEffect(() => {
+    setIsMounted(true);
     getSharedPostUser();
+
+    return () => {
+      setIsMounted(false);
+    };
   }, []);
 
   const handleLike = async () => {

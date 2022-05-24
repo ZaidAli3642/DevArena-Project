@@ -5,34 +5,42 @@ import AppPostInput from './../components/AppPostInput';
 import AppModalForm from '../components/AppModalForm';
 import PostCard from '../components/PostCard';
 import colors from '../config/colors';
-import AppText from '../components/AppText';
 import AuthContext from './../context/AuthContext';
 import apiClient from '../api/client';
+import ActivityIndicator from '../components/ActivityIndicator';
 
 function NewsFeedScreen() {
   const [visible, setVisible] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {user, image} = useContext(AuthContext);
 
   const getUserPosts = async () => {
     try {
+      setLoading(true);
       const {data} = await apiClient.get(`/posts/${user.user_id}/post`);
+
       data.allUsersPosts.sort(function (o1, o2) {
         if (o1.created_at > o2.created_at) return -1;
         else if (o1.created_at < o2.created_at) return 1;
         else return 0;
       });
+
       setAllPosts(data.allUsersPosts);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
+    let isMounted = true;
     getUserPosts();
-  }, [setAllPosts]);
+
+    return () => (isMounted = false);
+  }, []);
 
   const handleSubmit = async (values, {resetForm}) => {
     const formdata = new FormData();
@@ -67,8 +75,12 @@ function NewsFeedScreen() {
 
   return (
     <View style={styles.container}>
-      {allPosts.length === 0 ? (
-        <>
+      <ActivityIndicator visible={loading} />
+      <FlatList
+        contentContainerStyle={{flexGrow: 1}}
+        data={allPosts}
+        keyExtractor={post => post.post_id.toString()}
+        ListHeaderComponent={() => (
           <View style={styles.input}>
             <View style={{flex: 0.2}}>
               <Image
@@ -85,49 +97,15 @@ function NewsFeedScreen() {
               />
             </View>
           </View>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <AppText>No posts for now!</AppText>
-          </View>
-        </>
-      ) : (
-        <FlatList
-          contentContainerStyle={{flexGrow: 1}}
-          data={allPosts}
-          keyExtractor={post => post.post_id.toString()}
-          ListHeaderComponent={() => (
-            <View style={styles.input}>
-              <View style={{flex: 0.2}}>
-                <Image
-                  style={styles.image}
-                  source={
-                    image
-                      ? {uri: image}
-                      : require('../assets/profileAvatar.jpeg')
-                  }
-                />
-              </View>
-              <View style={{flex: 1}}>
-                <AppPostInput
-                  onPress={() => setVisible(true)}
-                  placeholder="WRITE SOMETHING!"
-                />
-              </View>
-            </View>
-          )}
-          renderItem={({item}) => {
-            return <PostCard user={user} image={image} item={item} />;
-          }}
-          refreshing={refreshing}
-          onRefresh={() => {
-            getUserPosts();
-          }}
-        />
-      )}
+        )}
+        renderItem={({item}) => {
+          return <PostCard user={user} image={image} item={item} />;
+        }}
+        refreshing={refreshing}
+        onRefresh={() => {
+          getUserPosts();
+        }}
+      />
 
       <AppModalForm
         image={image}

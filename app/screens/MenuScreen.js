@@ -12,6 +12,7 @@ import routes from '../routes/routes';
 import ItemSeperator from './../components/ItemSeperator';
 import AuthContext from './../context/AuthContext';
 import apiClient from '../api/client';
+import authStorage from '../context/auth/authStorage';
 
 const menuItems = [
   {
@@ -82,6 +83,7 @@ function MenuScreen({navigation}) {
           onPress={() => {
             setUser(null);
             setImage(null);
+            authStorage.removeToken();
           }}
         />
       </View>
