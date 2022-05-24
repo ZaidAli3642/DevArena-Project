@@ -61,7 +61,8 @@ function EmailVerificationScreen({route}) {
             <AppText style={styles.text}>Verify Email</AppText>
           </View>
           <AppText style={styles.codeText}>
-            Please Enter 6 digit code sent to your xyz@gmail.com.
+            Please Enter 6 digit code sent to your{' '}
+            {`${route.params.user.email}`}.
           </AppText>
           {verifyFailed && <ErrorMessage error={errorMessage} />}
           <AppFormField

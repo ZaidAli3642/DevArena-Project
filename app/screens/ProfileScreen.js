@@ -1,5 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Image, ScrollView, View, StyleSheet, Alert} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  View,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import {format} from 'timeago.js';
 import * as ImagePicker from 'react-native-image-picker';
 
@@ -17,19 +24,23 @@ import AppFormImagePicker from '../components/AppFormImagePicker';
 function ProfileScreen() {
   const [visible, setVisible] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const {user, setImage, image} = useContext(AuthContext);
 
   const getUserPosts = async () => {
     try {
+      setLoading(true);
       const {data} = await apiClient.get(`/post/${user.user_id}`);
+
       data.userPosts.sort(function (o1, o2) {
         if (o1.created_at > o2.created_at) return -1;
         else if (o1.created_at < o2.created_at) return 1;
         else return 0;
       });
-      console.log(data.userPosts);
+
       setAllPosts(data.userPosts);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -146,13 +157,11 @@ function ProfileScreen() {
         <ItemSeperator />
         {allPosts.length === 0 ? (
           <>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <AppText>No posts for now!</AppText>
-            </View>
+            <ActivityIndicator
+              animating={loading}
+              size="large"
+              color={colors.red}
+            />
           </>
         ) : (
           <View style={styles.postContainer}>

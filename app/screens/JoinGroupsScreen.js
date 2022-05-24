@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 
 import GroupPickerItem from './../components/GroupPickerItem';
 import ItemSeperator from './../components/ItemSeperator';
 import AppHeadingText from './../components/AppHeadingText';
 import routes from '../routes/routes';
+import apiClient from '../api/client';
+import AuthContext from '../context/AuthContext';
 
 const groups = [
   {
@@ -34,23 +36,30 @@ const groups = [
 ];
 
 function JoinGroupsScreen({navigation}) {
+  const [allGroups, setAllGroups] = useState([]);
+
+  const {user} = useContext(AuthContext);
+
+  const getAllGroups = async () => {
+    const {data} = await apiClient.get(`/all_group/${user.user_id}`);
+    setAllGroups(data.allGroups);
+  };
+
+  useEffect(() => {
+    getAllGroups();
+  }, []);
+
   return (
     <View style={styles.container}>
       <AppHeadingText style={styles.heading}>Suggestions</AppHeadingText>
       <FlatList
-        data={groups}
-        keyExtractor={group => group.groupId.toString()}
+        data={allGroups}
+        keyExtractor={group => group.group_id.toString()}
         renderItem={({item}) => (
           <GroupPickerItem
             onPress={() =>
               navigation.navigate(routes.SINGLE_GROUP, {
-                group: {
-                  groupName: item.groupName,
-                  groupDescription: item.groupDescription,
-                  groupImage:
-                    item.groupImage ||
-                    'https://icdn.digitaltrends.com/image/digitaltrends/avatars-character-line-up_white_bg-copy.jpg',
-                },
+                group: item,
               })
             }
             item={item}

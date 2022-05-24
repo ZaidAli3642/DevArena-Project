@@ -56,7 +56,7 @@ function GroupsScreen({route}) {
   const [allPosts, setAllPosts] = useState(posts);
   const [visible, setVisible] = useState(false);
 
-  const groupItem = route.params.group;
+  const {group} = route.params;
 
   const {user} = useContext(AuthContext);
 
@@ -79,7 +79,7 @@ function GroupsScreen({route}) {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <GroupHeader groupItem={groupItem} />
+        <GroupHeader group={group} />
 
         <View style={styles.inputContainer}>
           <Image
