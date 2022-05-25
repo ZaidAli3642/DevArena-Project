@@ -20,6 +20,7 @@ import AppButton from '../components/AppButton';
 import AuthContext from './../context/AuthContext';
 import apiClient from './../api/client';
 import AppFormImagePicker from '../components/AppFormImagePicker';
+import postsApi from '../api/posts';
 
 function ProfileScreen() {
   const [visible, setVisible] = useState(false);
@@ -31,15 +32,9 @@ function ProfileScreen() {
   const getUserPosts = async () => {
     try {
       setLoading(true);
-      const {data} = await apiClient.get(`/post/${user.user_id}`);
+      const userPosts = await postsApi.userPosts(user.user_id);
 
-      data.userPosts.sort(function (o1, o2) {
-        if (o1.created_at > o2.created_at) return -1;
-        else if (o1.created_at < o2.created_at) return 1;
-        else return 0;
-      });
-
-      setAllPosts(data.userPosts);
+      setAllPosts(userPosts);
       setLoading(false);
     } catch (error) {
       console.log(error);

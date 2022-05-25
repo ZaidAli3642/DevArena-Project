@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import * as yup from 'yup';
 import apiClient from '../api/client';
+import groupsApi from '../api/groupsApi';
 
 import AppForm from '../components/AppForm';
 import AppFormField from '../components/AppFormField';
@@ -20,30 +21,19 @@ const validationSchema = yup.object().shape({
 function CreateGroupScreen() {
   const {user} = useContext(AuthContext);
 
-  const handleCreateGroup = async values => {
-    const formdata = new FormData();
-
-    if (values.image) {
-      const photo = {
-        uri: values.image.uri,
-        type: values.image.type,
-        name: values.image.fileName,
-      };
-      formdata.append('image', photo);
+  const handleCreateGroup = async (values, {resetForm}) => {
+    try {
+      const response = await groupsApi.createGroup(
+        user.user_id,
+        values.groupName,
+        values.groupDescription,
+        values.image,
+      );
+      console.log(response.data);
+      resetForm();
+    } catch (error) {
+      console.log(error);
     }
-
-    formdata.append('group_name', values.groupName);
-    formdata.append('group_description', values.groupDescription);
-    formdata.append('user_id', user.user_id);
-
-    const response = await apiClient.post('/group', formdata, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    console.log(response.data);
   };
 
   return (

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
-import apiClient from '../api/client';
 
+import commentsApi from '../api/commentsApi';
 import inputRefContext from './../context/inputRefContext';
 import AppCommentForm from './AppCommentForm';
 import PostComment from './PostComment';
@@ -16,8 +16,12 @@ function AppComments({post_id, user, image}) {
   const [isMounted, setIsMounted] = useState(false);
 
   const getPostComments = async () => {
-    const {data} = await apiClient.get(`/comment/${post_id}/${user.user_id}`);
-    setAllComments(data.allComments);
+    try {
+      const response = await commentsApi.getComments(post_id, user.user_id);
+      setAllComments(response.data.allComments);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -36,13 +40,12 @@ function AppComments({post_id, user, image}) {
   };
 
   const handleCommentSubmit = async (values, resetForm) => {
-    const newComment = {
-      description: values.comment,
-      post_id: post_id,
-      user_id: user.user_id,
-    };
     try {
-      const response = await apiClient.post('/comment', newComment);
+      const response = await commentsApi.createComment(
+        values.comment,
+        post_id,
+        user.user_id,
+      );
       const {comment} = response.data;
 
       setAllComments([
@@ -65,15 +68,11 @@ function AppComments({post_id, user, image}) {
   };
 
   const handleCommentResponse = async (values, resetForm) => {
-    const newCommentResponse = {
-      description: values.comment,
-      comment_id: selectedComment.comment_id,
-      user_id: user.user_id,
-    };
     try {
-      const response = await apiClient.post(
-        '/comment_response',
-        newCommentResponse,
+      const response = await commentsApi.commentResponse(
+        values.comment,
+        selectedComment.comment_id,
+        user.user_id,
       );
 
       const {commentResponse} = response.data;

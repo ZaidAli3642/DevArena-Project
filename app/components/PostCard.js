@@ -8,6 +8,7 @@ import AppText from './AppText';
 import colors from '../config/colors';
 import apiClient from '../api/client';
 import AppComments from './AppComments';
+import postsApi from '../api/posts';
 
 function PostCard({item, image, user}) {
   const [liked, setLiked] = useState(item.like_post);
@@ -49,7 +50,7 @@ function PostCard({item, image, user}) {
 
     try {
       setLiked(!liked);
-      const response = await apiClient.post('/like', likeDetails);
+      const response = await postsApi.likePost(likeDetails);
       console.log(response.data);
     } catch (error) {
       console.log(error);
@@ -66,7 +67,8 @@ function PostCard({item, image, user}) {
 
     try {
       setDisliked(!disliked);
-      await apiClient.post('/dislike', dislikeDetails);
+      const response = await postsApi.dislikePost(dislikeDetails);
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -87,7 +89,7 @@ function PostCard({item, image, user}) {
       sharePost.size = item.post_size;
     }
     try {
-      await apiClient.post('/share_post', sharePost);
+      await postsApi.sharePost(sharePost);
     } catch (error) {
       console.log(error);
     }

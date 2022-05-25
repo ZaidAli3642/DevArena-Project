@@ -7,6 +7,7 @@ import AppHeadingText from './../components/AppHeadingText';
 import routes from '../routes/routes';
 import apiClient from '../api/client';
 import AuthContext from '../context/AuthContext';
+import groupsApi from '../api/groupsApi';
 
 const groups = [
   {
@@ -41,8 +42,12 @@ function JoinGroupsScreen({navigation}) {
   const {user} = useContext(AuthContext);
 
   const getAllGroups = async () => {
-    const {data} = await apiClient.get(`/all_group/${user.user_id}`);
-    setAllGroups(data.allGroups);
+    try {
+      const response = await groupsApi.getGroups(user.user_id);
+      setAllGroups([...response.data.allGroups]);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -54,7 +59,7 @@ function JoinGroupsScreen({navigation}) {
       <AppHeadingText style={styles.heading}>Suggestions</AppHeadingText>
       <FlatList
         data={allGroups}
-        keyExtractor={group => group.group_id.toString()}
+        keyExtractor={group => group.group_id?.toString()}
         renderItem={({item}) => (
           <GroupPickerItem
             onPress={() =>
