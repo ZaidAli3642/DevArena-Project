@@ -6,11 +6,8 @@ import AppModalForm from '../components/AppModalForm';
 import PostCard from '../components/PostCard';
 import colors from '../config/colors';
 import AuthContext from './../context/AuthContext';
-import apiClient from '../api/client';
 import ActivityIndicator from '../components/ActivityIndicator';
 import postsApi from '../api/posts';
-import AppText from '../components/AppText';
-import AppButton from '../components/AppButton';
 
 function NewsFeedScreen() {
   const [visible, setVisible] = useState(false);
@@ -34,10 +31,10 @@ function NewsFeedScreen() {
   };
 
   useEffect(() => {
-    let isMounted = true;
+    const ac = new AbortController();
     getUserPosts();
 
-    return () => (isMounted = false);
+    return () => ac.abort();
   }, []);
 
   const handleSubmit = async (values, {resetForm}) => {

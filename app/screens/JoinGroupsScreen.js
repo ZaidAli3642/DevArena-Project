@@ -5,36 +5,8 @@ import GroupPickerItem from './../components/GroupPickerItem';
 import ItemSeperator from './../components/ItemSeperator';
 import AppHeadingText from './../components/AppHeadingText';
 import routes from '../routes/routes';
-import apiClient from '../api/client';
 import AuthContext from '../context/AuthContext';
 import groupsApi from '../api/groupsApi';
-
-const groups = [
-  {
-    groupId: 1,
-    groupName: 'Software Engineering Group',
-    groupDescription: 'All about software engineering',
-    groupImage: null,
-  },
-  {
-    groupId: 2,
-    groupName: 'Coder Coder',
-    groupDescription: 'Coding Tests',
-    groupImage: null,
-  },
-  {
-    groupId: 3,
-    groupName: 'Developers hub',
-    groupDescription: 'Helping other developers',
-    groupImage: null,
-  },
-  {
-    groupId: 4,
-    groupName: 'Coding Memes',
-    groupDescription: 'Fun group',
-    groupImage: null,
-  },
-];
 
 function JoinGroupsScreen({navigation}) {
   const [allGroups, setAllGroups] = useState([]);
@@ -51,7 +23,10 @@ function JoinGroupsScreen({navigation}) {
   };
 
   useEffect(() => {
+    const ac = new AbortController();
     getAllGroups();
+
+    return () => ac.abort();
   }, []);
 
   return (

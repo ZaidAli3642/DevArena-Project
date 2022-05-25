@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {Image, ScrollView, View, StyleSheet} from 'react-native';
 import {format} from 'timeago.js';
 
@@ -8,6 +8,8 @@ import PostCard from '../components/PostCard';
 import colors from '../config/colors';
 import AppModalForm from './../components/AppModalForm';
 import AuthContext from './../context/AuthContext';
+import groupsApi from '../api/groupsApi';
+import apiClient from '../api/client';
 
 const posts = [
   {
@@ -53,12 +55,26 @@ const posts = [
 ];
 
 function GroupsScreen({route}) {
-  const [allPosts, setAllPosts] = useState(posts);
+  const [groupPosts, setGroupPosts] = useState([]);
   const [visible, setVisible] = useState(false);
 
   const {group} = route.params;
 
-  const {user} = useContext(AuthContext);
+  const {user, image} = useContext(AuthContext);
+
+  const getGroupPost = async () => {
+    try {
+      const response = await groupsApi.groupPosts(user.user_id, group.group_id);
+      console.log(response.data);
+      setGroupPosts(response.data.allGroupPosts);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getGroupPost();
+  }, []);
 
   const handleSubmit = (values, {resetForm}) => {
     const newPost = {
@@ -104,8 +120,8 @@ function GroupsScreen({route}) {
           handleSubmit={handleSubmit}
         />
 
-        {allPosts.map(post => (
-          <PostCard key={post.postId} item={post} />
+        {groupPosts.map(post => (
+          <PostCard key={post.post_id} item={post} image={image} user={user} />
         ))}
       </View>
     </ScrollView>

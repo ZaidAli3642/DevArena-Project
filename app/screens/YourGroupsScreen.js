@@ -40,8 +40,12 @@ function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
   };
 
   useEffect(() => {
+    const ac = new AbortController();
+
     getUserCreatedGroups();
     getJoinedUserGroups();
+
+    return () => ac.abort();
   }, []);
 
   return (

@@ -33,9 +33,13 @@ const getCreatedGroups = async user_id =>
 const getJoinedGroups = async user_id =>
   await apiClient.get(`/joined_group/${user_id}`);
 
+const groupPosts = async (user_id, group_id) =>
+  await apiClient.get(`/single_group_post/${user_id}/${group_id}`);
+
 export default {
   createGroup,
   getGroups,
   getCreatedGroups,
   getJoinedGroups,
+  groupPosts,
 };
