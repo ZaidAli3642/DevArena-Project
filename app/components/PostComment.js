@@ -5,7 +5,7 @@ import {format} from 'timeago.js';
 import AppText from './AppText';
 import colors from '../config/colors';
 import ResponseComments from './ResponseComments';
-import apiClient from '../api/client';
+import commentsApi from '../api/commentsApi';
 
 function PostComment({
   item,
@@ -27,12 +27,12 @@ function PostComment({
   } = item;
 
   const likeComment = async () => {
-    setLike(!like);
-    const {data} = await apiClient.post('/like_comments', {
-      comment_id,
-      user_id,
-    });
-    console.log(data);
+    try {
+      setLike(!like);
+      await commentsApi.likeComment(comment_id, user_id);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

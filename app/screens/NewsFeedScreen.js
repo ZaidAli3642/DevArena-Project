@@ -8,6 +8,9 @@ import colors from '../config/colors';
 import AuthContext from './../context/AuthContext';
 import apiClient from '../api/client';
 import ActivityIndicator from '../components/ActivityIndicator';
+import postsApi from '../api/posts';
+import AppText from '../components/AppText';
+import AppButton from '../components/AppButton';
 
 function NewsFeedScreen() {
   const [visible, setVisible] = useState(false);
@@ -20,15 +23,10 @@ function NewsFeedScreen() {
   const getUserPosts = async () => {
     try {
       setLoading(true);
-      const {data} = await apiClient.get(`/posts/${user.user_id}/post`);
 
-      data.allUsersPosts.sort(function (o1, o2) {
-        if (o1.created_at > o2.created_at) return -1;
-        else if (o1.created_at < o2.created_at) return 1;
-        else return 0;
-      });
+      const allFeedPosts = await postsApi.getFeedPosts(user.user_id, 'post');
 
-      setAllPosts(data.allUsersPosts);
+      setAllPosts(allFeedPosts);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -43,34 +41,17 @@ function NewsFeedScreen() {
   }, []);
 
   const handleSubmit = async (values, {resetForm}) => {
-    const formdata = new FormData();
+    const post = await postsApi.createPost(
+      user.user_id,
+      values.description,
+      'post',
+      values.image,
+    );
 
-    if (values.image) {
-      const photo = {
-        uri: values.image.uri,
-        type: values.image.type,
-        name: values.image.fileName,
-      };
-      formdata.append('image', photo);
-    }
-
-    formdata.append('description', values.description);
-    formdata.append('user_id', user.user_id);
-    formdata.append('post_type', 'post');
-
-    setRefreshing(true);
-    const response = await apiClient.post('/post', formdata, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    setAllPosts([...response.data, ...allPosts]);
+    setAllPosts([...post, ...allPosts]);
 
     setVisible(false);
     resetForm();
-    setRefreshing(false);
   };
 
   return (

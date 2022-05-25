@@ -10,6 +10,7 @@ import ListItem from './../components/ListItem';
 import routes from '../routes/routes';
 import apiClient from '../api/client';
 import AuthContext from '../context/AuthContext';
+import groupsApi from '../api/groupsApi';
 
 const groups = [];
 
@@ -22,9 +23,8 @@ function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
 
   const getUserCreatedGroups = async () => {
     try {
-      const {data} = await apiClient.get(`/user_group/${user.user_id}`);
-      console.log(data);
-      setUserCreatedGroups([...data.allUserGroups]);
+      const response = await groupsApi.getCreatedGroups(user.user_id);
+      setUserCreatedGroups([...response.data.allUserGroups]);
     } catch (error) {
       console.log(error);
     }
@@ -32,8 +32,8 @@ function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
 
   const getJoinedUserGroups = async () => {
     try {
-      const {data} = await apiClient.get(`/joined_group/${user.user_id}`);
-      setUserJoinedGroups(data.joinedGroups);
+      const response = await groupsApi.getJoinedGroups(user.user_id);
+      setUserJoinedGroups(response.data.joinedGroups);
     } catch (error) {
       console.log(error);
     }

@@ -8,6 +8,7 @@ import PostCard from '../components/PostCard';
 import AuthContext from './../context/AuthContext';
 import apiClient from '../api/client';
 import ActivityIndicator from '../components/ActivityIndicator';
+import postsApi from '../api/posts';
 
 function QueryFeedScreen() {
   const [visible, setVisible] = useState(false);
@@ -20,15 +21,9 @@ function QueryFeedScreen() {
   const getQueries = async () => {
     try {
       setLoading(true);
-      const {data} = await apiClient.get(`/posts/${user.user_id}/query`);
+      const allFeedQueries = await postsApi.getFeedPosts(user.user_id, 'query');
 
-      data.allUsersPosts.sort(function (o1, o2) {
-        if (o1.created_at > o2.created_at) return -1;
-        else if (o1.created_at < o2.created_at) return 1;
-        else return 0;
-      });
-
-      setAllQueries(data.allUsersPosts);
+      setAllQueries(allFeedQueries);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -40,34 +35,17 @@ function QueryFeedScreen() {
   }, []);
 
   const handleSubmit = async (values, {resetForm}) => {
-    const formdata = new FormData();
+    const query = await postsApi.createPost(
+      user.user_id,
+      values.description,
+      'query',
+      values.image,
+    );
 
-    if (values.image) {
-      const photo = {
-        uri: values.image.uri,
-        type: values.image.type,
-        name: values.image.fileName,
-      };
-      formdata.append('image', photo);
-    }
-
-    formdata.append('description', values.description);
-    formdata.append('user_id', user.user_id);
-    formdata.append('post_type', 'query');
-
-    setRefreshing(true);
-    const response = await apiClient.post('/post', formdata, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    setAllQueries([...response.data, ...allQueries]);
+    setAllQueries([...query, ...allQueries]);
 
     setVisible(false);
     resetForm();
-    setRefreshing(false);
   };
 
   return (

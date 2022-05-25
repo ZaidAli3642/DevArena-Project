@@ -16,6 +16,8 @@ const GroupsNavigator = () => (
       tabBarActiveTintColor: colors.red,
       tabBarInactiveTintColor: colors.mediumGrey,
       tabBarIndicatorStyle: {backgroundColor: colors.red},
+      tabBarPressColor: 'transparent',
+      tabBarPressOpacity: 0,
     }}>
     <Top.Screen
       name={routes.FOR_YOU}

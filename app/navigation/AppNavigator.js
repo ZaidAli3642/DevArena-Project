@@ -26,7 +26,11 @@ const AppNavigator = () => (
           alignItems: 'center',
           justifyContent: 'center',
         },
-        tabBarIndicatorStyle: {backgroundColor: colors.red},
+        tabBarIndicatorStyle: {
+          backgroundColor: colors.red,
+        },
+        // tabBarPressOpacity: 0,
+        tabBarPressColor: 'transparent',
       }}>
       <Top.Screen
         name={routes.HOME}
