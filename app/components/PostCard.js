@@ -16,8 +16,9 @@ function PostCard({item, image, user}) {
   const [visible, setVisible] = useState(false);
   const [sharedUser, setSharedUser] = useState(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [groupName, setGroupName] = useState(null);
 
-  const {description, imageUri, groupName, created_at, post_id} = item;
+  const {description, imageUri, created_at, post_id} = item;
 
   const getSharedPostUser = async () => {
     try {
@@ -31,9 +32,19 @@ function PostCard({item, image, user}) {
     }
   };
 
+  const getGroupDetail = async () => {
+    const {data} = await apiClient.get(`/group_post/${item.post_id}`);
+    if (data.group_post[0]) {
+      const {group_id} = data.group_post[0];
+      const response = await apiClient.get(`/group/${group_id}`);
+      setGroupName(response.data.singleGroup.group_name);
+    }
+  };
+
   useEffect(() => {
     setIsMounted(true);
     getSharedPostUser();
+    getGroupDetail();
 
     return () => {
       setIsMounted(false);
@@ -137,9 +148,10 @@ function PostCard({item, image, user}) {
         />
         <View style={styles.userDescription}>
           <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
-            <AppText style={styles.text}>{`${
-              item.firstname || user?.firstname
-            } ${item.lastname || user?.lastname}`}</AppText>
+            <AppText
+              style={
+                styles.text
+              }>{`${item.firstname} ${item.lastname}`}</AppText>
             {sharedUser && (
               <AppText style={{marginLeft: 5, fontSize: 13}}>
                 Shared from {`${sharedUser}`}

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 import {format} from 'timeago.js';
 
 import PostCard from '../components/PostCard';
+import postsApi from '../api/posts';
+import AuthContext from '../context/AuthContext';
 
 const groupPosts = [
   {
@@ -53,12 +55,31 @@ const groupPosts = [
 ];
 
 function GroupsForYouScreen() {
+  const [allGroupPosts, setAllGroupsPosts] = useState([]);
+
+  const {user, image} = useContext(AuthContext);
+
+  const getGroupPosts = async () => {
+    try {
+      const groupPosts = await postsApi.getFeedPosts(user.user_id, 'group');
+      setAllGroupsPosts(groupPosts);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getGroupPosts();
+  }, []);
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={groupPosts}
-        keyExtractor={groupPost => groupPost.gourpPostId.toString()}
-        renderItem={({item}) => <PostCard item={item} />}
+        data={allGroupPosts}
+        keyExtractor={groupPost => groupPost.post_id.toString()}
+        renderItem={({item}) => (
+          <PostCard item={item} image={image} user={user} />
+        )}
       />
     </View>
   );
