@@ -10,6 +10,7 @@ function GroupItem({
   image,
   IconComponent,
   roundedImage = false,
+  approve_request = true,
   onPress,
 }) {
   return (

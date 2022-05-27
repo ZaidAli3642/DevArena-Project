@@ -7,10 +7,9 @@ import AppNavigator from './AppNavigator';
 import PostViewScreen from '../screens/PostViewScreen';
 import ProfileScreen from './../screens/ProfileScreen';
 import AccountSettingsNavigator from './AccountSettingsNavigator';
-import MainGroupsNavigator from './MainGroupsNavigator';
 import GroupsScreen from './../screens/GroupsScreen';
 import GroupsNavigator from './GroupsNavigator';
-import AppComments from '../components/AppComments';
+import ApproveRequestScreen from '../screens/ApproveRequestScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -65,13 +64,13 @@ const MainNavigator = () => (
       component={GroupsScreen}
     />
     <Stack.Screen
-      name="APP_COMMENT"
+      name={routes.REQUESTS}
       options={{
-        animation: 'slide_from_left',
-        title: 'Comments',
+        animation: 'slide_from_right',
+        title: 'Requests',
         headerTintColor: colors.red,
       }}
-      component={AppComments}
+      component={ApproveRequestScreen}
     />
   </Stack.Navigator>
 );
