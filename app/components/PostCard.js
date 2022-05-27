@@ -17,6 +17,9 @@ function PostCard({item, image, user}) {
   const [sharedUser, setSharedUser] = useState(null);
   const [isMounted, setIsMounted] = useState(false);
   const [groupName, setGroupName] = useState(null);
+  const [postLikes, setPostLikes] = useState(0);
+  const [postDislikes, setPostDislikes] = useState(0);
+  const [postCommentsLength, setPostCommentsLength] = useState(0);
 
   const {description, imageUri, created_at, post_id} = item;
 
@@ -41,11 +44,40 @@ function PostCard({item, image, user}) {
     }
   };
 
+  const getPostLikes = async () => {
+    try {
+      const response = await apiClient.get(`/like/${item.post_id}`);
+      setPostLikes(response.data.postLikes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getPostDislikes = async () => {
+    try {
+      const response = await apiClient.get(`/dislike/${item.post_id}`);
+      setPostDislikes(response.data.postDislikes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getPostCommentsLength = async () => {
+    try {
+      const response = await apiClient.get(`/comment/${item.post_id}`);
+      setPostCommentsLength(response.data.postComments);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     setIsMounted(true);
     getSharedPostUser();
     getGroupDetail();
-
+    getPostLikes();
+    getPostDislikes();
+    getPostCommentsLength();
     return () => {
       setIsMounted(false);
     };
@@ -110,21 +142,21 @@ function PostCard({item, image, user}) {
     {
       id: 1,
       iconName: liked ? 'thumb-up' : 'thumb-up-outline',
-      title: 'Like',
+      title: postLikes,
       color: liked ? colors.red : colors.mediumGrey,
       onPress: handleLike,
     },
     {
       id: 2,
       iconName: disliked ? 'thumb-down' : 'thumb-down-outline',
-      title: 'Dislike',
+      title: postDislikes,
       color: disliked ? colors.red : colors.mediumGrey,
       onPress: handleDislike,
     },
     {
       id: 3,
       iconName: 'comment-outline',
-      title: 'Comment',
+      title: postCommentsLength,
       onPress: () => setVisible(true),
     },
     {

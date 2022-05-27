@@ -16,6 +16,7 @@ function JoinGroupsScreen({navigation}) {
   const getAllGroups = async () => {
     try {
       const response = await groupsApi.getGroups(user.user_id);
+
       setAllGroups([...response.data.allGroups]);
     } catch (error) {
       console.log(error);
@@ -34,7 +35,7 @@ function JoinGroupsScreen({navigation}) {
       <AppHeadingText style={styles.heading}>Suggestions</AppHeadingText>
       <FlatList
         data={allGroups}
-        keyExtractor={group => group.group_id?.toString()}
+        keyExtractor={group => group.group_id.toString()}
         renderItem={({item}) => (
           <GroupPickerItem
             onPress={() =>

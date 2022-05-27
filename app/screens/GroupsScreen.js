@@ -10,49 +10,7 @@ import AppModalForm from './../components/AppModalForm';
 import AuthContext from './../context/AuthContext';
 import groupsApi from '../api/groupsApi';
 import apiClient from '../api/client';
-
-const posts = [
-  {
-    postId: 1,
-    userImage:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-    username: 'Emma Watson',
-    date: format(new Date()),
-    description: 'Wow! what a beautiful view!',
-    postImage:
-      'https://images.unsplash.com/photo-1587502537815-0c8b5c9ba39a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxzZWFyY2h8MXx8bmF0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
-  },
-  {
-    postId: 2,
-    userImage:
-      'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80',
-    username: 'Tony Stark',
-    date: format(new Date()),
-    description: 'Yoooooo!',
-    postImage:
-      'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8bmF0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
-  },
-  {
-    postId: 3,
-    userImage:
-      'https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80',
-    username: 'Selena Gomez',
-    date: format(new Date()),
-    description: 'Need some sunlight!',
-    postImage:
-      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8bmF0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
-  },
-  {
-    postId: 4,
-    userImage:
-      'https://images.unsplash.com/photo-1504593811423-6dd665756598?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-    username: 'John Kent',
-    date: format(new Date()),
-    description: 'Be Greatful!',
-    postImage:
-      'https://images.unsplash.com/photo-1433086966358-54859d0ed716?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bmF0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60',
-  },
-];
+import postsApi from '../api/posts';
 
 function GroupsScreen({route}) {
   const [groupPosts, setGroupPosts] = useState([]);
@@ -65,7 +23,6 @@ function GroupsScreen({route}) {
   const getGroupPost = async () => {
     try {
       const response = await groupsApi.groupPosts(user.user_id, group.group_id);
-      console.log(response.data);
       setGroupPosts(response.data.allGroupPosts);
     } catch (error) {
       console.log(error);
@@ -76,18 +33,36 @@ function GroupsScreen({route}) {
     getGroupPost();
   }, []);
 
-  const handleSubmit = (values, {resetForm}) => {
-    const newPost = {
-      postId: Date.now(),
-      userImage: user.profileImage,
-      username: 'Zaid Saleem',
-      date: format(new Date()),
-      description: values.description,
-      postImage: values.image,
+  const joinGroup = async () => {
+    const joinDetails = {
+      joined_group_id: group.group_id,
+      joined_user_id: user.user_id,
+      joined_firstname: user.firstname,
+      joined_group_name: group.group_name,
+      user_id: group.user_id,
     };
 
-    const newPosts = [newPost, ...allPosts];
-    setAllPosts(newPosts);
+    const response = await apiClient.post('/request', joinDetails);
+    console.log(response.data);
+  };
+
+  const handleSubmit = async (values, {resetForm}) => {
+    const groupPost = await postsApi.createPost(
+      user.user_id,
+      values.description,
+      'group',
+      values.image,
+    );
+
+    if (groupPost[0].post_id) {
+      console.log(groupPost[0].post_id);
+      await apiClient.post('/group_post', {
+        post_id: groupPost[0].post_id,
+        group_id: group.group_id,
+      });
+      setGroupPosts([...groupPost, ...groupPosts]);
+    }
+
     setVisible(false);
     resetForm();
   };
@@ -95,15 +70,13 @@ function GroupsScreen({route}) {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <GroupHeader group={group} />
+        <GroupHeader group={group} user={user} joinGroup={joinGroup} />
 
         <View style={styles.inputContainer}>
           <Image
             style={styles.profileImage}
             source={
-              user.profileImage
-                ? {uri: user.profileImage}
-                : require('../assets/profileAvatar.jpeg')
+              image ? {uri: image} : require('../assets/profileAvatar.jpeg')
             }
           />
           <AppPostInput
@@ -113,6 +86,7 @@ function GroupsScreen({route}) {
           />
         </View>
         <AppModalForm
+          image={image}
           userTitle="Zaid Saleem"
           placeholder="What's on your mind?"
           setVisible={setVisible}

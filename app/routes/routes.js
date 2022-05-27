@@ -18,6 +18,7 @@ export default {
   PROFILE: 'Profile',
   QUERY: 'Query',
   REGISTER: 'Register',
+  REQUESTS: 'Request',
   SETTINGS: 'Settings',
   SINGLE_GROUP: 'SingleGroup',
   NESTED_SETTINGS: 'NestedSettings',

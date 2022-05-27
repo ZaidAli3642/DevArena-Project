@@ -12,8 +12,6 @@ import apiClient from '../api/client';
 import AuthContext from '../context/AuthContext';
 import groupsApi from '../api/groupsApi';
 
-const groups = [];
-
 // List all the Groups that you have joined
 function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
   const [userCreatedGroups, setUserCreatedGroups] = useState([]);
@@ -24,6 +22,7 @@ function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
   const getUserCreatedGroups = async () => {
     try {
       const response = await groupsApi.getCreatedGroups(user.user_id);
+      console.log(response.data);
       setUserCreatedGroups([...response.data.allUserGroups]);
     } catch (error) {
       console.log(error);

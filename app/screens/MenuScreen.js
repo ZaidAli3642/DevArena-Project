@@ -33,6 +33,15 @@ const menuItems = [
     },
     target: routes.GROUPS,
   },
+  {
+    title: 'Requests',
+    icon: {
+      iconPackage: MaterialCommunityIcons,
+      backgroundColor: 'dodgerblue',
+      name: 'check-circle-outline',
+    },
+    target: routes.REQUESTS,
+  },
 ];
 
 function MenuScreen({navigation}) {

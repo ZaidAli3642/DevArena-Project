@@ -8,6 +8,7 @@ import AuthNavigator from './app/navigation/AuthNavigator';
 import AuthContext from './app/context/AuthContext';
 import authStorage from './app/context/auth/authStorage';
 import apiClient from './app/api/client';
+import ApproveRequestScreen from './app/screens/ApproveRequestScreen';
 
 function App() {
   const [user, setUser] = useState(null);
