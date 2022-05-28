@@ -2,6 +2,7 @@ import React, {useState, memo, useEffect} from 'react';
 import {Image, View, Modal, StyleSheet, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {format} from 'timeago.js';
+import {useNavigation} from '@react-navigation/native';
 
 import AppButton from './AppButton';
 import AppText from './AppText';
@@ -9,6 +10,7 @@ import colors from '../config/colors';
 import apiClient from '../api/client';
 import AppComments from './AppComments';
 import postsApi from '../api/posts';
+import routes from '../routes/routes';
 
 function PostCard({item, image, user}) {
   const [liked, setLiked] = useState(item.like_post);
@@ -21,13 +23,16 @@ function PostCard({item, image, user}) {
   const [postDislikes, setPostDislikes] = useState(0);
   const [postCommentsLength, setPostCommentsLength] = useState(0);
 
-  const {description, imageUri, created_at, post_id} = item;
+  const navigation = useNavigation();
+
+  const {description, imageUri, created_at, post_id, user_id} = item;
 
   const getSharedPostUser = async () => {
     try {
       if (item.shared_user_id) {
         const response = await apiClient.get(`/user/${item.shared_user_id}`);
-        const {firstname, lastname} = response.data.user[0];
+        console.log(response.data);
+        const {firstname, lastname} = response.data;
         setSharedUser(firstname + ' ' + lastname);
       }
     } catch (error) {
@@ -180,10 +185,14 @@ function PostCard({item, image, user}) {
         />
         <View style={styles.userDescription}>
           <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
-            <AppText
-              style={
-                styles.text
-              }>{`${item.firstname} ${item.lastname}`}</AppText>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => navigation.navigate(routes.PROFILE, {user_id})}>
+              <AppText
+                style={
+                  styles.text
+                }>{`${item.firstname} ${item.lastname}`}</AppText>
+            </TouchableOpacity>
             {sharedUser && (
               <AppText style={{marginLeft: 5, fontSize: 13}}>
                 Shared from {`${sharedUser}`}

@@ -6,8 +6,8 @@ import {useFormikContext} from 'formik';
 import AppButton from './AppButton';
 import colors from '../config/colors';
 
-function SubmitButton({title, onSubmitCode}) {
-  const {handleSubmit, values} = useFormikContext();
+function SubmitButton({title}) {
+  const {handleSubmit} = useFormikContext();
 
   return (
     <>
@@ -18,7 +18,6 @@ function SubmitButton({title, onSubmitCode}) {
         <TouchableOpacity
           onPress={() => {
             handleSubmit();
-            if (values['code']) onSubmitCode();
           }}>
           <MaterialCommunityIcons
             name="send-circle"

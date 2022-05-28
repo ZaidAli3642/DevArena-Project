@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import {format} from 'timeago.js';
 import * as ImagePicker from 'react-native-image-picker';
@@ -21,18 +22,23 @@ import AuthContext from './../context/AuthContext';
 import apiClient from './../api/client';
 import AppFormImagePicker from '../components/AppFormImagePicker';
 import postsApi from '../api/posts';
+import routes from '../routes/routes';
 
-function ProfileScreen() {
+function ProfileScreen({route, navigation}) {
   const [visible, setVisible] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [userDetails, setUserDetails] = useState();
+  const [loadingUserDetails, setLoadingUserDetails] = useState(false);
+
+  const {user_id} = route.params;
 
   const {user, setImage, image} = useContext(AuthContext);
 
   const getUserPosts = async () => {
     try {
       setLoading(true);
-      const userPosts = await postsApi.userPosts(user.user_id);
+      const userPosts = await postsApi.userPosts(user_id);
 
       setAllPosts(userPosts);
       setLoading(false);
@@ -41,8 +47,24 @@ function ProfileScreen() {
     }
   };
 
+  const getUserDetails = async () => {
+    try {
+      setLoadingUserDetails(true);
+      const response = await apiClient.get(`/user/${user_id}`);
+      setUserDetails(response.data);
+      setLoadingUserDetails(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    const ac = new AbortController();
+
     getUserPosts();
+    getUserDetails();
+
+    return () => ac.abort();
   }, []);
 
   const handleSelectImage = async () => {
@@ -115,22 +137,42 @@ function ProfileScreen() {
         <View style={styles.user}>
           <AppFormImagePicker
             name="image"
-            image={image}
+            image={userDetails?.profile_imageUri}
             handleSelectImage={handlePress}
             user_id={user.user_id}
+            otherUserId={user_id}
           />
 
-          <AppText
-            style={
-              styles.title
-            }>{`${user.firstname} ${user.lastname}`}</AppText>
-          <AppText style={styles.description}>{user.category}</AppText>
-          <AppButton
-            style={styles.button}
-            textStyle={styles.textStyle}
-            color="dodgerblue"
-            title="FOLLOW"
-          />
+          {!loadingUserDetails && (
+            <AppText
+              style={
+                styles.title
+              }>{`${userDetails?.firstname} ${userDetails?.lastname}`}</AppText>
+          )}
+          <AppText style={styles.description}>{userDetails?.category}</AppText>
+          {user.user_id === user_id ? null : (
+            <AppButton
+              style={styles.button}
+              textStyle={styles.textStyle}
+              color="dodgerblue"
+              title="FOLLOW"
+            />
+          )}
+          <View style={styles.followContainer}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.push(routes.FOLLWERS, {user_id: user_id})
+              }>
+              <AppText>Followers</AppText>
+            </TouchableOpacity>
+            <View style={styles.followSeperator} />
+            <TouchableOpacity
+              onPress={() =>
+                navigation.push(routes.FOLLOWINGS, {user_id: user_id})
+              }>
+              <AppText>Followings</AppText>
+            </TouchableOpacity>
+          </View>
         </View>
         <ItemSeperator />
         <View style={styles.input}>
@@ -186,7 +228,8 @@ function ProfileScreen() {
 
 const styles = StyleSheet.create({
   button: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 25,
+    padding: 5,
     borderRadius: 10,
   },
   textStyle: {
@@ -197,6 +240,16 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 20,
+  },
+  followContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
+  },
+  followSeperator: {
+    borderRightWidth: 1,
+    borderRightColor: 'black',
   },
 
   input: {

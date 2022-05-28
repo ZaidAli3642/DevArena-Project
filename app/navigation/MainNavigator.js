@@ -10,6 +10,9 @@ import AccountSettingsNavigator from './AccountSettingsNavigator';
 import GroupsScreen from './../screens/GroupsScreen';
 import GroupsNavigator from './GroupsNavigator';
 import ApproveRequestScreen from '../screens/ApproveRequestScreen';
+import FollowRequests from '../screens/FollowRequests';
+import FollowersScreen from './../screens/FollowersScreen';
+import FollowingsScreen from './../screens/FollowingsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -67,10 +70,37 @@ const MainNavigator = () => (
       name={routes.REQUESTS}
       options={{
         animation: 'slide_from_right',
-        title: 'Requests',
+        title: 'Group Requests',
         headerTintColor: colors.red,
       }}
       component={ApproveRequestScreen}
+    />
+    <Stack.Screen
+      name={routes.FOLLOW}
+      options={{
+        animation: 'slide_from_right',
+        title: 'Follow Requests',
+        headerTintColor: colors.red,
+      }}
+      component={FollowRequests}
+    />
+    <Stack.Screen
+      name={routes.FOLLWERS}
+      options={{
+        animation: 'slide_from_right',
+        title: 'Followers',
+        headerTintColor: colors.red,
+      }}
+      component={FollowersScreen}
+    />
+    <Stack.Screen
+      name={routes.FOLLOWINGS}
+      options={{
+        animation: 'slide_from_right',
+        title: 'Followings',
+        headerTintColor: colors.red,
+      }}
+      component={FollowingsScreen}
     />
   </Stack.Navigator>
 );

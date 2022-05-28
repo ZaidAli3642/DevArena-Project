@@ -1,26 +1,76 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 
 import AppText from './AppText';
 import AppButton from './AppButton';
+import apiClient from './../api/client';
+import colors from '../config/colors';
 
-function ApproveRequestItem({approveRequest, name, message, groupName}) {
+function ApproveRequestItem({
+  approveRequest,
+  name,
+  message,
+  groupName,
+  text,
+  requested_user_id,
+  acceptFollowRequest,
+  accepted,
+}) {
+  const [userProfileImage, setUserProfileImage] = useState(null);
+  const getRequestedUserImage = async () => {
+    const response = await apiClient.get('/image/' + requested_user_id);
+    setUserProfileImage(response.data.imageUri);
+  };
+
+  useEffect(() => {
+    getRequestedUserImage();
+  }, []);
+
   return (
     <View style={styles.requestContainer}>
       <Image
         style={styles.image}
-        source={require('../assets/zaid-saleem-image.jpg')}
+        source={
+          userProfileImage
+            ? {uri: userProfileImage}
+            : require('../assets/profileAvatar.jpeg')
+        }
       />
       <View style={styles.description}>
         <AppText style={styles.title}>{name}</AppText>
-        <AppText numberOfLines={1}>{message + ' ' + groupName}</AppText>
+        {groupName ? (
+          <AppText numberOfLines={1}>{message + ' ' + groupName}</AppText>
+        ) : (
+          <AppText numberOfLines={1}>{'wants to follow you.'}</AppText>
+        )}
       </View>
-      <AppButton
-        title="Approve"
-        textStyle={styles.buttonText}
-        style={styles.button}
-        onPress={approveRequest}
-      />
+      {groupName ? (
+        <AppButton
+          title={text ? 'Approved' : 'Approve'}
+          textStyle={styles.buttonText}
+          style={styles.button}
+          onPress={approveRequest}
+        />
+      ) : (
+        <View
+          style={{
+            flexDirection: 'row',
+            marginRight: 10,
+          }}>
+          <AppButton
+            title={accepted ? 'Accepted' : 'Accept'}
+            textStyle={styles.buttonText}
+            style={[styles.button, {padding: 5}]}
+            onPress={acceptFollowRequest}
+          />
+          <AppButton
+            title="Reject"
+            color={colors.red}
+            textStyle={styles.buttonText}
+            style={[styles.button, {padding: 5, marginLeft: 10}]}
+          />
+        </View>
+      )}
     </View>
   );
 }
@@ -31,7 +81,7 @@ const styles = StyleSheet.create({
   },
   description: {
     flex: 1,
-    marginLeft: 5,
+    marginLeft: 10,
   },
   requestContainer: {
     flexDirection: 'row',
@@ -48,6 +98,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 10,
+    marginHorizontal: 5,
   },
 });
 export default ApproveRequestItem;

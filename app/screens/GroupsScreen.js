@@ -11,10 +11,12 @@ import AuthContext from './../context/AuthContext';
 import groupsApi from '../api/groupsApi';
 import apiClient from '../api/client';
 import postsApi from '../api/posts';
+import AppButton from '../components/AppButton';
 
 function GroupsScreen({route}) {
   const [groupPosts, setGroupPosts] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [text, setText] = useState(route.params.group.approve_request);
 
   const {group} = route.params;
 
@@ -44,6 +46,7 @@ function GroupsScreen({route}) {
 
     const response = await apiClient.post('/request', joinDetails);
     console.log(response.data);
+    setText(!text);
   };
 
   const handleSubmit = async (values, {resetForm}) => {
@@ -70,7 +73,12 @@ function GroupsScreen({route}) {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <GroupHeader group={group} user={user} joinGroup={joinGroup} />
+        <GroupHeader
+          group={group}
+          text={text}
+          user={user}
+          joinGroup={joinGroup}
+        />
 
         <View style={styles.inputContainer}>
           <Image

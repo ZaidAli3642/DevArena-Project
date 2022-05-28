@@ -1,7 +1,20 @@
 import React from 'react';
-import {TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {TouchableOpacity, View, Image, StyleSheet} from 'react-native';
 
-function AppFormImagePicker({handleSelectImage, image}) {
+function AppFormImagePicker({handleSelectImage, image, user_id, otherUserId}) {
+  if (user_id !== otherUserId)
+    return (
+      <View style={styles.imageContainer}>
+        {!image && (
+          <Image
+            style={styles.image}
+            source={require('../assets/profileAvatar.jpeg')}
+          />
+        )}
+        {image && <Image style={styles.image} source={{uri: image}} />}
+      </View>
+    );
+
   return (
     <TouchableOpacity onPress={handleSelectImage} style={styles.imageContainer}>
       {!image && (
