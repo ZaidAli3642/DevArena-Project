@@ -3,6 +3,7 @@ import {FlatList, View, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 import AppHeadingText from '../components/AppHeadingText';
 import Icon from '../components/Icon';
@@ -11,7 +12,6 @@ import colors from '../config/colors';
 import routes from '../routes/routes';
 import ItemSeperator from './../components/ItemSeperator';
 import AuthContext from './../context/AuthContext';
-import apiClient from '../api/client';
 import authStorage from '../context/auth/authStorage';
 
 const menuItems = [
@@ -34,13 +34,22 @@ const menuItems = [
     target: routes.GROUPS,
   },
   {
-    title: 'Requests',
+    title: 'Group Requests',
     icon: {
       iconPackage: MaterialCommunityIcons,
-      backgroundColor: 'dodgerblue',
+      backgroundColor: '#778ca3',
       name: 'check-circle-outline',
     },
     target: routes.REQUESTS,
+  },
+  {
+    title: 'Follow Requests',
+    icon: {
+      iconPackage: SimpleLineIcons,
+      backgroundColor: '#a55eea',
+      name: 'user-follow',
+    },
+    target: routes.FOLLOW,
   },
 ];
 
@@ -56,7 +65,9 @@ function MenuScreen({navigation}) {
           description={user.category}
           image={image}
           roundedImage={true}
-          onPress={() => navigation.navigate(routes.PROFILE)}
+          onPress={() =>
+            navigation.navigate(routes.PROFILE, {user_id: user.user_id})
+          }
         />
       </View>
 
@@ -113,6 +124,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     marginLeft: 20,
+    marginBottom: 0,
   },
 });
 export default MenuScreen;

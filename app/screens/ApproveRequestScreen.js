@@ -8,12 +8,18 @@ import AuthContext from '../context/AuthContext';
 
 function ApproveRequestScreen() {
   const [requests, setRequests] = useState([]);
+  const [text, setText] = useState(false);
 
   const {user} = useContext(AuthContext);
 
   const getRequests = async () => {
-    const response = await apiClient.get(`/request/${user.user_id}`);
-    setRequests(response.data.allRequests);
+    try {
+      const response = await apiClient.get(`/request/${user.user_id}`);
+      console.log(response.data);
+      setRequests(response.data.allRequests);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -23,6 +29,10 @@ function ApproveRequestScreen() {
   const approveRequest = async join_id => {
     try {
       await apiClient.patch(`/approve/${join_id}`);
+      setText(text => ({
+        ...text,
+        [join_id]: !text[join_id],
+      }));
     } catch (error) {
       console.log(error);
     }
@@ -39,7 +49,9 @@ function ApproveRequestScreen() {
             name={item.joined_firstname}
             message={item.message}
             groupName={item.joined_group_name}
+            requested_user_id={item.joined_user_id}
             approveRequest={() => approveRequest(item.join_id)}
+            text={text[item.join_id]}
           />
         )}
         ItemSeparatorComponent={ItemSeperator}

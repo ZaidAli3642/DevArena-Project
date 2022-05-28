@@ -6,7 +6,7 @@ import AppText from '../components/AppText';
 import colors from '../config/colors';
 import AppButton from './AppButton';
 
-function GroupHeader({group, user, joinGroup}) {
+function GroupHeader({group, user, text, joinGroup}) {
   const {
     group_description,
     group_image,
@@ -35,17 +35,17 @@ function GroupHeader({group, user, joinGroup}) {
           {group.user_id === user.user_id ? null : joined_user_id ===
             user.user_id ? (
             <AppButton
-              title={!approve_request ? 'Requested' : 'JOINED'}
+              title={!text ? 'Requested' : 'JOINED'}
               textStyle={styles.buttonText}
               color={colors.red}
-              style={styles.button}
+              style={[styles.button, {width: 100}]}
             />
           ) : (
             <AppButton
-              title="JOIN"
+              title={!text ? 'JOIN' : 'Requested'}
               textStyle={styles.buttonText}
               color={colors.red}
-              style={styles.button}
+              style={[styles.button, {width: 100}]}
               onPress={joinGroup}
             />
           )}
