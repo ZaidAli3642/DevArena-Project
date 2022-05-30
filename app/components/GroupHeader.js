@@ -7,13 +7,7 @@ import colors from '../config/colors';
 import AppButton from './AppButton';
 
 function GroupHeader({group, user, text, joinGroup}) {
-  const {
-    group_description,
-    group_image,
-    group_name,
-    joined_user_id,
-    approve_request,
-  } = group;
+  const {group_description, group_image, group_name, joined_user_id} = group;
 
   return (
     <>

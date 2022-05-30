@@ -14,7 +14,7 @@ function AppFormPicker({name, color = colors.white, item, onSelectLanguage}) {
         <PickerItem
           key={i.id}
           color={color}
-          label={i.label}
+          label={i.label || i.category}
           onPress={() => {
             if (onSelectLanguage) onSelectLanguage();
             setFieldValue(name, i);

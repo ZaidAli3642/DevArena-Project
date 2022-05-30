@@ -11,7 +11,6 @@ import AuthContext from './../context/AuthContext';
 import groupsApi from '../api/groupsApi';
 import apiClient from '../api/client';
 import postsApi from '../api/posts';
-import AppButton from '../components/AppButton';
 
 function GroupsScreen({route}) {
   const [groupPosts, setGroupPosts] = useState([]);

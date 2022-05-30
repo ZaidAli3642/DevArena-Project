@@ -25,7 +25,7 @@ function FollowingsScreen({route, navigation}) {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View>
       <FlatList
         data={followings}
         keyExtractor={following => following.user_id.toString()}
