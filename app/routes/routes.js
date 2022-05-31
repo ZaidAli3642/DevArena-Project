@@ -1,4 +1,6 @@
 export default {
+  ADD_USER: 'AddUser',
+  ALL_MEMBERS: 'AllMembers',
   CODE: 'Code',
   CREATE_GROUP: 'CreateGroup',
   EMAIL_VERIFY: 'Email',
@@ -26,6 +28,7 @@ export default {
   SINGLE_GROUP: 'SingleGroup',
   NESTED_SETTINGS: 'NestedSettings',
   UPDATE_PASSWORD: 'UpdatePassword',
+  UPDATE_GROUP: 'UpdateGroup',
   USER_INFO_UPDATE: 'UserInfoUpdate',
   USER_CATEGORY_INFO_UPDATE: 'UserCategoryInfoUpdate',
   WELCOME: 'Welcome',

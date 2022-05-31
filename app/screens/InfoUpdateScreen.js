@@ -9,20 +9,49 @@ import AppKeyboardView from '../components/AppKeyboardView';
 import SubmitButton from '../components/SubmitButton';
 import colors from '../config/colors';
 import AppText from './../components/AppText';
+import apiClient from './../api/client';
 
 function InfoUpdateScreen({route}) {
   const validationSchema = yup.object().shape({
     data: yup.string().required('Data is required').label('Data'),
   });
 
-  const {oldTextName, oldValue} = route.params;
+  const {oldTextName, oldValue, key, user, group} = route.params;
 
-  const handleSubmit = values => {
-    const inputKey = 'firstname';
+  const handleGroupUpdate = async data => {
+    try {
+      const response = await apiClient.patch(
+        `/group_update/${group.group_id}`,
+        {
+          updatedValue: data,
+        },
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUserUpdate = async data => {
+    try {
+      const response = await apiClient.patch(`/users/${user.user_id}`, {
+        updatedValue: data,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUpdate = values => {
     const data = {
-      [inputKey]: values.data,
+      name: key,
+      value: values.data,
     };
-    console.log(data);
+
+    if (group.group_id) return handleGroupUpdate(data);
+
+    return handleUserUpdate(data);
   };
 
   return (
@@ -35,7 +64,7 @@ function InfoUpdateScreen({route}) {
       </AppText>
       <AppForm
         initialValues={{data: ''}}
-        onSubmit={handleSubmit}
+        onSubmit={handleUpdate}
         validationSchema={validationSchema}>
         <AppKeyboardView>
           <AppFormField

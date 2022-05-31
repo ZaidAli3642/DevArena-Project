@@ -1,6 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {Image, ScrollView, View, StyleSheet} from 'react-native';
-import {format} from 'timeago.js';
 
 import AppPostInput from '../components/AppPostInput';
 import GroupHeader from '../components/GroupHeader';

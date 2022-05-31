@@ -17,6 +17,7 @@ function JoinGroupsScreen({navigation}) {
     try {
       const response = await groupsApi.getGroups(user.user_id);
 
+      console.log(response.data);
       setAllGroups([...response.data.allGroups]);
     } catch (error) {
       console.log(error);

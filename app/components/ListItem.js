@@ -3,6 +3,7 @@ import {Image, View, StyleSheet, TouchableOpacity} from 'react-native';
 
 import AppText from '../components/AppText';
 import colors from '../config/colors';
+import AppButton from './AppButton';
 
 function GroupItem({
   name,
@@ -11,6 +12,12 @@ function GroupItem({
   IconComponent,
   roundedImage = false,
   onPress,
+  join_id,
+  addUser,
+  removed,
+  added,
+  add = false,
+  removeMembers,
 }) {
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
@@ -39,12 +46,35 @@ function GroupItem({
             </AppText>
           )}
         </View>
+        {join_id && (
+          <AppButton
+            title={removed ? 'Removed' : 'Remove'}
+            textStyle={styles.textStyle}
+            style={styles.button}
+            onPress={removeMembers}
+          />
+        )}
+        {add && (
+          <AppButton
+            title={added ? 'Added' : 'add'}
+            textStyle={styles.textStyle}
+            style={styles.button}
+            onPress={addUser}
+          />
+        )}
       </View>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
+  button: {
+    width: 100,
+    borderRadius: 10,
+  },
+  textStyle: {
+    fontSize: 15,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',

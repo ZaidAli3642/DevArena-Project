@@ -136,19 +136,16 @@ function ProfileScreen({route, navigation}) {
       ]);
   };
 
-  const handleSubmit = (values, {resetForm}) => {
-    const newPost = {
-      postId: Date.now(),
-      userImage: user.profileImage,
-      username: 'Zaid Saleem',
-      date: format(new Date()),
-      description: values.description,
-      postImage: values.image,
-    };
-
+  const handleSubmit = async (values, {resetForm}) => {
     console.log(values);
-    const newPosts = [newPost, ...allPosts];
-    setAllPosts(newPosts);
+    const post = await postsApi.createPost(
+      user.user_id,
+      values.description,
+      'post',
+      values.image,
+    );
+
+    setAllPosts([...post, ...allPosts]);
     setVisible(false);
     resetForm();
   };
