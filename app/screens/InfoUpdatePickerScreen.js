@@ -7,14 +7,28 @@ import AppText from '../components/AppText';
 import AppForm from '../components/AppForm';
 import SubmitButton from '../components/SubmitButton';
 import AppDropDown from '../components/AppDropDown';
+import apiClient from '../api/client';
 
-function InfoUpdatePickerScreen() {
+function InfoUpdatePickerScreen({route}) {
   const validationSchema = yup.object().shape({
     category: yup.object().nullable().required().label('Category'),
   });
 
-  const handleSubmit = values => {
-    console.log(values);
+  const {key, user} = route.params;
+
+  const updateUserCategory = async values => {
+    const data = {
+      name: key,
+      value: values.category.value,
+    };
+    try {
+      const response = await apiClient.patch(`/users/${user.user_id}`, {
+        updatedValue: data,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -24,7 +38,7 @@ function InfoUpdatePickerScreen() {
 
       <AppForm
         initialValues={{category: null}}
-        onSubmit={handleSubmit}
+        onSubmit={updateUserCategory}
         validationSchema={validationSchema}>
         <View>
           <AppDropDown name="category" />

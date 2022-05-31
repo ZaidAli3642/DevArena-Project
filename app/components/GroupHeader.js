@@ -1,19 +1,18 @@
 import React from 'react';
-import {Image, View, StyleSheet} from 'react-native';
+import {Image, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 import AppHeadingText from '../components/AppHeadingText';
 import AppText from '../components/AppText';
 import colors from '../config/colors';
 import AppButton from './AppButton';
+import ItemSeperator from './ItemSeperator';
+import routes from '../routes/routes';
 
 function GroupHeader({group, user, text, joinGroup}) {
-  const {
-    group_description,
-    group_image,
-    group_name,
-    joined_user_id,
-    approve_request,
-  } = group;
+  const {group_description, group_image, group_name, joined_user_id} = group;
+
+  const navigation = useNavigation();
 
   return (
     <>
@@ -32,8 +31,14 @@ function GroupHeader({group, user, text, joinGroup}) {
             <AppText style={styles.description}>{group_description}</AppText>
           </View>
 
-          {group.user_id === user.user_id ? null : joined_user_id ===
-            user.user_id ? (
+          {group.user_id === user.user_id ? (
+            <AppButton
+              title="Add Users"
+              style={[styles.button, {width: 100}]}
+              textStyle={styles.buttonText}
+              onPress={() => navigation.navigate(routes.ADD_USER, {group})}
+            />
+          ) : joined_user_id === user.user_id ? (
             <AppButton
               title={!text ? 'Requested' : 'JOINED'}
               textStyle={styles.buttonText}
@@ -50,12 +55,41 @@ function GroupHeader({group, user, text, joinGroup}) {
             />
           )}
         </View>
+        <ItemSeperator />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: 10,
+          }}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => navigation.navigate(routes.ALL_MEMBERS, {group})}>
+            <AppText style={styles.allMembers}>All members</AppText>
+          </TouchableOpacity>
+          {group.user_id !== user.user_id ? null : (
+            <>
+              <View style={{borderLeftWidth: 1, borderLeftColor: 'black'}} />
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() =>
+                  navigation.navigate(routes.UPDATE_GROUP, {group})
+                }>
+                <AppText style={styles.allMembers}>Update group</AppText>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
       </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  allMembers: {
+    marginLeft: 20,
+    marginTop: 10,
+  },
   button: {
     width: 75,
     borderRadius: 10,
@@ -76,6 +110,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
 
   description: {

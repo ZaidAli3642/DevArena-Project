@@ -14,6 +14,8 @@ function ApproveRequestItem({
   text,
   requested_user_id,
   acceptFollowRequest,
+  rejectFollowRequest,
+  rejected,
   accepted,
 }) {
   const [userProfileImage, setUserProfileImage] = useState(null);
@@ -64,10 +66,11 @@ function ApproveRequestItem({
             onPress={acceptFollowRequest}
           />
           <AppButton
-            title="Reject"
+            title={rejected ? 'Rejected' : 'Reject'}
             color={colors.red}
             textStyle={styles.buttonText}
             style={[styles.button, {padding: 5, marginLeft: 10}]}
+            onPress={rejectFollowRequest}
           />
         </View>
       )}

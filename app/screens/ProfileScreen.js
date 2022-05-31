@@ -30,6 +30,8 @@ function ProfileScreen({route, navigation}) {
   const [loading, setLoading] = useState(false);
   const [userDetails, setUserDetails] = useState();
   const [loadingUserDetails, setLoadingUserDetails] = useState(false);
+  const [followRequest, setFollowRequest] = useState(false);
+  const [checkFollowRequest, setChcekFollowRequest] = useState(null);
 
   const {user_id} = route.params;
 
@@ -58,14 +60,34 @@ function ProfileScreen({route, navigation}) {
     }
   };
 
+  const checkFollowUserRequest = async () => {
+    const response = await apiClient.get(
+      `/check_request?follow_user_id=${user.user_id}&user_id=${user_id}`,
+    );
+    console.log('hello');
+    setChcekFollowRequest(response.data.followRequestUser[0]);
+  };
+
   useEffect(() => {
     const ac = new AbortController();
 
     getUserPosts();
     getUserDetails();
+    checkFollowUserRequest();
 
     return () => ac.abort();
   }, []);
+
+  const followRequestSend = async () => {
+    const follow = {
+      follow_user_id: user.user_id,
+      follow_firstname: user.firstname,
+      user_id: user_id,
+    };
+    setFollowRequest(!followRequest);
+    const response = await apiClient.post('/follow_request', follow);
+    console.log(response.data);
+  };
 
   const handleSelectImage = async () => {
     const result = await ImagePicker.launchImageLibrary({mediaType: 'photo'});
@@ -114,19 +136,16 @@ function ProfileScreen({route, navigation}) {
       ]);
   };
 
-  const handleSubmit = (values, {resetForm}) => {
-    const newPost = {
-      postId: Date.now(),
-      userImage: user.profileImage,
-      username: 'Zaid Saleem',
-      date: format(new Date()),
-      description: values.description,
-      postImage: values.image,
-    };
-
+  const handleSubmit = async (values, {resetForm}) => {
     console.log(values);
-    const newPosts = [newPost, ...allPosts];
-    setAllPosts(newPosts);
+    const post = await postsApi.createPost(
+      user.user_id,
+      values.description,
+      'post',
+      values.image,
+    );
+
+    setAllPosts([...post, ...allPosts]);
     setVisible(false);
     resetForm();
   };
@@ -150,12 +169,23 @@ function ProfileScreen({route, navigation}) {
               }>{`${userDetails?.firstname} ${userDetails?.lastname}`}</AppText>
           )}
           <AppText style={styles.description}>{userDetails?.category}</AppText>
-          {user.user_id === user_id ? null : (
+          {user.user_id === user_id ? null : checkFollowRequest?.user_id ===
+            user_id ? (
             <AppButton
               style={styles.button}
               textStyle={styles.textStyle}
               color="dodgerblue"
-              title="FOLLOW"
+              title={
+                !checkFollowRequest?.approve_request ? 'REQUESTED' : 'FOLLOWED'
+              }
+            />
+          ) : (
+            <AppButton
+              style={styles.button}
+              textStyle={styles.textStyle}
+              color="dodgerblue"
+              title={followRequest ? 'REQUESTED' : 'FOLLOW'}
+              onPress={followRequestSend}
             />
           )}
           <View style={styles.followContainer}>

@@ -1,7 +1,7 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
 import * as yup from 'yup';
-import apiClient from '../api/client';
+
 import groupsApi from '../api/groupsApi';
 
 import AppForm from '../components/AppForm';

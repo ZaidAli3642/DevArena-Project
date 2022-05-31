@@ -13,6 +13,10 @@ import ApproveRequestScreen from '../screens/ApproveRequestScreen';
 import FollowRequests from '../screens/FollowRequests';
 import FollowersScreen from './../screens/FollowersScreen';
 import FollowingsScreen from './../screens/FollowingsScreen';
+import AllMembersScreen from './../components/AllMembersScreen';
+import UpdateGroupScreen from './../screens/UpdateGroupScreen';
+import InfoUpdateScreen from '../screens/InfoUpdateScreen';
+import AddUserScreen from './../components/AddUserScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -101,6 +105,42 @@ const MainNavigator = () => (
         headerTintColor: colors.red,
       }}
       component={FollowingsScreen}
+    />
+    <Stack.Screen
+      name={routes.ALL_MEMBERS}
+      options={{
+        animation: 'slide_from_right',
+        title: 'All Group Members',
+        headerTintColor: colors.red,
+      }}
+      component={AllMembersScreen}
+    />
+    <Stack.Screen
+      name={routes.UPDATE_GROUP}
+      options={{
+        animation: 'slide_from_right',
+        title: 'Update Group Details',
+        headerTintColor: colors.red,
+      }}
+      component={UpdateGroupScreen}
+    />
+    <Stack.Screen
+      name={routes.USER_INFO_UPDATE}
+      options={{
+        animation: 'slide_from_right',
+        title: 'Update Group Details',
+        headerTintColor: colors.red,
+      }}
+      component={InfoUpdateScreen}
+    />
+    <Stack.Screen
+      name={routes.ADD_USER}
+      options={{
+        animation: 'slide_from_right',
+        title: 'Add Users',
+        headerTintColor: colors.red,
+      }}
+      component={AddUserScreen}
     />
   </Stack.Navigator>
 );

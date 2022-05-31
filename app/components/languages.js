@@ -18,42 +18,6 @@ export const languageOptions = [
     value: 'cpp',
   },
   {
-    id: 48,
-    name: 'C (GCC 7.4.0)',
-    label: 'C (GCC 7.4.0)',
-    value: 'c',
-  },
-  {
-    id: 52,
-    name: 'C++ (GCC 7.4.0)',
-    label: 'C++ (GCC 7.4.0)',
-    value: 'cpp',
-  },
-  {
-    id: 49,
-    name: 'C (GCC 8.3.0)',
-    label: 'C (GCC 8.3.0)',
-    value: 'c',
-  },
-  {
-    id: 53,
-    name: 'C++ (GCC 8.3.0)',
-    label: 'C++ (GCC 8.3.0)',
-    value: 'cpp',
-  },
-  {
-    id: 50,
-    name: 'C (GCC 9.2.0)',
-    label: 'C (GCC 9.2.0)',
-    value: 'c',
-  },
-  {
-    id: 54,
-    name: 'C++ (GCC 9.2.0)',
-    label: 'C++ (GCC 9.2.0)',
-    value: 'cpp',
-  },
-  {
     id: 70,
     name: 'Python (2.7.17)',
     label: 'Python (2.7.17)',
