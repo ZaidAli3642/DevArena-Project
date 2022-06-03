@@ -6,7 +6,13 @@ import inputRefContext from './../context/inputRefContext';
 import AppCommentForm from './AppCommentForm';
 import PostComment from './PostComment';
 
-function AppComments({post_id, user, image}) {
+function AppComments({
+  post_id,
+  user,
+  image,
+  setPostCommentsLength,
+  postCommentsLength,
+}) {
   const [allComments, setAllComments] = useState([]);
   const [allCommentsResponse, setAllCommentsResponse] = useState([]);
   const [selectedComment, setSelectedComment] = useState(null);
@@ -60,6 +66,8 @@ function AppComments({post_id, user, image}) {
           comment_response: [],
         },
       ]);
+
+      setPostCommentsLength(postCommentsLength + 1);
 
       resetForm();
     } catch (error) {
