@@ -261,6 +261,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     padding: 5,
     borderRadius: 10,
+    backgroundColor: 'red',
   },
   textStyle: {
     fontSize: 17,

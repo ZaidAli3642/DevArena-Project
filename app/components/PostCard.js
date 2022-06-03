@@ -98,6 +98,7 @@ function PostCard({item, image, user}) {
 
     try {
       setLiked(!liked);
+      setPostLikes(postLikes + 1);
       const response = await postsApi.likePost(likeDetails);
       console.log(response.data);
     } catch (error) {
@@ -115,6 +116,7 @@ function PostCard({item, image, user}) {
 
     try {
       setDisliked(!disliked);
+      setPostDislikes(postDislikes + 1);
       const response = await postsApi.dislikePost(dislikeDetails);
       console.log(response.data);
     } catch (error) {
@@ -231,7 +233,13 @@ function PostCard({item, image, user}) {
           color={colors.red}
           onPress={() => setVisible(false)}
         />
-        <AppComments image={image} post_id={post_id} user={user} />
+        <AppComments
+          image={image}
+          setPostCommentsLength={setPostCommentsLength}
+          postCommentsLength={postCommentsLength}
+          post_id={post_id}
+          user={user}
+        />
       </Modal>
     </View>
   );

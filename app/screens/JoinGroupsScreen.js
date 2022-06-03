@@ -17,8 +17,16 @@ function JoinGroupsScreen({navigation}) {
     try {
       const response = await groupsApi.getGroups(user.user_id);
 
-      console.log(response.data);
-      setAllGroups([...response.data.allGroups]);
+      const result = response.data.allGroups.reduce((finalArray, current) => {
+        let obj = finalArray.find(item => item.group_id === current.group_id);
+
+        if (obj) {
+          return finalArray;
+        }
+        return finalArray.concat([current]);
+      }, []);
+
+      setAllGroups([...result]);
     } catch (error) {
       console.log(error);
     }

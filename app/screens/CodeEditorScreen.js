@@ -102,11 +102,14 @@ function CodeEditorScreen() {
       data: formData,
     };
 
+    console.log(options);
+
     axios
       .request(options)
       .then(response => {
-        console.log(response.data);
+        console.log(response);
         const token = response.data.token;
+
         checkStatus(token);
       })
       .catch(err => {
