@@ -25,7 +25,13 @@ function AddUserScreen({route}) {
       const response = await apiClient.get(
         `/allFollowersFollowing/${user.user_id}`,
       );
-      setAllFollowUsers(response.data.allFollowUsers);
+      const allUsers = response.data.allFollowUsers.filter(
+        followUser =>
+          followUser.user_id !== group.user_id &&
+          followUser.approve_request !== true,
+      );
+
+      setAllFollowUsers(allUsers);
     } catch (error) {
       console.log(error);
     }

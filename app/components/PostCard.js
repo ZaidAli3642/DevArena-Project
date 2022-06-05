@@ -89,7 +89,10 @@ function PostCard({item, image, user}) {
   }, []);
 
   const handleLike = async () => {
-    setDisliked(false);
+    if (disliked) {
+      setPostDislikes(postDislikes - 1);
+      setDisliked(false);
+    }
 
     const likeDetails = {
       user_id: user.user_id,
@@ -97,9 +100,14 @@ function PostCard({item, image, user}) {
     };
 
     try {
+      const response = await postsApi.likePost(likeDetails);
+      if (liked) {
+        setLiked(!liked);
+        return setPostLikes(postLikes - 1);
+      }
+
       setLiked(!liked);
       setPostLikes(postLikes + 1);
-      const response = await postsApi.likePost(likeDetails);
       console.log(response.data);
     } catch (error) {
       console.log(error);
@@ -107,7 +115,10 @@ function PostCard({item, image, user}) {
   };
 
   const handleDislike = async () => {
-    setLiked(false);
+    if (liked) {
+      setLiked(false);
+      setPostLikes(postLikes - 1);
+    }
 
     const dislikeDetails = {
       user_id: user.user_id,
@@ -115,9 +126,14 @@ function PostCard({item, image, user}) {
     };
 
     try {
+      const response = await postsApi.dislikePost(dislikeDetails);
+      if (disliked) {
+        setDisliked(!disliked);
+        return setPostDislikes(postDislikes - 1);
+      }
       setDisliked(!disliked);
       setPostDislikes(postDislikes + 1);
-      const response = await postsApi.dislikePost(dislikeDetails);
+
       console.log(response.data);
     } catch (error) {
       console.log(error);

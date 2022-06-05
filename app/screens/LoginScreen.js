@@ -36,6 +36,7 @@ function LoginScreen({navigation}) {
   };
 
   const handleLogin = async values => {
+    console.log(values);
     const loginUser = {
       email: values.email,
       password: values.password,

@@ -157,6 +157,7 @@ function ProfileScreen({route, navigation}) {
           <AppFormImagePicker
             name="image"
             image={userDetails?.profile_imageUri}
+            userImage={image}
             handleSelectImage={handlePress}
             user_id={user.user_id}
             otherUserId={user_id}
