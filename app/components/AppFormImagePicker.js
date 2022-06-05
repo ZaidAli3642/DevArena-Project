@@ -1,7 +1,13 @@
 import React from 'react';
 import {TouchableOpacity, View, Image, StyleSheet} from 'react-native';
 
-function AppFormImagePicker({handleSelectImage, image, user_id, otherUserId}) {
+function AppFormImagePicker({
+  handleSelectImage,
+  image,
+  userImage,
+  user_id,
+  otherUserId,
+}) {
   if (user_id !== otherUserId)
     return (
       <View style={styles.imageContainer}>
@@ -23,7 +29,7 @@ function AppFormImagePicker({handleSelectImage, image, user_id, otherUserId}) {
           source={require('../assets/profileAvatar.jpeg')}
         />
       )}
-      {image && <Image style={styles.image} source={{uri: image}} />}
+      {image && <Image style={styles.image} source={{uri: userImage}} />}
     </TouchableOpacity>
   );
 }

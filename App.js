@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import jwtDecode from 'jwt-decode';
 import SplashScreen from 'react-native-splash-screen';
@@ -9,6 +9,9 @@ import AuthNavigator from './app/navigation/AuthNavigator';
 import AuthContext from './app/context/AuthContext';
 import authStorage from './app/context/auth/authStorage';
 import apiClient from './app/api/client';
+import OfflineNotice from './app/components/OfflineNotice';
+import AppText from './app/components/AppText';
+import colors from './app/config/colors';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -41,17 +44,16 @@ function App() {
   }, []);
 
   return (
-    <AuthContext.Provider value={{user, setUser, image, setImage}}>
-      <NavigationContainer>
-        {user ? <MainNavigator /> : <AuthNavigator />}
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <>
+      <OfflineNotice />
+      <AuthContext.Provider value={{user, setUser, image, setImage}}>
+        <NavigationContainer>
+          {user ? <MainNavigator /> : <AuthNavigator />}
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+const styles = StyleSheet.create({});
 export default App;
