@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import * as yup from 'yup';
 
@@ -19,20 +19,24 @@ const validationSchema = yup.object().shape({
 });
 
 function CreateGroupScreen() {
+  const [disabled, setDisabled] = useState(false);
+
   const {user} = useContext(AuthContext);
 
   const handleCreateGroup = async (values, {resetForm}) => {
+    setDisabled(true);
     try {
-      const response = await groupsApi.createGroup(
+      await groupsApi.createGroup(
         user.user_id,
         values.groupName,
         values.groupDescription,
         values.image,
       );
-      console.log(response.data);
       resetForm();
+      setDisabled(false);
     } catch (error) {
       console.log(error);
+      setDisabled(false);
     }
   };
 
@@ -70,7 +74,7 @@ function CreateGroupScreen() {
               textStyle={styles.textStyle}
             />
           </View>
-          <SubmitButton title="CREATE" />
+          <SubmitButton title="CREATE" disabled={disabled} />
         </AppForm>
       </AppKeyboardView>
     </View>

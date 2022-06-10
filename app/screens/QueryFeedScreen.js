@@ -6,7 +6,6 @@ import AppPostInput from '../components/AppPostInput';
 import colors from '../config/colors';
 import PostCard from '../components/PostCard';
 import AuthContext from './../context/AuthContext';
-import apiClient from '../api/client';
 import ActivityIndicator from '../components/ActivityIndicator';
 import postsApi from '../api/posts';
 
@@ -15,6 +14,7 @@ function QueryFeedScreen() {
   const [allQueries, setAllQueries] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const {user, image} = useContext(AuthContext);
 
@@ -35,6 +35,7 @@ function QueryFeedScreen() {
   }, []);
 
   const handleSubmit = async (values, {resetForm}) => {
+    setDisabled(true);
     const query = await postsApi.createPost(
       user.user_id,
       values.description,
@@ -45,6 +46,7 @@ function QueryFeedScreen() {
     setAllQueries([...query, ...allQueries]);
 
     setVisible(false);
+    setDisabled(false);
     resetForm();
   };
 
@@ -82,6 +84,7 @@ function QueryFeedScreen() {
       <AppModalForm
         image={image}
         placeholder="DO YOU HAVE A QUERY?"
+        disabled={disabled}
         setVisible={setVisible}
         userTitle="Muhammad Zaid Saleem"
         visible={visible}

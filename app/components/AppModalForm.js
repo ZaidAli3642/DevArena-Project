@@ -16,7 +16,14 @@ const validationSchema = yup.object().shape({
   description: yup.string().required().label('Description'),
 });
 
-function AppModalForm({visible, setVisible, placeholder, image, handleSubmit}) {
+function AppModalForm({
+  visible,
+  setVisible,
+  placeholder,
+  image,
+  disabled,
+  handleSubmit,
+}) {
   const {user} = useContext(AuthContext);
 
   return (
@@ -66,7 +73,7 @@ function AppModalForm({visible, setVisible, placeholder, image, handleSubmit}) {
             iconColor={colors.yellow}
           />
 
-          <SubmitButton title="POST" />
+          <SubmitButton title="POST" disabled={disabled} />
         </AppForm>
       </View>
     </Modal>

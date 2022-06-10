@@ -13,7 +13,6 @@ function FollowingsScreen({route, navigation}) {
   const getUserFollowings = async () => {
     try {
       const response = await apiClient.get(`/following/${user_id}`);
-      console.log(response.data);
       setFollowings(response.data.allFollowings);
     } catch (error) {
       console.log(error);

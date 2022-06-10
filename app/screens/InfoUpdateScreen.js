@@ -18,40 +18,37 @@ function InfoUpdateScreen({route}) {
 
   const {oldTextName, oldValue, key, user, group} = route.params;
 
-  const handleGroupUpdate = async data => {
+  const handleGroupUpdate = async (data, resetForm) => {
     try {
-      const response = await apiClient.patch(
-        `/group_update/${group.group_id}`,
-        {
-          updatedValue: data,
-        },
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleUserUpdate = async data => {
-    try {
-      const response = await apiClient.patch(`/users/${user.user_id}`, {
+      await apiClient.patch(`/group_update/${group.group_id}`, {
         updatedValue: data,
       });
-      console.log(response.data);
+      resetForm();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleUpdate = values => {
+  const handleUserUpdate = async (data, resetForm) => {
+    try {
+      await apiClient.patch(`/users/${user.user_id}`, {
+        updatedValue: data,
+      });
+      resetForm();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUpdate = (values, {resetForm}) => {
     const data = {
       name: key,
       value: values.data,
     };
 
-    if (group.group_id) return handleGroupUpdate(data);
+    if (group) return handleGroupUpdate(data, resetForm);
 
-    return handleUserUpdate(data);
+    return handleUserUpdate(data, resetForm);
   };
 
   return (

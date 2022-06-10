@@ -1,27 +1,34 @@
 import apiClient from './client';
+import {storage} from '../firebase/firebaseConfig';
+import {ref, uploadBytes, getDownloadURL} from 'firebase/storage';
 
 const createGroup = async (user_id, groupName, groupDescription, image) => {
-  const formdata = new FormData();
+  const groupDetails = {
+    group_name: groupName,
+    group_description: groupDescription,
+    user_id,
+  };
 
   if (image) {
-    const photo = {
-      uri: image.uri,
-      type: image.type,
-      name: image.fileName,
-    };
-    formdata.append('image', photo);
+    let imageName = new Date().valueOf() + '_' + image.fileName;
+
+    const imageRef = ref(storage, imageName);
+
+    const response = await fetch(image.uri);
+    const blob = await response.blob();
+
+    const snapshot = await uploadBytes(imageRef, blob);
+
+    const downloadUrl = await getDownloadURL(snapshot.ref);
+
+    groupDetails.filename = imageName;
+    groupDetails.path = image.uri;
+    groupDetails.mimetype = image.type;
+    groupDetails.size = image.fileSize;
+    groupDetails.group_imageurl = downloadUrl;
   }
 
-  formdata.append('group_name', groupName);
-  formdata.append('group_description', groupDescription);
-  formdata.append('user_id', user_id);
-
-  const response = await apiClient.post('/group', formdata, {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  const response = await apiClient.post('/group', groupDetails);
   return response;
 };
 

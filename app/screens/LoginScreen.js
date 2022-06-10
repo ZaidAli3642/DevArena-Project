@@ -29,14 +29,12 @@ function LoginScreen({navigation}) {
     try {
       const {data} = await apiClient.get(`/image/${user_id}`);
       setImage(data.imageUri);
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleLogin = async values => {
-    console.log(values);
     const loginUser = {
       email: values.email,
       password: values.password,

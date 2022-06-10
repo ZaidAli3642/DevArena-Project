@@ -15,7 +15,7 @@ function ApproveRequestScreen() {
   const getRequests = async () => {
     try {
       const response = await apiClient.get(`/request/${user.user_id}`);
-      console.log(response.data);
+
       setRequests(response.data.allRequests);
     } catch (error) {
       console.log(error);

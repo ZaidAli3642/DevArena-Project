@@ -1,9 +1,17 @@
 import React from 'react';
-import {TouchableOpacity, View, Image, StyleSheet} from 'react-native';
+import {
+  TouchableOpacity,
+  View,
+  Image,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
+import colors from '../config/colors';
 
 function AppFormImagePicker({
   handleSelectImage,
   image,
+  disabled,
   userImage,
   user_id,
   otherUserId,
@@ -22,15 +30,41 @@ function AppFormImagePicker({
     );
 
   return (
-    <TouchableOpacity onPress={handleSelectImage} style={styles.imageContainer}>
-      {!image && (
-        <Image
-          style={styles.image}
-          source={require('../assets/profileAvatar.jpeg')}
-        />
+    <>
+      {disabled ? (
+        <View style={styles.activityContainer}>
+          <ActivityIndicator
+            style={{
+              width: '100%',
+              height: '100%',
+            }}
+            color={colors.red}
+            size="large"
+            animating={disabled}
+          />
+        </View>
+      ) : (
+        <TouchableOpacity
+          onPress={handleSelectImage}
+          style={styles.imageContainer}>
+          <>
+            {!userImage && (
+              <>
+                {!disabled && (
+                  <Image
+                    style={styles.image}
+                    source={require('../assets/profileAvatar.jpeg')}
+                  />
+                )}
+              </>
+            )}
+            {userImage && (
+              <Image style={styles.image} source={{uri: userImage}} />
+            )}
+          </>
+        </TouchableOpacity>
       )}
-      {image && <Image style={styles.image} source={{uri: userImage}} />}
-    </TouchableOpacity>
+    </>
   );
 }
 
@@ -46,6 +80,15 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+  },
+  activityContainer: {
+    borderWidth: 4,
+    borderColor: 'dodgerblue',
+    width: 140,
+    height: 140,
+    borderRadius: 140 / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default AppFormImagePicker;

@@ -6,7 +6,6 @@ import AppText from './AppText';
 
 function OfflineNotice() {
   const netInfo = useNetInfo();
-  console.log(netInfo);
 
   if (netInfo.isConnected === false || netInfo.isInternetReachable === false)
     return (

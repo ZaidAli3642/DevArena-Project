@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Keyboard} from 'react-native';
+import {View, StyleSheet, Keyboard, ActivityIndicator} from 'react-native';
 import * as yup from 'yup';
 
 import AppForm from '../components/AppForm';
@@ -28,8 +28,10 @@ function RegisterScreen({navigation}) {
   const [page, setPage] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
   const [registerFailed, setRegisterFailed] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const handleRegister = async (values, {resetForm}) => {
+    setDisabled(true);
     try {
       const user = {
         firstname: values.firstName,
@@ -48,7 +50,9 @@ function RegisterScreen({navigation}) {
       setRegisterFailed(false);
       user.sixDigitCode = result.data.sixDigitCode;
       navigation.navigate(routes.EMAIL_VERIFY, {user});
+      setDisabled(false);
     } catch (error) {
+      setDisabled(false);
       console.log(error);
     }
   };
@@ -75,7 +79,7 @@ function RegisterScreen({navigation}) {
                 color={colors.red}
                 onPress={() => setPage(page - 1)}
               />
-              <SubmitButton title="SIGNUP" />
+              <SubmitButton title="SIGNUP" disabled={disabled} />
             </>
           ) : (
             <AppButton

@@ -24,6 +24,7 @@ function CodeEditorScreen() {
   const [visible, setVisible] = useState(false);
   const [outputVisible, setOutputVisible] = useState(false);
   const [result, setResult] = useState(null);
+  const [disabled, setDisabled] = useState(false);
 
   const RAPID_API_HOST = 'judge0-ce.p.rapidapi.com';
   const RAPID_API_KEY = '27cce2b2b6msh942c39ba5e2a96ep14e9e2jsn331f0655d783';
@@ -50,8 +51,6 @@ function CodeEditorScreen() {
         }, 2000);
         return;
       } else {
-        console.log(response.data);
-
         setOutputVisible(true);
         outputDisplay(response.data);
 
@@ -64,7 +63,6 @@ function CodeEditorScreen() {
 
   const outputDisplay = response => {
     let statusId = response?.status?.id;
-    console.log(statusId);
     if (statusId === 6) {
       // compilation error
       let output = Buffer.from(response?.compile_output, 'base64').toString(
@@ -78,12 +76,13 @@ function CodeEditorScreen() {
       setResult('Time Limit Exceeded');
     } else {
       let output = Buffer.from(response?.stderr, 'base64').toString('ascii');
-      console.log(output);
       setResult(output);
     }
+    setDisabled(false);
   };
 
   const handleCompile = values => {
+    setDisabled(true);
     const formData = {
       language_id: values.language.id,
       // encode source code in base64
@@ -102,12 +101,9 @@ function CodeEditorScreen() {
       data: formData,
     };
 
-    console.log(options);
-
     axios
       .request(options)
       .then(response => {
-        console.log(response);
         const token = response.data.token;
 
         checkStatus(token);
@@ -181,7 +177,7 @@ function CodeEditorScreen() {
                 <AppText>{result}</AppText>
               </View>
             </Modal>
-            {!visible && <SubmitButton />}
+            {!visible && <SubmitButton disabled={disabled} />}
           </View>
         </AppForm>
       </AppKeyboardView>

@@ -14,6 +14,7 @@ function NewsFeedScreen() {
   const [allPosts, setAllPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const {user, image} = useContext(AuthContext);
 
@@ -38,6 +39,7 @@ function NewsFeedScreen() {
   }, []);
 
   const handleSubmit = async (values, {resetForm}) => {
+    setDisabled(true);
     const post = await postsApi.createPost(
       user.user_id,
       values.description,
@@ -48,6 +50,7 @@ function NewsFeedScreen() {
     setAllPosts([...post, ...allPosts]);
 
     setVisible(false);
+    setDisabled(false);
     resetForm();
   };
 
@@ -89,6 +92,7 @@ function NewsFeedScreen() {
         image={image}
         placeholder="What's On Your Mind?"
         setVisible={setVisible}
+        disabled={disabled}
         userTitle="Muhammad Zaid Saleem"
         visible={visible}
         handleSubmit={handleSubmit}
