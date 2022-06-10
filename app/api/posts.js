@@ -1,4 +1,11 @@
 import apiClient from './client';
+import {storage} from '../firebase/firebaseConfig';
+import {
+  ref,
+  getDownloadURL,
+  uploadBytes,
+  uploadBytesResumable,
+} from 'firebase/storage';
 
 const getFeedPosts = async (user_id, post_type) => {
   try {
@@ -17,28 +24,32 @@ const getFeedPosts = async (user_id, post_type) => {
 };
 
 const createPost = async (user_id, description, post_type, image) => {
-  const formdata = new FormData();
-
-  if (image) {
-    const photo = {
-      uri: image.uri,
-      type: image.type,
-      name: image.fileName,
-    };
-    formdata.append('image', photo);
-  }
-
-  formdata.append('description', description);
-  formdata.append('user_id', user_id);
-  formdata.append('post_type', post_type);
-
+  const postDetails = {
+    description,
+    post_type,
+    user_id: user_id,
+  };
   try {
-    const response = await apiClient.post('/post', formdata, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    if (image) {
+      const imageName = new Date().valueOf() + '_' + image.fileName;
+
+      const imageRef = ref(storage, imageName);
+
+      const responseImage = await fetch(image.uri);
+      const blob = await responseImage.blob();
+
+      const snapshot = await uploadBytes(imageRef, blob);
+      const downloadUrl = await getDownloadURL(snapshot.ref);
+      console.log('Image Uploaded' + '  ' + downloadUrl);
+
+      postDetails.filename = imageName;
+      postDetails.path = image.uri;
+      postDetails.mimetype = image.type;
+      postDetails.size = image.fileSize;
+      postDetails.post_imageurl = downloadUrl;
+    }
+
+    const response = await apiClient.post('/post', postDetails);
 
     return response.data;
   } catch (error) {
@@ -59,7 +70,7 @@ const userPosts = async user_id => {
   try {
     const {data} = await apiClient.get(`/post/${user_id}`);
 
-    const sortedUserPost = data.userPosts.sort(function (o1, o2) {
+    const sortedUserPost = data?.userPosts?.sort(function (o1, o2) {
       if (o1.created_at > o2.created_at) return -1;
       else if (o1.created_at < o2.created_at) return 1;
       else return 0;

@@ -22,10 +22,9 @@ function InfoUpdatePickerScreen({route}) {
       value: values.category.value,
     };
     try {
-      const response = await apiClient.patch(`/users/${user.user_id}`, {
+      await apiClient.patch(`/users/${user.user_id}`, {
         updatedValue: data,
       });
-      console.log(response.data);
     } catch (error) {
       console.log(error);
     }

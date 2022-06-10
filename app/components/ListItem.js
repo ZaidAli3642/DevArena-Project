@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Image, View, StyleSheet, TouchableOpacity} from 'react-native';
 
 import AppText from '../components/AppText';
 import colors from '../config/colors';
 import AppButton from './AppButton';
+import AuthContext from './../context/AuthContext';
 
 function GroupItem({
   name,
@@ -15,10 +16,13 @@ function GroupItem({
   join_id,
   addUser,
   removed,
+  user_id,
   added,
   add = false,
   removeMembers,
 }) {
+  const {user} = useContext(AuthContext);
+
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
       <View style={styles.container}>
@@ -47,12 +51,16 @@ function GroupItem({
           )}
         </View>
         {join_id && (
-          <AppButton
-            title={removed ? 'Removed' : 'Remove'}
-            textStyle={styles.textStyle}
-            style={styles.button}
-            onPress={removeMembers}
-          />
+          <>
+            {user_id !== user.user_id ? null : (
+              <AppButton
+                title={removed ? 'Removed' : 'Remove'}
+                textStyle={styles.textStyle}
+                style={styles.button}
+                onPress={removeMembers}
+              />
+            )}
+          </>
         )}
         {add && (
           <AppButton

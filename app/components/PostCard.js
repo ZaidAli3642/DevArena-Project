@@ -31,7 +31,6 @@ function PostCard({item, image, user}) {
     try {
       if (item.shared_user_id) {
         const response = await apiClient.get(`/user/${item.shared_user_id}`);
-        console.log(response.data);
         const {firstname, lastname} = response.data;
         setSharedUser(firstname + ' ' + lastname);
       }
@@ -108,7 +107,6 @@ function PostCard({item, image, user}) {
 
       setLiked(!liked);
       setPostLikes(postLikes + 1);
-      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -133,8 +131,6 @@ function PostCard({item, image, user}) {
       }
       setDisliked(!disliked);
       setPostDislikes(postDislikes + 1);
-
-      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -153,6 +149,7 @@ function PostCard({item, image, user}) {
       sharePost.filepath = item.post_filepath;
       sharePost.mimetype = item.post_mimetype;
       sharePost.size = item.post_size;
+      sharePost.post_imageurl = item.imageUri;
     }
     try {
       await postsApi.sharePost(sharePost);

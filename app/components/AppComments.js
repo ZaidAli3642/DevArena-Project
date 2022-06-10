@@ -96,7 +96,6 @@ function AppComments({
           created_at: commentResponse[0].created_at,
         },
       ]);
-      console.log(commentResponse);
       resetForm();
     } catch (error) {
       console.log(error);

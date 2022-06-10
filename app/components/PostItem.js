@@ -15,8 +15,8 @@ function PostItem({title, name, iconName, iconColor, textStyle}) {
   const handleSelectImage = async () => {
     const result = await ImagePicker.launchImageLibrary({mediaType: 'photo'});
     if (!result.didCancel) {
-      const {uri, type, fileName} = result.assets[0];
-      setFieldValue(name, {uri, type, fileName});
+      const {uri, type, fileName, fileSize} = result.assets[0];
+      setFieldValue(name, {uri, type, fileName, fileSize});
     }
   };
 

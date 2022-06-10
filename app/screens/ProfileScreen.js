@@ -8,8 +8,14 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import {format} from 'timeago.js';
 import * as ImagePicker from 'react-native-image-picker';
+import {storage} from '../firebase/firebaseConfig';
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+} from 'firebase/storage';
 
 import AppText from '../components/AppText';
 import AppModalForm from '../components/AppModalForm';
@@ -32,6 +38,7 @@ function ProfileScreen({route, navigation}) {
   const [loadingUserDetails, setLoadingUserDetails] = useState(false);
   const [followRequest, setFollowRequest] = useState(false);
   const [checkFollowRequest, setChcekFollowRequest] = useState(null);
+  const [disabled, setDisabled] = useState(false);
 
   const {user_id} = route.params;
 
@@ -64,7 +71,6 @@ function ProfileScreen({route, navigation}) {
     const response = await apiClient.get(
       `/check_request?follow_user_id=${user.user_id}&user_id=${user_id}`,
     );
-    console.log('hello');
     setChcekFollowRequest(response.data.followRequestUser[0]);
   };
 
@@ -85,46 +91,65 @@ function ProfileScreen({route, navigation}) {
       user_id: user_id,
     };
     setFollowRequest(!followRequest);
-    const response = await apiClient.post('/follow_request', follow);
-    console.log(response.data);
+    await apiClient.post('/follow_request', follow);
   };
 
   const handleSelectImage = async () => {
     const result = await ImagePicker.launchImageLibrary({mediaType: 'photo'});
 
     if (result.didCancel || result.errorCode) return;
-    const {uri, fileName, type} = result.assets[0];
-    setImage(uri);
-    // const newImageUri = 'file:///' + image?.split('file:/').join('');
-    const photo = {
-      uri: uri,
-      name: fileName,
-      type: type,
-    };
+    const imageName = new Date().valueOf() + '_' + result.assets[0].fileName;
 
-    try {
-      const formdata = new FormData();
+    setDisabled(true);
+    const imageRef = ref(storage, imageName);
+    const response = await fetch(result.assets[0].uri);
+    const blob = await response.blob();
 
-      formdata.append('image', photo);
+    const uploadTask = uploadBytesResumable(imageRef, blob);
 
-      formdata.append('user_id', user.user_id);
+    uploadTask.on(
+      'state_changed',
+      snapShot => {
+        const progress =
+          (snapShot.bytesTransferred / snapShot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+      },
+      error => {
+        setDisabled(false);
+        console.log(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then(async downloadURL => {
+          console.log('File available at', downloadURL);
+          const imageDetail = {
+            filename: imageName,
+            filepath: result.assets[0].uri,
+            mimetype: result.assets[0].type,
+            size: result.assets[0].fileSize,
+            profile_imageurl: downloadURL,
+            user_id: user.user_id,
+          };
 
-      const response = await apiClient.post('/image_upload', formdata, {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+          const response = await apiClient.post('/image_upload', imageDetail);
+          setImage(response.data.profile_imageurl);
+          setDisabled(false);
+        });
+      },
+    );
   };
 
   const deleteUserProfile = async () => {
-    const response = await apiClient.delete(`/image_delete/${user.user_id}`);
-    setImage(null);
-    console.log(response.data);
+    try {
+      const response = await apiClient.delete(`/image_delete/${user.user_id}`);
+      const imageRef = ref(
+        storage,
+        response.data.user_image[0].profile_filename,
+      );
+      await deleteObject(imageRef);
+      setImage(null);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handlePress = () => {
@@ -137,7 +162,6 @@ function ProfileScreen({route, navigation}) {
   };
 
   const handleSubmit = async (values, {resetForm}) => {
-    console.log(values);
     const post = await postsApi.createPost(
       user.user_id,
       values.description,
@@ -157,6 +181,7 @@ function ProfileScreen({route, navigation}) {
           <AppFormImagePicker
             name="image"
             image={userDetails?.profile_imageUri}
+            disabled={disabled}
             userImage={image}
             handleSelectImage={handlePress}
             user_id={user.user_id}
@@ -223,7 +248,7 @@ function ProfileScreen({route, navigation}) {
           </View>
         </View>
         <ItemSeperator />
-        {allPosts.length === 0 ? (
+        {allPosts?.length === 0 ? (
           <>
             <ActivityIndicator
               animating={loading}
@@ -233,7 +258,7 @@ function ProfileScreen({route, navigation}) {
           </>
         ) : (
           <View style={styles.postContainer}>
-            {allPosts.map(post => (
+            {allPosts?.map(post => (
               <PostCard
                 key={post.post_id}
                 image={image}

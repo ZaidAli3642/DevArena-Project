@@ -26,10 +26,12 @@ const validationSchema = yup.object().shape({
 function EmailVerificationScreen({route}) {
   const [verifyFailed, setverifyFailed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [disabled, setDisabled] = useState(false);
 
   const {setUser} = useContext(AuthContext);
 
   const verifyUser = async values => {
+    setDisabled(true);
     const user = {
       ...route.params.user,
     };
@@ -44,6 +46,7 @@ function EmailVerificationScreen({route}) {
       setErrorMessage('Verification code not matched.');
       setverifyFailed(true);
     }
+    setDisabled(false);
   };
 
   return (
@@ -74,7 +77,7 @@ function EmailVerificationScreen({route}) {
             maxLength={6}
             textContentType="oneTimeCode"
           />
-          <SubmitButton title="Verify" />
+          <SubmitButton title="Verify" disabled={disabled} />
         </AppForm>
       </AppKeyboardView>
     </View>

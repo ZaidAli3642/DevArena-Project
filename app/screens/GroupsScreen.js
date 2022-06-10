@@ -15,6 +15,7 @@ function GroupsScreen({route}) {
   const [groupPosts, setGroupPosts] = useState([]);
   const [visible, setVisible] = useState(false);
   const [text, setText] = useState(route.params.group.approve_request);
+  const [disabled, setDisabled] = useState(false);
 
   const {group} = route.params;
 
@@ -42,12 +43,12 @@ function GroupsScreen({route}) {
       user_id: group.user_id,
     };
 
-    const response = await apiClient.post('/request', joinDetails);
-    console.log(response.data);
+    await apiClient.post('/request', joinDetails);
     setText(!text);
   };
 
   const handleSubmit = async (values, {resetForm}) => {
+    setDisabled(true);
     const groupPost = await postsApi.createPost(
       user.user_id,
       values.description,
@@ -56,7 +57,6 @@ function GroupsScreen({route}) {
     );
 
     if (groupPost[0].post_id) {
-      console.log(groupPost[0].post_id);
       await apiClient.post('/group_post', {
         post_id: groupPost[0].post_id,
         group_id: group.group_id,
@@ -66,6 +66,7 @@ function GroupsScreen({route}) {
 
     setVisible(false);
     resetForm();
+    setDisabled(false);
   };
 
   return (
@@ -95,6 +96,7 @@ function GroupsScreen({route}) {
           image={image}
           userTitle="Zaid Saleem"
           placeholder="What's on your mind?"
+          disabled={disabled}
           setVisible={setVisible}
           visible={visible}
           handleSubmit={handleSubmit}

@@ -46,7 +46,6 @@ function SettingsScreen({navigation}) {
       if (data.imageUri) {
         setImage(data.imageUri);
       }
-      console.log(image);
     } catch (error) {
       console.log('Error getting image', error);
     }

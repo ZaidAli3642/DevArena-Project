@@ -40,8 +40,7 @@ function FollowRequests() {
 
   const rejectFollowRequest = async follow_id => {
     try {
-      const response = await apiClient.delete(`/reject_request/${follow_id}`);
-      console.log(response.data);
+      await apiClient.delete(`/reject_request/${follow_id}`);
       setRejected(rejected => ({
         ...rejected,
         [follow_id]: !rejected[follow_id],

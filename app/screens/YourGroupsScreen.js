@@ -22,7 +22,6 @@ function YourGroupsScreen({GroupPickerItem = ListItem, navigation}) {
   const getUserCreatedGroups = async () => {
     try {
       const response = await groupsApi.getCreatedGroups(user.user_id);
-      console.log(response.data);
       setUserCreatedGroups([...response.data.allUserGroups]);
     } catch (error) {
       console.log(error);
